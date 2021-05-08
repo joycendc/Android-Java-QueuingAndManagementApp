@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Giligans</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Categories</string>
+    <string name="title_notifications">Plate</string>
+    <string name="title_line">Line</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
