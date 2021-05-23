@@ -4,38 +4,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="8dp"
-    tools:context="com.giligans.queueapp.MainApp">
+    tools:context=".MainApp">
 
-    <LinearLayout android:layout_alignParentBottom="true"
+    <LinearLayout
+        android:id="@+id/totalLayout"
+        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:gravity="right|center_horizontal">
+        android:layout_height="90dp"
+        android:orientation="vertical"
+        android:gravity="right|center_horizontal|center_vertical">
 
-        <TextView
-            android:id="@+id/total"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TOTAL"
-            android:padding="10dp"
-            android:layout_marginRight="20dp"
-            android:textSize="20sp"/>
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:padding="5dp"
+                android:text="TOTAL"
+                android:textColor="@color/colorPrimary"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+            <LinearLayout
+                android:layout_alignParentBottom="true"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:orientation="horizontal"
+                android:gravity="right|center_horizontal|center_vertical">
+                <TextView
+                    android:id="@+id/total"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:padding="5dp"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+         </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/placeOrder"
+            android:text="Place Order"
+            android:padding="8dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:textAllCaps="false"
+            android:layout_alignParentBottom="true"
+            app:cornerRadius="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:enabled="false"/>
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/placeOrder"
-        android:text="Place Order"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:enabled="false"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/plateRecyclerView"
-        android:layout_above="@+id/placeOrder"
+        android:layout_above="@+id/totalLayout"
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         />
+
 </RelativeLayout>

@@ -4,26 +4,45 @@ android:layout_width="match_parent"
 android:layout_height="match_parent"
 android:orientation="vertical"
 xmlns:app="http://schemas.android.com/apk/res-auto"
-tools:context=".HomeFragment">
+tools:context=".MainApp">
 
-<com.google.android.material.appbar.AppBarLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:theme="@style/AppTheme">
+    <TextView
+        android:id="@+id/alltime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        android:text="Categories"
+        android:textColor="@color/colorPrimary"
+        android:textSize="25sp"
+        android:textStyle="bold" />
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:tabMode="scrollable"
-        app:tabGravity="fill"/>
+        android:layout_height="wrap_content"
+        app:elevation="0dp"
+        android:layout_margin="10dp">
 
-</com.google.android.material.appbar.AppBarLayout>
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            app:tabMode="scrollable"
+            app:tabMaxWidth="100dp"
+            app:tabGravity="fill"
+            app:tabIndicatorHeight="0dp"
+            app:tabBackground="@drawable/tab_bg"
+            app:tabPaddingBottom="0dp"
+            app:tabPaddingEnd="0dp"
+            app:tabPaddingStart="0dp"
+            app:tabPaddingTop="0dp" />
 
-<androidx.viewpager.widget.ViewPager
-    android:id="@+id/viewpager_content"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    </com.google.android.material.appbar.AppBarLayout>
 
-</androidx.viewpager.widget.ViewPager>
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewpager_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>
