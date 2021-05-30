@@ -60,15 +60,9 @@
             <ImageView
                 android:id="@+id/big_image"
                 android:layout_width="match_parent"
-<<<<<<< HEAD
                 android:layout_height="300dp"
                 android:maxHeight="350dp"
                 android:padding="20dp"
-=======
-                android:layout_height="250dp"
-                android:maxHeight="300dp"
-                android:padding="30dp"
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 android:src="@drawable/ic_fastfood_24dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -111,10 +105,6 @@
                 android:id="@+id/prodPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-<<<<<<< HEAD
-=======
-                android:layout_marginTop="16dp"
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 android:text="TextView"
                 android:textSize="22sp"
                 android:textStyle="bold"

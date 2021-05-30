@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<<<<<<< HEAD
         <TextView
             android:id="@+id/textView"
             android:layout_width="0dp"
@@ -25,15 +24,12 @@
             android:textStyle="bold"
             android:visibility="gone" />
 
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             app:elevation="5dp">
 
-<<<<<<< HEAD
             <ImageView
                 android:id="@+id/logo"
                 android:layout_width="0dp"
@@ -43,18 +39,6 @@
                 android:scaleType="fitStart"
                 android:src="@drawable/ic_logo"
                 app:tint="@color/colorPrimary"
-=======
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="0dp"
-                android:layout_height="51dp"
-                android:layout_marginStart="15dp"
-                android:clickable="true"
-                android:gravity="center|start"
-                android:text="Giligans Menu"
-                android:textSize="24sp"
-                android:textStyle="bold"
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/timer"
                 app:layout_constraintHorizontal_bias="0.0"

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -30,21 +29,3 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-=======
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="100dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
-    android:orientation="vertical"
-    android:gravity="top|right">
-
-    <ImageView
-    android:id="@+id/settings"
-    android:layout_width="35dp"
-    android:layout_height="35dp"
-    android:src="@drawable/ic_person_24dp"
-    app:tint="@color/colorPrimary" />
-
-</LinearLayout>
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c

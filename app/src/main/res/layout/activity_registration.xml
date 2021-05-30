@@ -6,20 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".Registration">
 
-<<<<<<< HEAD
-=======
-
-
-
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         <TextView
             android:id="@+id/textView"
             android:layout_width="173dp"
@@ -57,11 +47,8 @@
                 android:layout_marginEnd="20dp"
                 android:ems="10"
                 android:freezesText="false"
-<<<<<<< HEAD
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -83,11 +70,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:ems="10"
-<<<<<<< HEAD
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/fname"
                 app:layout_constraintTop_toBottomOf="@+id/fname">
@@ -110,11 +94,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:ems="10"
-<<<<<<< HEAD
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/lname"
                 app:layout_constraintTop_toBottomOf="@+id/lname">
@@ -137,11 +118,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:ems="10"
-<<<<<<< HEAD
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/email"
                 app:layout_constraintTop_toBottomOf="@+id/email">
@@ -164,11 +142,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:ems="10"
-<<<<<<< HEAD
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/mobileField"
                 app:layout_constraintTop_toBottomOf="@+id/mobileField">
@@ -191,11 +166,8 @@
                 android:layout_marginTop="30dp"
                 android:layout_marginEnd="20dp"
                 android:ems="10"
-<<<<<<< HEAD
                 app:boxBackgroundColor="@android:color/transparent"
                 android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/passwordFieldLayout"
                 app:layout_constraintTop_toBottomOf="@+id/passwordFieldLayout">
@@ -230,112 +202,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/confirmPass" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-<<<<<<< HEAD
         </androidx.core.widget.NestedScrollView>
     </androidx.constraintlayout.widget.ConstraintLayout>
-=======
-
-        </androidx.core.widget.NestedScrollView>
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="60dp">-->
-
-<!--        <TextView-->
-<!--            android:id="@+id/textView"-->
-<!--            android:layout_width="173dp"-->
-<!--            android:layout_height="51dp"-->
-<!--            android:clickable="true"-->
-<!--            android:gravity="center"-->
-<!--            android:text="Giligans Menu"-->
-<!--            android:textSize="24sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintHorizontal_bias="0.0"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            app:layout_constraintVertical_bias="0.555" />-->
-
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
-
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:gravity="center"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/firstName"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:hint="First name"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:inputType="textPersonName" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/lastName"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:hint="Last name"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:freezesText="false"-->
-<!--            android:inputType="textPersonName" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/emailField"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:hint="Email"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:freezesText="false"-->
-<!--            android:inputType="textEmailAddress" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/mobile"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:hint="Mobile Number"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:freezesText="false"-->
-<!--            android:inputType="phone" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/passwordField"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:hint="Password"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:inputType="textPassword" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/passwordFieldConfirm"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:ems="10"-->
-<!--            android:hint="Confirm Password"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:inputType="textPassword" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/signup"-->
-<!--            android:layout_width="150dp"-->
-<!--            android:layout_height="80dp"-->
-<!--            android:gravity="center"-->
-<!--            android:padding="16dp"-->
-<!--            android:text="Sign up"-->
-<!--            android:layout_margin="5dp"-->
-<!--            android:textAllCaps="false"-->
-<!--            android:textSize="25sp" />-->
-
-<!--    </LinearLayout>-->
-
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 </RelativeLayout>

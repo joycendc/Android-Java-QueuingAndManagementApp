@@ -28,11 +28,7 @@
                 android:padding="8dp"
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-<<<<<<< HEAD
                 android:maxHeight="120dp"
-=======
-                android:minHeight="200dp"
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_menu_24dp"
                 android:adjustViewBounds="true"/>

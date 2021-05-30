@@ -35,11 +35,8 @@
             android:layout_marginEnd="20dp"
             android:ems="10"
             android:freezesText="false"
-<<<<<<< HEAD
             app:boxBackgroundColor="@android:color/transparent"
             android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
@@ -61,11 +58,8 @@
             android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
             android:ems="10"
-<<<<<<< HEAD
             app:boxBackgroundColor="@android:color/transparent"
             android:background="@android:color/transparent"
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             app:passwordToggleTint="@color/colorPrimary"
             app:passwordToggleEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
@@ -107,11 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="48dp"
-<<<<<<< HEAD
             android:text="Don't have account ? Create one"
-=======
-            android:text="Don't hava account ? Create one"
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             android:textAlignment="center"
             android:textColor="@color/colorPrimary"
             android:textSize="18sp"
@@ -120,13 +110,5 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/login" />
 
-<<<<<<< HEAD
     </androidx.constraintlayout.widget.ConstraintLayout>
-=======
-
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 </RelativeLayout>
