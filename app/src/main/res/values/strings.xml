@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Giligans</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Categories</string>
+    <string name="title_home">Favorites</string>
+    <string name="title_dashboard">Home</string>
     <string name="title_notifications">Plate</string>
     <string name="title_line">Line</string>
 

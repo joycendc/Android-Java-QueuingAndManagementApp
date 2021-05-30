@@ -1,18 +1,10 @@
 package com.giligans.queueapp.models;
 
-import java.util.ArrayList;
-
-public class CustomerModel {
-    String id;
-    String queueNumber;
-    String name;
-    ArrayList<PlateModel> orders;
-
-    public CustomerModel(String id, String queueNumber, String name, ArrayList<PlateModel> orders) {
+public class CustomerModel implements Comparable, Cloneable {
+    public String id, name;
+    public CustomerModel(String id, String name) {
         this.id = id;
-        this.queueNumber = queueNumber;
         this.name = name;
-        this.orders = orders;
     }
 
     public String getId() {
@@ -23,14 +15,6 @@ public class CustomerModel {
         this.id = id;
     }
 
-    public String getQueueNumber() {
-        return queueNumber;
-    }
-
-    public void setQueueNumber(String queueNumber) {
-        this.queueNumber = queueNumber;
-    }
-
     public String getName() {
         return name;
     }
@@ -39,11 +23,23 @@ public class CustomerModel {
         this.name = name;
     }
 
-    public ArrayList<PlateModel> getOrders() {
-        return orders;
+    @Override
+    public int compareTo(Object o) {
+        CustomerModel compare = (CustomerModel) o;
+        if (compare.id == this.id && compare.name.equals(this.name)) {
+            return 0;
+        }
+        return 1;
     }
 
-    public void setOrders(ArrayList<PlateModel> orders) {
-        this.orders = orders;
+    @Override
+    public CustomerModel clone() {
+        CustomerModel clone;
+        try {
+            clone = (CustomerModel) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e); //should not happen
+        }
+        return clone;
     }
 }

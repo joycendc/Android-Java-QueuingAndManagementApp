@@ -1,14 +1,10 @@
 package com.giligans.queueapp.models;
 
 public class FoodModel {
-    String name;
-    String description;
-    String price;
-    int imageUrl;
-    int bigimageurl;
+    String name, description, price, imageUrl, bigimageurl;
 
-    public FoodModel(String name, String description, String price, int
-            imageUrl, int bigimageurl) {
+    public FoodModel(String name, String description, String price, String
+            imageUrl, String bigimageurl) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -16,11 +12,11 @@ public class FoodModel {
         this.bigimageurl = bigimageurl;
     }
 
-    public int getBigimageurl() {
+    public String getBigimageurl() {
         return bigimageurl;
     }
 
-    public void setBigimageurl(int bigimageurl) {
+    public void setBigimageurl(String bigimageurl) {
         this.bigimageurl = bigimageurl;
     }
 
@@ -48,11 +44,11 @@ public class FoodModel {
         this.price = price;
     }
 
-    public int getImageUrl() {
+    public String getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(int imageUrl) {
+    public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
 }
