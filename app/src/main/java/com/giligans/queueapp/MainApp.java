@@ -16,10 +16,7 @@ import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-<<<<<<< HEAD
 import android.provider.Settings;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -36,10 +33,7 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
-<<<<<<< HEAD
 import androidx.core.content.ContextCompat;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -69,10 +63,7 @@ import com.google.gson.reflect.TypeToken;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
-<<<<<<< HEAD
 import org.jetbrains.annotations.NotNull;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -83,10 +74,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-<<<<<<< HEAD
 import java.util.Objects;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import java.util.UUID;
 
 import static com.giligans.queueapp.BuildConfig.HOST;
@@ -110,62 +98,38 @@ public class MainApp extends AppCompatActivity {
     ProducDetailsFragment product;
     LineFragment line;
     public TabCategoryFragment tabcat;
-<<<<<<< HEAD
     public FavoritesFragment home;
     public HomeFragment categories;
     public PlateFragment plate;
     ImageView settings, settings2;
     TextView timer, textView, greeting;
-=======
-    public HomeFragment home;
-    public CategoriesFragment categories;
-    public PlateFragment plate;
-    ImageView settings, settings2;
-    TextView timer, textView;
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
     SwitchCompat switchTheme;
     public boolean connectivity;
     ConstraintLayout top;
     boolean orderDone;
-<<<<<<< HEAD
     AlertDialog.Builder resDialog;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         line = new LineFragment();
-<<<<<<< HEAD
         home =  new FavoritesFragment();
         categories = new HomeFragment();
-=======
-        home =  new HomeFragment();
-        categories = new CategoriesFragment();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         plate = new PlateFragment();
         product = new ProducDetailsFragment();
         tabcat = new TabCategoryFragment();
 
-<<<<<<< HEAD
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
             setTheme(R.style.AppThemeDark);
         }
-=======
-
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){ setTheme(R.style.AppThemeDark); }
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         else{ setTheme(R.style.AppTheme); }
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_app);
         isConnected();
 
-<<<<<<< HEAD
-        isConnected();
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
+    
         top = (ConstraintLayout) findViewById(R.id.topBar);
         timer = (TextView) findViewById(R.id.timer);
         settings = (ImageView) findViewById(R.id.settings);
@@ -192,7 +156,6 @@ public class MainApp extends AppCompatActivity {
             }
         });
 
-<<<<<<< HEAD
         switchTheme = (SwitchCompat) nvDrawer.getMenu().getItem(2).getActionView().findViewById(R.id.switchTheme);
 
         settings2 = (ImageView) nvDrawer.getHeaderView(0).findViewById(R.id.settings);
@@ -201,11 +164,6 @@ public class MainApp extends AppCompatActivity {
         SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         greeting.setText("Hello, " + sharedPreferences.getString("keyfname", null));
 
-=======
-        switchTheme =  (SwitchCompat) nvDrawer.getMenu().getItem(2).getActionView().findViewById(R.id.switchTheme);
-        settings2 = (ImageView) nvDrawer.getHeaderView(0).findViewById(R.id.settings);
-
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         settings2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -227,7 +185,6 @@ public class MainApp extends AppCompatActivity {
         setupDrawerContent(nvDrawer);
 
         //I added this if statement to keep the selected fragment when rotating the device
-<<<<<<< HEAD
         if (savedInstanceState == null) { getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit(); }
 
         if(getItemCount() > 0){ setBadgeCount(getItemCount()); }
@@ -371,81 +328,11 @@ public class MainApp extends AppCompatActivity {
                 .setCancelable(false)
                 .show();
             connectivity = false;
-=======
-        if (savedInstanceState == null) { getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new CategoriesFragment()).commit(); }
-
-        if(getItemCount() > 0){ setBadgeCount(getItemCount()); }
-        customer = new ArrayList<CustomerModel>();
-        bottomNav.setSelectedItemId(R.id.navigation_home);
-
-
-        connectivity = false;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(intentResult.getContents() != null){
-            String id= UUID.randomUUID().toString();
-            String uid = id.substring(0, 5);
-            new AlertDialog.Builder(this)
-                .setTitle("Result")
-                .setMessage(intentResult.getContents())
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-        }else{
-            Toast.makeText(getApplicationContext(), "Please scan correctly !", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    void changeTheme(){
-        if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        } else {
-            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-        }
-        this.recreate();
-    }
-
-    public boolean checkNetworkConnection(){
-        ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return (networkInfo != null && networkInfo.isConnected());
-    }
-
-    public void isConnected() {
-        if (checkNetworkConnection()) {
-            StringRequest stringRequest = new StringRequest(Request.Method.GET, INIT,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            if(response.equals("OK")) connectivity = true;
-                            getLine();
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            connectivity = false;
-                            Toast.makeText(getApplicationContext(), error.getMessage() + " Server no response", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-            Volley.newRequestQueue(getApplicationContext()).add(stringRequest);
-        }else{
-            connectivity = false;
-            Toast.makeText(getApplicationContext(),  "No Internet Connection", Toast.LENGTH_SHORT).show();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         }
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-<<<<<<< HEAD
             new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NotNull MenuItem menuItem) {
@@ -453,15 +340,6 @@ public class MainApp extends AppCompatActivity {
                     return true;
                 }
             });
-=======
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -484,10 +362,7 @@ public class MainApp extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 SharedPrefManager.getInstance(getApplicationContext()).logout();
                                 finish();
-<<<<<<< HEAD
                                 startActivity(new Intent(getApplicationContext(), MainActivity.class));
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                             }
                         })
                         .setNegativeButton(android.R.string.no, null)
@@ -496,12 +371,8 @@ public class MainApp extends AppCompatActivity {
                 }
                  break;
             case R.id.nav_switch:
-<<<<<<< HEAD
                 switchTheme.setChecked(!switchTheme.isChecked());
 
-=======
-                switchTheme.setChecked(switchTheme.isChecked() ? false : true);
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 changeTheme();
                 break;
             default:
@@ -568,7 +439,6 @@ public class MainApp extends AppCompatActivity {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-<<<<<<< HEAD
                     //Toast.makeText(getApplicationContext(), error.getMessage() + " line no response", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -622,52 +492,6 @@ public class MainApp extends AppCompatActivity {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Toast.makeText(getApplicationContext(), error.getMessage() + " finish", Toast.LENGTH_SHORT).show();
-=======
-                    Toast.makeText(getApplicationContext(), error.getMessage() + " line no response", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-            });
-
-
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    requestQueue.add(stringRequest);
-
-                    if (line.isAdded()) { line.customerAdapter.setData(customer); }
-
-                    handler.postDelayed(this, 500);
-                    customer = new ArrayList<CustomerModel>();
-                }
-            };
-            handler.post(runnable);
-
-    }
-
-    void finishNa(){
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear().apply();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REMOVE,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject obj = new JSONObject(response);
-                        if (!obj.getBoolean("error")) {
-                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), error.getMessage() + " finish", Toast.LENGTH_SHORT).show();
                 }
             }) {
             @Override
@@ -679,60 +503,16 @@ public class MainApp extends AppCompatActivity {
                 return params;
             }
         };
-        Volley.newRequestQueue(getApplicationContext()).add(stringRequest);
-    }
-
-    public void getTime(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_TIME,
-            new Response.Listener<String>(){
-                @Override
-                public void onResponse(String response){
-                    try {
-                        mTimeLeftInMillis = Integer.parseInt(response) > 0 ? Integer.parseInt(response) * min : 1 * min;
-                    } catch (Exception e) {
-                        Log.e("TIME", e.getMessage());
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error){
-                    Toast.makeText(getApplicationContext(), error.getMessage() + "time", Toast.LENGTH_SHORT).show();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
-                }
-            }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                String id = sharedPreferences.getString("keyid", null);
-                params.put("customer_id", id);
-                return params;
-            }
-        };
-<<<<<<< HEAD
         VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
     public void getTime(){
         StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_TIME,
-=======
-        Volley.newRequestQueue(getApplicationContext()).add(stringRequest);
-    }
-
-    void orderDone(){
-        final RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_USER,
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             new Response.Listener<String>(){
                 @Override
                 public void onResponse(String response){
                     try {
-<<<<<<< HEAD
                         mTimeLeftInMillis = Integer.parseInt(response) > 0 ? Integer.parseInt(response) * min : 1 * min;
-=======
-                        orderDone = Boolean.parseBoolean(response);
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                     } catch (Exception e) {
                         Log.e("TIME", e.getMessage());
                     }
@@ -741,12 +521,7 @@ public class MainApp extends AppCompatActivity {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error){
-<<<<<<< HEAD
                     Toast.makeText(getApplicationContext(), error.getMessage() + " time", Toast.LENGTH_SHORT).show();
-=======
-                    orderDone = false;
-                    Toast.makeText(getApplicationContext(), error.getMessage() + "time", Toast.LENGTH_SHORT).show();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 }
             }) {
             @Override
@@ -758,7 +533,6 @@ public class MainApp extends AppCompatActivity {
                 return params;
             }
         };
-<<<<<<< HEAD
         VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
@@ -796,33 +570,6 @@ public class MainApp extends AppCompatActivity {
 
     public void startTimer(){
         //orderDone();
-=======
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                requestQueue.add(stringRequest);
-
-                if(orderDone){
-                    handler.removeCallbacks(runnable);
-                    timer.setVisibility(View.INVISIBLE);
-                    mCountDownTimer.cancel();
-                    mTimerRunning = false;
-                    mTimeLeftInMillis = 0;
-                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.clear().apply();
-                    updateCountDownText();
-                }
-                handler.postDelayed(this, 100);
-            }
-        };
-        handler.post(runnable);
-    }
-
-    public void startTimer(){
-        orderDone();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         timer.setVisibility(View.VISIBLE);
         mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
         mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
@@ -858,11 +605,7 @@ public class MainApp extends AppCompatActivity {
                 mTimerRunning = false;
                 mTimeLeftInMillis = 0;
                 finishNa();
-<<<<<<< HEAD
                 Toast.makeText(getApplicationContext(), "YOU'RE ORDER IS READY !", Toast.LENGTH_LONG).show();
-=======
-                Toast.makeText(getApplicationContext(), "YOU'RE NEXT IN LINE", Toast.LENGTH_LONG).show();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 String message = "Please go to the counter now";
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(MainApp.this, "Notification");
                 builder.setSmallIcon(R.drawable.ic_fastfood_24dp);
@@ -917,7 +660,6 @@ public class MainApp extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-<<<<<<< HEAD
         orderDone();
         timer.setVisibility(View.INVISIBLE);
 //        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
@@ -961,30 +703,6 @@ public class MainApp extends AppCompatActivity {
                 break;
             default:
                 break;
-=======
-        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        mTimeLeftInMillis = prefs.getLong("millisLeft", 0);
-        mTimerRunning = prefs.getBoolean("timerRunning", false);
-        updateCountDownText();
-        timer.setVisibility(View.INVISIBLE);
-        if (mTimerRunning) {
-            mEndTime = prefs.getLong("endTime", 0);
-            mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
-            if (mTimeLeftInMillis < 0) {
-                mTimeLeftInMillis = 0;
-                mTimerRunning = false;
-                mTimeLeftInMillis = START_TIME_IN_MILLIS;
-                updateCountDownText();
-            }
-            else {
-                startTimer();
-            }
-        }else{
-            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.clear();
-            editor.apply();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
@@ -1018,17 +736,10 @@ public class MainApp extends AppCompatActivity {
                 Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.navigation_home:
-<<<<<<< HEAD
                         selectedFragment = new FavoritesFragment();
                         break;
                     case R.id.navigation_dashboard:
                         selectedFragment = new HomeFragment();
-=======
-                        selectedFragment = new HomeFragment();
-                        break;
-                    case R.id.navigation_dashboard:
-                        selectedFragment = new CategoriesFragment();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                         break;
                     case R.id.navigation_notifications:
                         selectedFragment = new PlateFragment();
@@ -1037,11 +748,7 @@ public class MainApp extends AppCompatActivity {
                         selectedFragment = line;
                         break;
                     default:
-<<<<<<< HEAD
                         selectedFragment = new FavoritesFragment();
-=======
-                        selectedFragment = new HomeFragment();
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                         break;
                 }
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -1062,7 +769,6 @@ public class MainApp extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-<<<<<<< HEAD
         if (bottomNav.getSelectedItemId() == R.id.navigation_dashboard) {
             if (getVisibleFragment() instanceof HomeFragment) {
                 finish();
@@ -1078,18 +784,6 @@ public class MainApp extends AppCompatActivity {
                 bottomNav.setSelectedItemId(R.id.navigation_dashboard);
                 setFragment(R.id.navigation_dashboard);
             }
-=======
-        if (bottomNav.getSelectedItemId() == R.id.navigation_home) {
-            if (getVisibleFragment() instanceof HomeFragment) {
-                finish();
-            }else{
-                setFragment(R.id.navigation_home);
-            }
-        }
-        else {
-            bottomNav.setSelectedItemId(R.id.navigation_home);
-            setFragment(R.id.navigation_home);
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         }
     }
 }

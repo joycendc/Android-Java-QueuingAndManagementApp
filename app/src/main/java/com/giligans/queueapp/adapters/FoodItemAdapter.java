@@ -4,10 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-<<<<<<< HEAD
 import android.view.inputmethod.InputMethodManager;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,11 +17,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-<<<<<<< HEAD
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import com.giligans.queueapp.R;
 import com.giligans.queueapp.fragments.ProducDetailsFragment;
 import com.giligans.queueapp.models.FoodModel;
@@ -62,12 +56,9 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Recent
         Glide.with(context)
             .load(foodModelList.get(position).getImageUrl())
             .placeholder(R.drawable.ic_menu_24dp)
-<<<<<<< HEAD
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)
             .error(R.drawable.ic_menu_24dp))
             .dontAnimate()
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             .into(holder.imageView);
 
         ProducDetailsFragment pdf = new ProducDetailsFragment(
@@ -79,20 +70,12 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Recent
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-<<<<<<< HEAD
                 InputMethodManager inputMethodManager =(InputMethodManager) context.getSystemService(context.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
                 try {
                     ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
                             .replace(R.id.fragment_container, pdf)
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-=======
-
-                try {
-                    ((FragmentActivity) view.getContext()).getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.fragment_container, pdf)
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                             .addToBackStack(null)
                             .commit();
 //                    int size =  ((MainApp) view.getContext()).bottomNav.getMenu().size();

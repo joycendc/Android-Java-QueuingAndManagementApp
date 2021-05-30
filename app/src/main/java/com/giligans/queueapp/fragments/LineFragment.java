@@ -27,11 +27,8 @@ public class LineFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_line, container, false);
         customerRecycler = (RecyclerView) view.findViewById(R.id.lineRecyclerView);
-<<<<<<< HEAD
         empty = (TextView) view.findViewById(R.id.empty);
 
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false);
         customerRecycler.setLayoutManager(gridLayoutManager);

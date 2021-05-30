@@ -20,18 +20,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-<<<<<<< HEAD
-=======
-import com.android.volley.toolbox.Volley;
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import com.giligans.queueapp.DBContract;
 import com.giligans.queueapp.DBHelper;
 import com.giligans.queueapp.MainApp;
 import com.giligans.queueapp.R;
-<<<<<<< HEAD
 import com.giligans.queueapp.VolleySingelton;
-=======
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.models.FoodModel;
 import org.json.JSONArray;
@@ -114,11 +107,6 @@ public class TabCategoryFragment extends Fragment {
                         try {
                             //db.execSQL(dbHelper.DROP_ITEM_TABLE);
                             //db.execSQL(dbHelper.CREATE_ITEM_TABLE);
-<<<<<<< HEAD
-
-=======
-                            String url = "";
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                             JSONArray items = new JSONArray(response);
                             for(int i = 0; i < items.length(); i++){
                                 JSONObject itemObject = items.getJSONObject(i);
@@ -128,11 +116,7 @@ public class TabCategoryFragment extends Fragment {
                                 String price = itemObject.getString("price");
                                 String preptime = itemObject.getString("prep_time");
                                 //int cat_id = itemObject.getInt("id");
-<<<<<<< HEAD
                                 String url = HOST + "images/" + itemObject.getString("url");
-=======
-                                if(!itemObject.getString("url").equals("")) url = HOST + itemObject.getString("url");
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 
                                 //dbHelper.saveItemsToLocalDB(name, description, price, preptime, cat_id, db);
                                 foodListList.add(new FoodModel(name, description, price, url, url));
@@ -149,21 +133,11 @@ public class TabCategoryFragment extends Fragment {
                         readFromLocalDB();
                     }
                 });
-<<<<<<< HEAD
             VolleySingelton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
-=======
-            Volley.newRequestQueue(getActivity().getApplicationContext()).add(stringRequest);
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         }
     }
 
     private void setRecentlyViewedRecycler(List<FoodModel> foodModelDataList) {
-<<<<<<< HEAD
-=======
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(context,  new Utility().autoFitColumns(context, 150));
-//        foodListRecycler.addItemDecoration(new GridSpacing(new Utility().calculateSpacing(context)));
-//        foodListRecycler.setLayoutManager(gridLayoutManager);
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         foodListRecycler.setHasFixedSize(true);
         foodListRecycler.setItemAnimator(new DefaultItemAnimator());
         foodListAdapter = new FoodItemAdapter(context, fragmentManager, foodModelDataList);

@@ -19,24 +19,16 @@ android {
         debug {
             buildConfigField "String", "HOST", "\"http://192.168.254.144/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.254.152/\""
-<<<<<<< HEAD
 //            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""
 
-=======
-         //   buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 
         }
         release {
             buildConfigField "String", "HOST", "\"http://192.168.254.144/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.254.152/\""
-<<<<<<< HEAD
 //            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""
-=======
-            //buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -75,18 +67,12 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.cardview:cardview:1.0.0'
-<<<<<<< HEAD
     implementation "androidx.core:core-ktx:1.5.0"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
     implementation "androidx.recyclerview:recyclerview:1.2.0"
     implementation "androidx.work:work-runtime:2.5.0"
 
-=======
-    implementation "androidx.core:core-ktx:+"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 }
 repositories {
     mavenCentral()

@@ -10,14 +10,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-<<<<<<< HEAD
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-=======
-
-import com.bumptech.glide.Glide;
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import com.giligans.queueapp.MainApp;
 import com.giligans.queueapp.R;
 import com.giligans.queueapp.interfaces.TotalClickListener;
@@ -57,7 +52,6 @@ public class PlateItemAdapter extends RecyclerView.Adapter<PlateItemAdapter.Plat
         holder.price.setText("₱ " + plateModel.get(position).getPrice());
         holder.qty.setText(String.valueOf(plateModel.get(position).getQty()));
         holder.total.setText("₱ " + String.valueOf(String.format("%,d", plateModel.get(position).getTotal())));
-<<<<<<< HEAD
 
         Glide.with(context)
             .load(plateModel.get(position).getBigimageurl())
@@ -86,31 +80,6 @@ public class PlateItemAdapter extends RecyclerView.Adapter<PlateItemAdapter.Plat
             }
         });
 
-=======
-
-        Glide.with(context)
-                .load(plateModel.get(position).getBigimageurl())
-                .placeholder(R.drawable.ic_menu_24dp)
-                .into(holder.foodImage);
-
-        holder.inc.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                qty = plateModel.get(position).getQty();
-                qty++;
-                plateModel.get(position).setQty(qty);
-                plateModel.get(position).setTotal(Integer.parseInt(plateModel.get(position).getPrice()) * plateModel.get(position).getQty());
-                holder.total.setText("₱ " + String.format("%,d", plateModel.get(position).getTotal()));
-                holder.qty.setText(String.valueOf(qty));
-                int sum = 0;
-                for(PlateModel p : plateModel){
-                    sum += p.getTotal();
-                }
-                totalClickListener.onItemClick("₱ " + String.format("%,d", sum));
-            }
-        });
-
->>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         holder.dec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
