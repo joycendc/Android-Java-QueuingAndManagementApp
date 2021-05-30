@@ -1,6 +1,10 @@
 package com.giligans.queueapp;
 
 import android.content.Context;
+<<<<<<< HEAD
+=======
+import android.content.Intent;
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import android.content.SharedPreferences;
 
 import com.giligans.queueapp.models.UserModel;
@@ -58,6 +62,10 @@ public class SharedPrefManager {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         editor.clear();
         editor.apply();
+<<<<<<< HEAD
+=======
+        context.startActivity(new Intent(context, MainActivity.class));
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
     }
 
 }

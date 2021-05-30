@@ -7,7 +7,10 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+<<<<<<< HEAD
 import androidx.appcompat.app.AppCompatDelegate;
+=======
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -30,8 +33,11 @@ public class Registration extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+<<<<<<< HEAD
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){ setTheme(R.style.AppThemeDark); }
         else{ setTheme(R.style.AppTheme); }
+=======
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 

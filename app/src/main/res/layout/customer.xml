@@ -4,11 +4,18 @@
     android:id="@+id/row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+<<<<<<< HEAD
     android:layout_marginBottom="5dp"
     android:padding="15dp"
     app:cardBackgroundColor="@color/colorPrimary"
     app:cardCornerRadius="10dp"
     app:cardElevation="0dp">
+=======
+    app:cardCornerRadius="10dp"
+    android:layout_marginBottom="5dp"
+    app:cardElevation="0dp"
+    android:padding="15dp">
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -19,7 +26,10 @@
             android:layout_width="95dp"
             android:layout_height="95dp"
             android:padding="8dp"
+<<<<<<< HEAD
             android:tint="@color/white"
+=======
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -32,7 +42,11 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:text="Mang Juan"
+<<<<<<< HEAD
             android:textColor="@color/white"
+=======
+            android:textColor="@color/colorPrimary"
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/customerImage"
@@ -44,7 +58,10 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="ABNFJABHFIAFSK"
+<<<<<<< HEAD
             android:textColor="@color/white"
+=======
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -58,7 +75,10 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:text="Current"
+<<<<<<< HEAD
             android:textColor="@color/white"
+=======
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"

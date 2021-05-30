@@ -116,18 +116,30 @@ public class MainActivity extends AppCompatActivity {
                                 finish();
                                 startActivity(new Intent(getApplicationContext(), MainApp.class));
                             }else{
+<<<<<<< HEAD
                                 Toast.makeText(getApplicationContext(), obj.getString("message") + " else", Toast.LENGTH_LONG).show();
                             }
 
                         }catch (Exception e){
                             Toast.makeText(getApplicationContext(), e.getMessage() + " catch", Toast.LENGTH_LONG).show();
+=======
+                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                            }
+
+                        }catch (Exception e){
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                         }
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+<<<<<<< HEAD
                         Toast.makeText(getApplicationContext(), "Please Connect to our Wifi first before using this app", Toast.LENGTH_LONG).show();
+=======
+                        Toast.makeText(getApplicationContext(), volleyError.toString(), Toast.LENGTH_LONG).show();
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                     }
                 }) {
             @Override

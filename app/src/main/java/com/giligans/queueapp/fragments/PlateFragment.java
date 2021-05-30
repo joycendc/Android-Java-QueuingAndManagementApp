@@ -1,7 +1,11 @@
 package com.giligans.queueapp.fragments;
 
 import android.content.Context;
+<<<<<<< HEAD
 import android.content.Intent;
+=======
+import android.content.DialogInterface;
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,7 +17,10 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+<<<<<<< HEAD
 import android.widget.EditText;
+=======
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,10 +39,16 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+<<<<<<< HEAD
 import com.giligans.queueapp.CustomersListener;
 import com.giligans.queueapp.MainApp;
 import com.giligans.queueapp.R;
 import com.giligans.queueapp.VolleySingelton;
+=======
+import com.android.volley.toolbox.Volley;
+import com.giligans.queueapp.MainApp;
+import com.giligans.queueapp.R;
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 import com.giligans.queueapp.adapters.PlateItemAdapter;
 import com.giligans.queueapp.interfaces.TotalClickListener;
 import com.giligans.queueapp.models.PlateModel;
@@ -92,6 +105,7 @@ public class PlateFragment extends Fragment {
         plateListRecycler = (RecyclerView) view.findViewById(R.id.plateRecyclerView);
         total = (TextView) view.findViewById(R.id.total);
 
+
         SharedPreferences sp = getActivity().getSharedPreferences("plate_list", Context.MODE_PRIVATE);
         String json = sp.getString("orderlist", null);
         if(json != null){
@@ -117,6 +131,7 @@ public class PlateFragment extends Fragment {
         placeOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+<<<<<<< HEAD
                 final AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 View mView = getLayoutInflater().inflate(R.layout.placeorder_dialog,null);
                 final EditText txt_inputText = (EditText)mView.findViewById(R.id.txt_input);
@@ -161,6 +176,28 @@ public class PlateFragment extends Fragment {
                     }
                 });
                 alertDialog.show();
+=======
+                new AlertDialog.Builder(context)
+                    .setTitle("Place Order")
+                    .setMessage("Are you sure you want to place your order with the total of " + total.getText() + " ?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            insertToDB();
+                            total.setText("");
+
+                            FragmentTransaction ft =  getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.fragment_container, new LineFragment());
+                            ft.addToBackStack(null);
+                            ft.commit();
+                            totalAmount = 0;
+                            ((MainApp)getActivity()).bottomNav.setSelectedItemId(R.id.navigation_line);
+                        }
+                    })
+                    .setNegativeButton(android.R.string.no, null)
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
+                    .show();
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
             }
         });
         return view;
@@ -176,6 +213,10 @@ public class PlateFragment extends Fragment {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
         final String name = sharedPreferences.getString("keyfname", null);
         final int amount = totalAmount;
+<<<<<<< HEAD
+=======
+       // time = 1;
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, INSERT_URL,
                 new Response.Listener<String>() {
@@ -191,6 +232,7 @@ public class PlateFragment extends Fragment {
                                 plateModel = new ArrayList<PlateModel>();
                                 setPlateListRecycler(plateModel);
                                 ((MainApp)getActivity()).setBadgeCount(0);
+<<<<<<< HEAD
                                 //((MainApp) getActivity()).getTime();
 
 //                                final Handler handler = new Handler(Looper.getMainLooper());
@@ -200,6 +242,17 @@ public class PlateFragment extends Fragment {
 //                                        ((MainApp) getActivity()).startTimer();
 //                                    }
 //                                }, 2500);
+=======
+                                ((MainApp) getActivity()).getTime();
+
+                                final Handler handler = new Handler(Looper.getMainLooper());
+                                handler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ((MainApp) getActivity()).startTimer();
+                                    }
+                                }, 1500);
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                             } else {
                                 Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
 
@@ -219,7 +272,11 @@ public class PlateFragment extends Fragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+<<<<<<< HEAD
                 String name = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null);
+=======
+                String name = sharedPreferences.getString("keyfname", null);
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 String id = sharedPreferences.getString("keyid", null);
                 String data = new Gson().toJson(orderlist);
                 params.put("customer_id", id);
@@ -230,8 +287,13 @@ public class PlateFragment extends Fragment {
                 return params;
             }
         };
+<<<<<<< HEAD
         VolleySingelton.getInstance(context).addToRequestQueue(stringRequest);
 
+=======
+        RequestQueue requestQueue = Volley.newRequestQueue(context);
+        requestQueue.add(stringRequest);
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
     }
 
     public void setPlateListRecycler(ArrayList<PlateModel> plateModel) {
@@ -268,6 +330,7 @@ public class PlateFragment extends Fragment {
                 total.setText("TOTAL : ₱ " + String.format("%,d", sum));
 
                 Snackbar snackbar = Snackbar.make(view, entity.getName()+" Removed", Snackbar.LENGTH_SHORT)
+<<<<<<< HEAD
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -283,6 +346,23 @@ public class PlateFragment extends Fragment {
 
                         }
                     });
+=======
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                placeOrder.setEnabled(true);
+                                plateItemAdapter.undoDelete(entity, position);
+                                totalAmount += temptotal;
+                                int sum = 0;
+                                for(PlateModel p : plateModel){
+                                    sum += p.getTotal();
+                                }
+                               // totalClickListener.onItemClick("₱ " + String.format("%,d", sum));
+                                total.setText("TOTAL : ₱ " + String.format("%,d", sum));
+
+                            }
+                        });
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 snackbar.show();
             }
 

@@ -77,7 +77,11 @@ public class ProducDetailsFragment extends Fragment {
         inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+<<<<<<< HEAD
                 if(qty < 10) qty++;
+=======
+                qty++;
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                 setQty();
             }
         });
@@ -96,10 +100,17 @@ public class ProducDetailsFragment extends Fragment {
                 //((MainApp) getContext()).showBottomNav();
 //                if(((MainApp)getActivity()).bottomNav.getSelectedItemId() == R.id.navigation_dashboard){
 //                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+<<<<<<< HEAD
 //                    ft.replace(R.id.fragment_container, new HomeFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 //                }else {
 //                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 //                    ft.replace(R.id.fragment_container, new FavoritesFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+=======
+//                    ft.replace(R.id.fragment_container, new CategoriesFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+//                }else {
+//                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+//                    ft.replace(R.id.fragment_container, new HomeFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
 //                }
                 ((MainApp)getActivity()).setFragment(((MainApp)getActivity()).bottomNav.getSelectedItemId());
             }
@@ -124,7 +135,11 @@ public class ProducDetailsFragment extends Fragment {
                             newList.get(i).setTotal(newList.get(i).getQty() * Integer.parseInt(newList.get(i).getPrice()));
                             Toast.makeText(getActivity().getApplicationContext(),"You Added Another" + name + " To Plate", Toast.LENGTH_SHORT).show();
                         }
+<<<<<<< HEAD
                        // newList.get(i).setBigimageurl(foodImage);
+=======
+                        newList.get(i).setBigimageurl(foodImage);
+>>>>>>> 9e3b33763f3e6ef32080d1b0fffeea1543eb516c
                         plateModel.add(new PlateModel(newList.get(i).getName(), newList.get(i).getPrice(), newList.get(i).getQty(), newList.get(i).getTotal(), newList.get(i).getBigimageurl()));
                     }
                 }
