@@ -47,7 +47,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login", Context.MODE_PRIVATE);
-        final String keyname = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keyfname", null);
+        final String keyname = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null);
         holder.name.setText("CUSTOMER " + (position + 1));
         holder.id.setText(customer.get(position).getId());
         if (position == 0) {

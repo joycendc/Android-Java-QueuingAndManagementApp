@@ -14,6 +14,45 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.giligans.queueapp.CustomersListener;
+import com.giligans.queueapp.MainApp;
+import com.giligans.queueapp.R;
+import com.giligans.queueapp.VolleySingelton;
+import com.giligans.queueapp.adapters.PlateItemAdapter;
+import com.giligans.queueapp.interfaces.TotalClickListener;
+import com.giligans.queueapp.models.PlateModel;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.giligans.queueapp.BuildConfig.HOST;
+
 public class PlateFragment extends Fragment {
     final String INSERT_URL = HOST + "insertorder.php";
     RecyclerView plateListRecycler;
@@ -116,7 +155,7 @@ public class PlateFragment extends Fragment {
                                         serviceIntent.putExtra("inputExtra", "Test");
                                         ContextCompat.startForegroundService(context, serviceIntent);
                                     }
-                                }, 500);
+                                }, 1000);
 
 
                         alertDialog.dismiss();

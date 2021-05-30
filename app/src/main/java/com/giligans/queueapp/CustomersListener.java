@@ -45,6 +45,7 @@ public class CustomersListener extends Service {
     Handler handler;
     Runnable runnable;
     boolean queued;
+    boolean isStarted = false;
 
     @Override
     public void onCreate() {
@@ -54,100 +55,105 @@ public class CustomersListener extends Service {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        String CHANNEL_ONE_ID = "com.kjtech.app.N1";
-        String CHANNEL_ONE_NAME = "Channel One";
-        NotificationChannel notificationChannel = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
-                    CHANNEL_ONE_NAME, IMPORTANCE_HIGH);
-            notificationChannel.enableLights(true);
-            notificationChannel.setLightColor(Color.RED);
-            notificationChannel.setShowBadge(true);
-            notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
-            NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-            manager.createNotificationChannel(notificationChannel);
-        }
+        if(!isStarted) {
+            isStarted = true;
 
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
-        Notification notification = new Notification.Builder(context)
-                .setChannelId(CHANNEL_ONE_ID)
-                .setContentTitle("You are in Line")
-                .setContentText("Please be alert")
-                .setSmallIcon(R.drawable.ic_line_24dp)
-                .setLargeIcon(icon)
-                .build();
+            String CHANNEL_ONE_ID = "com.giligans.queueapp.N1";
+            String CHANNEL_ONE_NAME = "Channel One";
+            NotificationChannel notificationChannel = null;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                notificationChannel = new NotificationChannel(CHANNEL_ONE_ID,
+                        CHANNEL_ONE_NAME, IMPORTANCE_HIGH);
+                notificationChannel.enableLights(true);
+                notificationChannel.setLightColor(Color.RED);
+                notificationChannel.setShowBadge(true);
+                notificationChannel.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC);
+                NotificationManager manager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+                manager.createNotificationChannel(notificationChannel);
+            }
 
-        Intent notificationIntent = new Intent(context, MainApp.class);
-        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        notification.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            Bitmap icon = BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher);
+            Notification notification = new Notification.Builder(context)
+                    .setChannelId(CHANNEL_ONE_ID)
+                    .setContentTitle("You are in Line")
+                    .setContentText("Please be alert")
+                    .setSmallIcon(R.drawable.ic_line_24dp)
+                    .setLargeIcon(icon)
+                    .build();
 
-        startForeground(1, notification);
+            Intent notificationIntent = new Intent(context, MainApp.class);
+            notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            notification.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        queued = false;
+            startForeground(1, notification);
 
-        final RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
-        final StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_USER,
-                new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response){
-                        try {
-                            orderDone = Boolean.parseBoolean(response);
-                        } catch (Exception e) {
-                            Log.e("TIME", e.getMessage());
+            queued = false;
+
+            final RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
+            final StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_USER,
+                    new Response.Listener<String>() {
+                        @Override
+                        public void onResponse(String response) {
+                            try {
+                                orderDone = Boolean.parseBoolean(response);
+                            } catch (Exception e) {
+                                Log.e("TIME", e.getMessage());
+                            }
                         }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        orderDone = false;
-                    }
-                }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                String id = sharedPreferences.getString("keyid", null);
-                params.put("customer_id", id);
-                return params;
-            }
-        };
-        handler = new Handler();
-        runnable = new Runnable() {
-            @Override
-            public void run() {
-                VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-
-                if(orderDone){
-                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    // Vibrate for 500 milliseconds
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {  v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.EFFECT_DOUBLE_CLICK)); }
-                    else { v.vibrate(1000); }
-
-                    stopForeground(true);
-                    stopSelfResult(startId);
-                    String message = "Please go to the counter now";
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "Notification");
-                    builder.setSmallIcon(R.drawable.ic_fastfood_24dp);
-                    builder.setContentTitle("Your order is ready !");
-                    builder.setContentText(message);
-                    builder.setAutoCancel(true);
-
-                    Intent i = new Intent(getApplicationContext(), MainApp.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.putExtra("message", message);
-                    PendingIntent pendingIntent =  PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(pendingIntent);
-
-                    NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
-                    managerCompat.notify(1, builder.build());
-
-
+                    },
+                    new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError error) {
+                            orderDone = false;
+                        }
+                    }) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<String, String>();
+                    SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                    String id = sharedPreferences.getString("keyid", null);
+                    params.put("customer_id", id);
+                    return params;
                 }
-                if(!orderDone) handler.postDelayed(this, 100);
-            }
-        };
-        handler.post(runnable);
+            };
+            handler = new Handler();
+            runnable = new Runnable() {
+                @Override
+                public void run() {
+                    VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
+                    if (orderDone) {
+                        Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                        // Vibrate for 500 milliseconds
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                            v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.EFFECT_DOUBLE_CLICK));
+                        } else {
+                            v.vibrate(1000);
+                        }
+
+                        stopForeground(true);
+                        stopSelfResult(startId);
+                        String message = "Please go to the counter now";
+                        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "Notification");
+                        builder.setSmallIcon(R.drawable.ic_fastfood_24dp);
+                        builder.setContentTitle("Your order is ready !");
+                        builder.setContentText(message);
+                        builder.setAutoCancel(true);
+
+                        Intent i = new Intent(getApplicationContext(), MainApp.class);
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        i.putExtra("message", message);
+                        PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                        builder.setContentIntent(pendingIntent);
+
+                        NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
+                        managerCompat.notify(1, builder.build());
+                    }
+                    if (!orderDone) handler.postDelayed(this, 100);
+                }
+            };
+            handler.post(runnable);
+        }
 
         return START_STICKY;
 //        String input = intent.getStringExtra("inputExtra");

@@ -110,6 +110,7 @@ public class MainApp extends AppCompatActivity {
     ConstraintLayout top;
     boolean orderDone;
     AlertDialog.Builder resDialog;
+    public int tabPos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,6 +197,8 @@ public class MainApp extends AppCompatActivity {
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
             switchTheme.setChecked(true);
         }
+
+        tabPos = 0;
 
         resDialog =  new AlertDialog.Builder(this);
     }
@@ -693,7 +696,7 @@ public class MainApp extends AppCompatActivity {
                 selectedFragment = new FavoritesFragment();
                 break;
             case R.id.navigation_dashboard:
-                selectedFragment = new HomeFragment();
+                selectedFragment = new HomeFragment(tabPos);
                 break;
             case R.id.navigation_notifications:
                 selectedFragment = new PlateFragment();
@@ -707,27 +710,7 @@ public class MainApp extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
     }
-    public void setFragment(int item){
-        Fragment selectedFragment = null;
-        switch (item) {
-            case R.id.navigation_home:
-                selectedFragment = new HomeFragment();
-                break;
-            case R.id.navigation_dashboard:
-                selectedFragment = new CategoriesFragment();
-                break;
-            case R.id.navigation_notifications:
-                selectedFragment = new PlateFragment();
-                break;
-            case R.id.navigation_line:
-                selectedFragment = line;
-                break;
-            default:
-                break;
-        }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-    }
+
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -771,7 +754,12 @@ public class MainApp extends AppCompatActivity {
     public void onBackPressed() {
         if (bottomNav.getSelectedItemId() == R.id.navigation_dashboard) {
             if (getVisibleFragment() instanceof HomeFragment) {
-                finish();
+                if(tabPos == 0) {
+                    finish();
+                }else{
+                    tabPos = 0;
+                    setFragment(R.id.navigation_dashboard);
+                }
             }else{
                 setFragment(R.id.navigation_dashboard);
             }

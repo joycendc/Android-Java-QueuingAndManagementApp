@@ -71,6 +71,8 @@ public class ProducDetailsFragment extends Fragment {
                 .placeholder(R.drawable.ic_fastfood_24dp)
                 .into(food);
 
+        food.setElevation(10);
+
         if(((MainApp)getActivity()).connectivity){ addToPlate.setEnabled(true); }
         if(((MainApp)getActivity()).mTimerRunning){ addToPlate.setEnabled(false); }
 
@@ -101,7 +103,7 @@ public class ProducDetailsFragment extends Fragment {
 //                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
 //                    ft.replace(R.id.fragment_container, new FavoritesFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
 //                }
-                ((MainApp)getActivity()).setFragment(((MainApp)getActivity()).bottomNav.getSelectedItemId());
+                ((MainApp)getActivity()).onBackPressed();
             }
         });
 

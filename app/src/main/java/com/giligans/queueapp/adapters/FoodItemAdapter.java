@@ -57,9 +57,13 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Recent
             .load(foodModelList.get(position).getImageUrl())
             .placeholder(R.drawable.ic_menu_24dp)
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)
-            .error(R.drawable.ic_menu_24dp))
+            .error(R.drawable.ic_fastfood_24dp))
             .dontAnimate()
             .into(holder.imageView);
+
+        holder.imageView.setElevation(10);
+
+
 
         ProducDetailsFragment pdf = new ProducDetailsFragment(
                 foodModelList.get(position).getName(),

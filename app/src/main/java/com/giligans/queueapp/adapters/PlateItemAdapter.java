@@ -57,9 +57,11 @@ public class PlateItemAdapter extends RecyclerView.Adapter<PlateItemAdapter.Plat
             .load(plateModel.get(position).getBigimageurl())
             .placeholder(R.drawable.ic_menu_24dp)
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)
-            .error(R.drawable.ic_menu_24dp))
+            .error(R.drawable.ic_fastfood_24dp))
             .dontAnimate()
             .into(holder.foodImage);
+
+        holder.foodImage.setElevation(10);
 
         holder.inc.setOnClickListener(new View.OnClickListener() {
             @Override

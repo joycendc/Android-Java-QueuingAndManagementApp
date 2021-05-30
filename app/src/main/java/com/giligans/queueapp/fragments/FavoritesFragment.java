@@ -156,7 +156,7 @@ public class FavoritesFragment extends Fragment {
                             db.execSQL(dbHelper.DROP_ITEM_TABLE);
                             db.execSQL(dbHelper.CREATE_ITEM_TABLE);
                             JSONArray items = new JSONArray(response);
-                            String url = "";
+
                             for(int i = 0; i < items.length(); i++){
                                 JSONObject itemObject = items.getJSONObject(i);
 
@@ -165,9 +165,10 @@ public class FavoritesFragment extends Fragment {
                                 String price = itemObject.getString("price");
                                 String preptime = itemObject.getString("prep_time");
                                 int cat_id = itemObject.getInt("cat_id");
-                                if(!itemObject.getString("url").equals("")) url = HOST + itemObject.getString("url");
+                                String url = HOST + "images/" + itemObject.getString("url");
+
                                 dbHelper.saveItemsToLocalDB(name, description, price, preptime, cat_id, db);
-                                foodModelList.add(new FoodModel(name, description, price, url, url));
+                               // foodModelList.add(new FoodModel(name, description, price, url, url));
                             }
                             setRecentlyViewedRecycler(foodModelList);
                         } catch (JSONException e) {

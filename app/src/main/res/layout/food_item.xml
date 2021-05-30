@@ -24,7 +24,7 @@
             android:layout_weight="2"
             android:orientation="vertical">
 
-            <ImageView
+            <com.qhutch.elevationimageview.ElevationImageView
                 android:padding="8dp"
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"

@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,8 +32,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.giligans.queueapp.AutoFitRecyclerView;
 import com.giligans.queueapp.DBContract;
 import com.giligans.queueapp.DBHelper;
@@ -45,6 +42,7 @@ import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.adapters.TabViewPagerAdapter;
 import com.giligans.queueapp.models.FoodModel;
 import com.google.android.material.tabs.TabLayout;
+import com.qhutch.elevationimageview.ElevationImageView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -52,18 +50,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class HomeFragment extends Fragment {
     String QUERY_URL = HOST + "fetchitems.php";
     final String CATEGORY_URL = HOST + "fetchcategory.php";
-    final String categoryImage = HOST + "images/drinks.png";
     public TabLayout tabLayout;
     public ViewPager firstViewPager;
-    TabViewPagerAdapter adapter;
+    public TabViewPagerAdapter adapter;
     ArrayList<String> categories;
-    private String[] tabIcons = {
+    public final String[] tabIcons = {
             HOST + "images/sweetandsourpork.png",
             HOST + "images/friedgarlicchicken.png",
             HOST + "images/beefcaldereta.png",
@@ -72,7 +70,7 @@ public class HomeFragment extends Fragment {
             HOST + "images/drinks.png",
             HOST + "images/lecheflan.png",
             HOST + "images/plainriceplatter.png",
-            HOST + "images/pancit.png",
+            HOST + "images/pancitcantonguisado.png",
             HOST + "images/kare-karenggulay.png",
     };
 
@@ -86,8 +84,16 @@ public class HomeFragment extends Fragment {
     public EditText editText;
     AutoFitRecyclerView recently_item;
     LinearLayout categoryview;
+    int pos;
 
-    public HomeFragment() { }
+    public HomeFragment() {
+        this.pos = 0;
+    }
+
+    public HomeFragment(int pos) {
+        this.pos = pos;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -104,7 +110,6 @@ public class HomeFragment extends Fragment {
         tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(firstViewPager);
         adapter = new TabViewPagerAdapter(getChildFragmentManager(), context);
-
 
 
         editText.addTextChangedListener(new TextWatcher() {
@@ -234,7 +239,7 @@ public class HomeFragment extends Fragment {
 
         CardView tab = (CardView) LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.custom_tab, null);
         TextView tabText = (TextView) tab.findViewById(R.id.title);
-        ImageView icon = (ImageView) tab.findViewById(R.id.icon);
+        ElevationImageView icon = (ElevationImageView) tab.findViewById(R.id.icon);
 
         cursor = dbHelper.readCatFromLocalDB(db);
         if(cursor != null) {
@@ -250,7 +255,7 @@ public class HomeFragment extends Fragment {
                 ((Activity) context).getTheme().resolveAttribute(R.attr.categoryText, typedValue, true);
                 tabText.setTextColor(typedValue.data);
                 tabText.setText(name);
-                icon = (ImageView) tab.findViewById(R.id.icon);
+                icon = (ElevationImageView) tab.findViewById(R.id.icon);
 
                 icon.setImageResource(R.drawable.ic_fastfood_24dp);
                 icon.setColorFilter(R.color.black, android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -275,6 +280,7 @@ public class HomeFragment extends Fragment {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
                     int pos = tab.getPosition();
+                    ((MainApp) Objects.requireNonNull(getActivity())).tabPos = pos;
                     adapter.SetOnSelectView(tabLayout, pos);
                 }
 
@@ -291,7 +297,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         );
-        adapter.SetOnSelectView(tabLayout, 0);
+        adapter.SetOnSelectView(tabLayout, 1);
 
         cursor.close();
         db.close();
@@ -299,104 +305,104 @@ public class HomeFragment extends Fragment {
 
     private void setupViewPager(ViewPager viewPager) {
         db = dbHelper.getWritableDatabase();
-        if(!((MainApp)getActivity()).connectivity) {
+        if(!((MainApp)getActivity()).checkNetworkConnection()) {
             readFromLocalDB();
         }else {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, CATEGORY_URL,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        try {
-                            db.execSQL(dbHelper.DROP_CAT_TABLE);
-                            db.execSQL(dbHelper.CREATE_CAT_TABLE);
-                            JSONArray category = new JSONArray(response);
+                    try {
+                        db.execSQL(dbHelper.DROP_CAT_TABLE);
+                        db.execSQL(dbHelper.CREATE_CAT_TABLE);
+                        JSONArray category = new JSONArray(response);
 
 //                            adapter.addFragment(new TabCategoryFragment(0), "All");
 
-                            for (int i = 0; i < category.length(); i++) {
-                                JSONObject itemObject = category.getJSONObject(i);
+                        for (int i = 0; i < category.length(); i++) {
+                            JSONObject itemObject = category.getJSONObject(i);
 
-                                int id = itemObject.getInt("id");
-                                String name = itemObject.getString("name");
-                                adapter.addFragment(new TabCategoryFragment(id), name);
-                                dbHelper.saveCatToLocalDB(name, db);
-                            }
-                            firstViewPager.setAdapter(adapter);
+                            int id = itemObject.getInt("id");
+                            String name = itemObject.getString("name");
+                            adapter.addFragment(new TabCategoryFragment(id), name);
+                            dbHelper.saveCatToLocalDB(name, db);
+                        }
+                        firstViewPager.setAdapter(adapter);
 
 
-                            CardView tab = (CardView) LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.custom_tab, null);
+                        CardView tab = (CardView) LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.custom_tab, null);
 //                            tab.setCardBackgroundColor(Color.TRANSPARENT);
 //                            tab.setCardElevation(0);
-                            TextView tabText = (TextView) tab.findViewById(R.id.title);
-                            ImageView icon = (ImageView) tab.findViewById(R.id.icon);
+                        TextView tabText = (TextView) tab.findViewById(R.id.title);
+                        ElevationImageView icon = (ElevationImageView) tab.findViewById(R.id.icon);
 //                            tabText.setText("All");
-//                            tabLayout.getTabAt(0).setIcon(tabIcons[0]);
 //                            tabLayout.getTabAt(0).setCustomView(tab);
 
+                        for (int i = 0; i < category.length(); i++) {
+                            JSONObject itemObject = category.getJSONObject(i);
+                            String name = itemObject.getString("name");
 
-                            for (int i = 0; i < category.length(); i++) {
-                                JSONObject itemObject = category.getJSONObject(i);
-                                String name = itemObject.getString("name");
+                            tab = (CardView) LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.custom_tab, null);
+                            tab.setCardBackgroundColor(Color.TRANSPARENT);
+                            tab.setCardElevation(0);
+                            tabText = (TextView) tab.findViewById(R.id.title);
+                            TypedValue typedValue = new TypedValue();
+                            ((Activity) context).getTheme().resolveAttribute(R.attr.categoryText, typedValue, true);
+                            tabText.setTextColor(typedValue.data);
+                            tabText.setText(name);
+                            icon = (ElevationImageView) tab.findViewById(R.id.icon);
 
-                                tab = (CardView) LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.custom_tab, null);
-                                tab.setCardBackgroundColor(Color.TRANSPARENT);
-                                tab.setCardElevation(0);
-                                tabText = (TextView) tab.findViewById(R.id.title);
-                                TypedValue typedValue = new TypedValue();
-                                ((Activity) context).getTheme().resolveAttribute(R.attr.categoryText, typedValue, true);
-                                tabText.setTextColor(typedValue.data);
-                                tabText.setText(name);
-                                icon = (ImageView) tab.findViewById(R.id.icon);
+                            Glide.with(context)
+                                .load(tabIcons[i])
+                                .placeholder(R.drawable.ic_fastfood_24dp)
+                                .dontAnimate()
+                                .into(icon);
+                            icon.setElevation(8);
 
-                                if(isAdded()) {
-                                    Glide.with(context)
-                                        .load(tabIcons[i])
-                                        .placeholder(R.drawable.ic_fastfood_24dp)
-                                        .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)
-                                        .error(R.drawable.ic_fastfood_24dp))
-                                        .dontAnimate()
-                                        .into(icon);
-                                }
-                               // tabLayout.getTabAt(i).setIcon(tabIcons[0]);
-                                tabLayout.getTabAt(i).setCustomView(tab);
-                            }
-
-                            int betweenSpace = 25;
-
-                            ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
-
-                            for (int i=0; i < slidingTabStrip.getChildCount(); i++) {
-                                View v = slidingTabStrip.getChildAt(i);
-                                ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-                                params.rightMargin = betweenSpace;
-                            }
-
-                            tabLayout.setOnTabSelectedListener(
-                                new TabLayout.OnTabSelectedListener(){
-                                    @Override
-                                    public void onTabSelected(TabLayout.Tab tab) {
-                                        int pos = tab.getPosition();
-                                        adapter.SetOnSelectView(tabLayout, pos);
-                                    }
-
-                                    @Override
-                                    public void onTabUnselected(TabLayout.Tab tab) {
-                                        int pos = tab.getPosition();
-                                        adapter.SetUnSelectView(tabLayout, pos);
-                                    }
-
-                                    @Override
-                                    public void onTabReselected(TabLayout.Tab tab) {
-                                        int pos = tab.getPosition();
-                                        adapter.SetOnSelectView(tabLayout, pos);
-                                    }
-                                }
-                            );
-                            adapter.SetOnSelectView(tabLayout, 0);
-
-                        } catch (JSONException e) {
-                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            tabLayout.getTabAt(i).setCustomView(tab);
                         }
+
+                        int betweenSpace = 25;
+
+                        ViewGroup slidingTabStrip = (ViewGroup) tabLayout.getChildAt(0);
+
+                        for (int i=0; i < slidingTabStrip.getChildCount(); i++) {
+                            View v = slidingTabStrip.getChildAt(i);
+                            ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+                            params.rightMargin = betweenSpace;
+                        }
+
+                        tabLayout.setOnTabSelectedListener(
+                            new TabLayout.OnTabSelectedListener(){
+                                @Override
+                                public void onTabSelected(TabLayout.Tab tab) {
+                                    int pos = tab.getPosition();
+                                    ((MainApp) Objects.requireNonNull(getActivity())).tabPos = pos;
+                                    adapter.SetOnSelectView(tabLayout, pos);
+                                }
+
+                                @Override
+                                public void onTabUnselected(TabLayout.Tab tab) {
+                                    int pos = tab.getPosition();
+                                    adapter.SetUnSelectView(tabLayout, pos);
+                                }
+
+                                @Override
+                                public void onTabReselected(TabLayout.Tab tab) {
+                                    int pos = tab.getPosition();
+                                    adapter.SetOnSelectView(tabLayout, pos);
+                                }
+                            }
+                        );
+
+
+                        tabLayout.setScrollPosition(pos,0f,true);
+                        viewPager.setCurrentItem(pos);
+                        adapter.SetOnSelectView(tabLayout, pos);
+
+                    } catch (JSONException e) {
+                        Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                     }
                 },
                 new Response.ErrorListener() {

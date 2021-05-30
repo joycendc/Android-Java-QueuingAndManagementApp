@@ -19,10 +19,14 @@
             android:layout_width="95dp"
             android:layout_height="95dp"
             android:padding="8dp"
-            android:tint="@color/white"
+            app:tint="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_person_24dp" />
+
+        <TextView
+            android:id="@+id/customerName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
