@@ -8,16 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.giligans.queueapp.MyDiffUtilCallBack;
 import com.giligans.queueapp.R;
 import com.giligans.queueapp.models.CustomerModel;
-
 import java.util.ArrayList;
 
 public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.CustomerViewHolder> {
@@ -29,13 +26,13 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
         this.customer = customer;
     }
 
-    public void compare(ArrayList<CustomerModel> newData){
+    public void update(ArrayList<CustomerModel> newData){
         DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new MyDiffUtilCallBack(newData, this.customer));
 
-        this.customer = new ArrayList<CustomerModel>();
-        this.customer = newData;
+        this.customer.clear();
+        this.customer.addAll(newData);
         diffResult.dispatchUpdatesTo(this);
-        //notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -82,7 +79,7 @@ public class CustomerAdapter extends RecyclerView.Adapter<CustomerAdapter.Custom
 
     @Override
     public int getItemCount() {
-        return customer != null ? customer.size() : 0;
+        return customer.size();
     }
 
     public class CustomerViewHolder extends RecyclerView.ViewHolder {

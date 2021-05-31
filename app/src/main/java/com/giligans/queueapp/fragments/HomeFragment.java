@@ -147,10 +147,11 @@ public class HomeFragment extends Fragment {
         }
         if(cursor != null){
             while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex(DBContract.ID));
                 String name = cursor.getString(cursor.getColumnIndex(DBContract.NAME));
                 String description = cursor.getString(cursor.getColumnIndex(DBContract.DESC));
                 String price = cursor.getString(cursor.getColumnIndex(DBContract.PRICE));
-                foodModelList.add(new FoodModel(name, description, price, "", ""));
+                foodModelList.add(new FoodModel(id, name, description, price, "", ""));
             }
         }else{
             Toast.makeText(context, "PLEASE CONNECT TO OUR WIFI", Toast.LENGTH_SHORT).show();
@@ -178,6 +179,7 @@ public class HomeFragment extends Fragment {
                                 for (int i = 0; i < items.length(); i++) {
                                     JSONObject itemObject = items.getJSONObject(i);
 
+                                    int id = itemObject.getInt("id");
                                     String name = itemObject.getString("name");
                                     String description = itemObject.getString("description");
                                     String price = itemObject.getString("price");
@@ -185,7 +187,7 @@ public class HomeFragment extends Fragment {
                                     int cat_id = itemObject.getInt("cat_id");
                                     String url = HOST + "images/" + itemObject.getString("url");
 
-                                    foodModelList.add(new FoodModel(name, description, price, url, url));
+                                    foodModelList.add(new FoodModel(id, name, description, price, url, url));
                                 }
                                 foodItemAdapter.updateList(foodModelList);
                             } catch (JSONException e) {

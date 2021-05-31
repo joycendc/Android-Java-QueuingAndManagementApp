@@ -82,6 +82,7 @@ public class CustomersListener extends Service {
                     .build();
 
             Intent notificationIntent = new Intent(context, MainApp.class);
+            notificationIntent.putExtra("inline","inline");
             notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             notification.contentIntent = PendingIntent.getActivity(context, 0, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
@@ -142,7 +143,7 @@ public class CustomersListener extends Service {
 
                         Intent i = new Intent(getApplicationContext(), MainApp.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        i.putExtra("message", message);
+                        //i.putExtra("message", message);
                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
                         builder.setContentIntent(pendingIntent);
 

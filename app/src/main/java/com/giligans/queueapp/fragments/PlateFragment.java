@@ -254,7 +254,7 @@ public class PlateFragment extends Fragment {
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 final int position = viewHolder.getAdapterPosition();
                 final PlateModel entity = plateItemAdapter.getEntity(viewHolder.getAdapterPosition());
-
+                ((MainApp)context).dereaseBadgeCount();
                 int temptotal = entity.getTotal();
                 totalAmount -= temptotal;
                 plateItemAdapter.removeItem(viewHolder.getAdapterPosition());
@@ -266,12 +266,14 @@ public class PlateFragment extends Fragment {
                 for(PlateModel p : plateModel){
                     sum += p.getTotal();
                 }
+
                 total.setText("TOTAL : ₱ " + String.format("%,d", sum));
 
                 Snackbar snackbar = Snackbar.make(view, entity.getName()+" Removed", Snackbar.LENGTH_SHORT)
                     .setAction("UNDO", new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            ((MainApp)context).increaseBadgeCount();
                             placeOrder.setEnabled(true);
                             plateItemAdapter.undoDelete(entity, position);
                             totalAmount += temptotal;
@@ -279,6 +281,7 @@ public class PlateFragment extends Fragment {
                             for(PlateModel p : plateModel){
                                 sum += p.getTotal();
                             }
+
                            // totalClickListener.onItemClick("₱ " + String.format("%,d", sum));
                             total.setText("TOTAL : ₱ " + String.format("%,d", sum));
 

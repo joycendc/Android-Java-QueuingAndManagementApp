@@ -279,7 +279,6 @@ public class MainApp extends AppCompatActivity {
                                 .setIcon(android.R.drawable.ic_dialog_alert)
                                 .setCancelable(false)
                                 .show();
-
                         }
                         getLine();
                     }
@@ -406,6 +405,18 @@ public class MainApp extends AppCompatActivity {
         badge.setNumber(count);
     }
 
+    public void increaseBadgeCount(){
+        int menuItemId = bottomNav.getMenu().getItem(2).getItemId();
+        BadgeDrawable badge = bottomNav.getOrCreateBadge(menuItemId);
+        badge.setNumber(badge.getNumber() + 1);
+    }
+
+    public void dereaseBadgeCount(){
+        int menuItemId = bottomNav.getMenu().getItem(2).getItemId();
+        BadgeDrawable badge = bottomNav.getOrCreateBadge(menuItemId);
+        badge.setNumber(badge.getNumber() - 1);
+    }
+
     public int getItemCount(){
         int count = 0;
         SharedPreferences sp = getSharedPreferences("plate_list", Context.MODE_PRIVATE);
@@ -421,7 +432,6 @@ public class MainApp extends AppCompatActivity {
     }
 
     public void getLine(){
-        final RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, FETCH_URL,
             new Response.Listener<String>() {
                 @Override
@@ -442,34 +452,27 @@ public class MainApp extends AppCompatActivity {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    //Toast.makeText(getApplicationContext(), error.getMessage() + " line no response", Toast.LENGTH_SHORT).show();
-                    finish();
+                    Toast.makeText(getApplicationContext(), error.getMessage() + " line no response", Toast.LENGTH_SHORT).show();
                 }
             });
 
-
-            handler = new Handler();
-            runnable = new Runnable() {
-                @Override
-                public void run() {
-                    VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-                    handler.postDelayed(this, 800);
-                    if (line.isAdded()) {
-                        line.customerAdapter.compare(customer);
-                        line.customerAdapter.notifyDataSetChanged();
-                        if(line.customerAdapter.getItemCount() == 0){
-                            line.empty.setVisibility(View.VISIBLE);
-                        }else{
-                            line.empty.setVisibility(View.INVISIBLE);
-                        }
+        final Handler handler = new Handler();
+        handler.postDelayed( new Runnable() {
+            @Override
+            public void run() {
+                VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                if (line.isAdded()) {
+                    line.customerAdapter.update(customer);
+                    if(line.customerAdapter.getItemCount() == 0){
+                        line.empty.setVisibility(View.VISIBLE);
+                    }else{
+                        line.empty.setVisibility(View.INVISIBLE);
                     }
-
-
-                    customer = new ArrayList<CustomerModel>();
                 }
-            };
-            handler.post(runnable);
-
+                handler.postDelayed(this, 600);
+                customer = new ArrayList<CustomerModel>();
+            }
+        }, 600 );
     }
 
     void finishNa(){
@@ -607,7 +610,7 @@ public class MainApp extends AppCompatActivity {
                 timer.setVisibility(View.INVISIBLE);
                 mTimerRunning = false;
                 mTimeLeftInMillis = 0;
-                finishNa();
+                //finishNa();
                 Toast.makeText(getApplicationContext(), "YOU'RE ORDER IS READY !", Toast.LENGTH_LONG).show();
                 String message = "Please go to the counter now";
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(MainApp.this, "Notification");
@@ -664,6 +667,10 @@ public class MainApp extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         orderDone();
+        Bundle extras = getIntent().getExtras();
+        String method = (extras != null) ? extras.getString("inline") : "";
+        if (method.equals("inline")) bottomNav.setSelectedItemId(R.id.navigation_line);
+
         timer.setVisibility(View.INVISIBLE);
 //        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
 //        mTimeLeftInMillis = prefs.getLong("millisLeft", 0);
@@ -708,7 +715,7 @@ public class MainApp extends AppCompatActivity {
                 break;
         }
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                selectedFragment).setTransition(FragmentTransaction.TRANSIT_NONE).commit();
     }
 
 

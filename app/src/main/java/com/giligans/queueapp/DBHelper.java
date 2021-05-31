@@ -16,9 +16,9 @@ import java.io.OutputStream;
 
 public class DBHelper extends SQLiteOpenHelper {
     static final  int DB_VERSION = 1;
-    public static final String  CREATE_ITEM_TABLE = "CREATE TABLE " + DBContract.TABLE_NAME + "(id INTEGER PRIMARY KEY AUTOINCREMENT," + DBContract.NAME+" TEXT,"
+    public static final String  CREATE_ITEM_TABLE = "CREATE TABLE " + DBContract.TABLE_NAME + "(id INTEGER PRIMARY KEY," + DBContract.NAME+" TEXT,"
             + DBContract.DESC+ " TEXT," + DBContract.PRICE + " TEXT," + DBContract.PREPTIME + " TEXT," + DBContract.CAT_ID+ " INTEGER);";
-    public static final String  CREATE_CAT_TABLE = "CREATE TABLE " + DBContract.CAT_TABLE_NAME + "(id INTEGER PRIMARY KEY AUTOINCREMENT," + DBContract.CAT_NAME +" TEXT);";
+    public static final String  CREATE_CAT_TABLE = "CREATE TABLE " + DBContract.CAT_TABLE_NAME + "(id INTEGER PRIMARY KEY," + DBContract.CAT_NAME +" TEXT);";
     public static final String DROP_ITEM_TABLE = "DROP TABLE IF EXISTS " + DBContract.TABLE_NAME;
     public static final String DROP_CAT_TABLE = "DROP TABLE IF EXISTS " + DBContract.CAT_TABLE_NAME;
     Context context;
@@ -151,8 +151,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return (db.query(DBContract.TABLE_NAME, projection, DBContract.NAME + " LIKE ?", new String[] { "%" +query+"%" }, null, null, null));
     }
 
-    public void saveItemsToLocalDB(String name, String desc, String price, String prep_time, int cat_id, SQLiteDatabase db){
+    public void saveItemsToLocalDB(int id, String name, String desc, String price, String prep_time, int cat_id, SQLiteDatabase db){
         ContentValues contentValues = new ContentValues();
+        contentValues.put(DBContract.ID, id);
         contentValues.put(DBContract.NAME, name);
         contentValues.put(DBContract.DESC, desc);
         contentValues.put(DBContract.PRICE, price);

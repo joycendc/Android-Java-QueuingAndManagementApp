@@ -66,6 +66,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Recent
 
 
         ProducDetailsFragment pdf = new ProducDetailsFragment(
+                foodModelList.get(position).getId(),
                 foodModelList.get(position).getName(),
                 foodModelList.get(position).getDescription(),
                 foodModelList.get(position).getPrice(),

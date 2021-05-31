@@ -80,10 +80,11 @@ public class TabCategoryFragment extends Fragment {
         Cursor cursor = dbHelper.readItemsFromLocalDB(db, catId);
         if(cursor != null){
             while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex(DBContract.ID));
                 String name = cursor.getString(cursor.getColumnIndex(DBContract.NAME));
                 String description = cursor.getString(cursor.getColumnIndex(DBContract.DESC));
                 String price = cursor.getString(cursor.getColumnIndex(DBContract.PRICE));
-                foodListList.add(new FoodModel(name, description, price, "", ""));
+                foodListList.add(new FoodModel(id, name, description, price, "", ""));
             }
         }else{
             Toast.makeText(context, "PLEASE CONNECT TO OUR WIFI", Toast.LENGTH_SHORT).show();
@@ -111,6 +112,7 @@ public class TabCategoryFragment extends Fragment {
                             for(int i = 0; i < items.length(); i++){
                                 JSONObject itemObject = items.getJSONObject(i);
 
+                                int id = itemObject.getInt("id");
                                 String name = itemObject.getString("name");
                                 String description = itemObject.getString("description");
                                 String price = itemObject.getString("price");
@@ -119,7 +121,7 @@ public class TabCategoryFragment extends Fragment {
                                 String url = HOST + "images/" + itemObject.getString("url");
 
                                 //dbHelper.saveItemsToLocalDB(name, description, price, preptime, cat_id, db);
-                                foodListList.add(new FoodModel(name, description, price, url, url));
+                                foodListList.add(new FoodModel(id, name, description, price, url, url));
                             }
                             setRecentlyViewedRecycler(foodListList);
                         } catch (JSONException e) {

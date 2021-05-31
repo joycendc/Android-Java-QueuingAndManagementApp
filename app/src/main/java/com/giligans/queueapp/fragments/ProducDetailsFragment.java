@@ -11,21 +11,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
 import com.giligans.queueapp.MainApp;
 import com.giligans.queueapp.R;
+import com.giligans.queueapp.VolleySingelton;
 import com.giligans.queueapp.models.PlateModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class ProducDetailsFragment extends Fragment {
+    final String FAVE = HOST + "favorite.php";
     ImageView back, food;
     CardView img;
     String name;
@@ -35,11 +51,14 @@ public class ProducDetailsFragment extends Fragment {
     public MaterialButton addToPlate;
     ArrayList<PlateModel> plateModel;
     int qty;
-    ImageButton inc, dec;
+    ImageButton inc, dec, addFav;
+    boolean isFave = false;
+    int item_id;
 
     public ProducDetailsFragment() {}
 
-    public ProducDetailsFragment(String name, String desc, String price, String foodImage) {
+    public ProducDetailsFragment(int id, String name, String desc, String price, String foodImage) {
+        this.item_id = id;
         this.name = name;
         this.description = desc;
         this.price = price;
@@ -61,6 +80,7 @@ public class ProducDetailsFragment extends Fragment {
         addToPlate = (MaterialButton) view.findViewById(R.id.addToPlate);
         inc = (ImageButton) view.findViewById(R.id.increase);
         dec = (ImageButton) view.findViewById(R.id.decrease);
+        addFav = (ImageButton) view.findViewById(R.id.addFav);
 
         proName.setText(this.name);
         proPrice.setText("₱ " + this.price);
@@ -72,6 +92,7 @@ public class ProducDetailsFragment extends Fragment {
                 .into(food);
 
         food.setElevation(10);
+
 
         if(((MainApp)getActivity()).connectivity){ addToPlate.setEnabled(true); }
         if(((MainApp)getActivity()).mTimerRunning){ addToPlate.setEnabled(false); }
@@ -92,17 +113,23 @@ public class ProducDetailsFragment extends Fragment {
             }
         });
 
+        addFav.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!isFave) {
+                    isFave = true;
+                    setFav("add");
+                }else{
+                    isFave = false;
+                    setFav("remove");
+                }
+                addFav.setImageResource(isFave ? R.drawable.ic_favorite_24dp : R.drawable.ic_favorite_border_24dp);
+            }
+        });
+
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //((MainApp) getContext()).showBottomNav();
-//                if(((MainApp)getActivity()).bottomNav.getSelectedItemId() == R.id.navigation_dashboard){
-//                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//                    ft.replace(R.id.fragment_container, new HomeFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-//                }else {
-//                    FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-//                    ft.replace(R.id.fragment_container, new FavoritesFragment()).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-//                }
                 ((MainApp)getActivity()).onBackPressed();
             }
         });
@@ -144,10 +171,93 @@ public class ProducDetailsFragment extends Fragment {
                 ((MainApp)getActivity()).setBadgeCount(((MainApp)getActivity()).getItemCount());
             }
         });
+        checkFav();
         return view;
     }
+
+    @Override
+    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+     }
 
     void setQty(){
         proQty.setText(qty+"");
     }
+
+    void checkFav(){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, FAVE,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj = new JSONObject(response);
+                        if (!obj.getBoolean("error")) {
+                            isFave = obj.getBoolean("status");
+                        }
+                    }catch (Exception e){
+                        isFave = false;
+                    }
+                    addFav.setImageResource(isFave ? R.drawable.ic_favorite_24dp : R.drawable.ic_favorite_border_24dp);
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    isFave = false;
+                }
+            }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                String id = sharedPreferences.getString("keyid", null);
+                params.put("customer_id", id);
+                params.put("item_id", String.valueOf(item_id));
+                params.put("fave", "check");
+                return params;
+            }
+        };
+        VolleySingelton.getInstance(getContext()).addToRequestQueue(stringRequest);
+
+    }
+
+    void setFav(String mode){
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, FAVE,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj = new JSONObject(response);
+                        if (!obj.getBoolean("error")) {
+                            String status = obj.getString("status");
+
+                            Toast.makeText(getActivity().getApplicationContext(), status, Toast.LENGTH_SHORT).show();
+                         }
+                    }catch (Exception e){
+                        isFave = false;
+                        e.printStackTrace();
+                    }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                String id = sharedPreferences.getString("keyid", null);
+                params.put("customer_id", id);
+                params.put("item_id", String.valueOf(item_id));
+                params.put("fave", mode);
+                return params;
+            }
+        };
+        VolleySingelton.getInstance(getContext()).addToRequestQueue(stringRequest);
+    }
+
 }

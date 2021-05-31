@@ -1,15 +1,25 @@
 package com.giligans.queueapp.models;
 
 public class FoodModel {
+    int id;
     String name, description, price, imageUrl, bigimageurl;
 
-    public FoodModel(String name, String description, String price, String
+    public FoodModel(int id, String name, String description, String price, String
             imageUrl, String bigimageurl) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
         this.bigimageurl = bigimageurl;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getBigimageurl() {
