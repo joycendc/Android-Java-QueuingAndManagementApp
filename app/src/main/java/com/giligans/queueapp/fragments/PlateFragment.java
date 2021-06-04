@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -43,7 +44,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.giligans.queueapp.R;
 import com.giligans.queueapp.activities.MainApp;
-import com.giligans.queueapp.activities.Pay;
 import com.giligans.queueapp.adapters.PlateItemAdapter;
 import com.giligans.queueapp.interfaces.TotalChangedListener;
 import com.giligans.queueapp.models.PlateModel;
@@ -158,18 +158,29 @@ public class PlateFragment extends Fragment {
                     linear.setOrientation(LinearLayout.HORIZONTAL);
 
                     for(int col = 1; col <= cols; col++) {
-                        if(colNums > totalCells) break;
-                        RadioButton rdbtn = new RadioButton(context);
-                        rdbtn.setLayoutParams (new RadioGridGroup.LayoutParams(0, RadioGridGroup.LayoutParams.MATCH_PARENT, 1));
-                        //if(col == 1 && row == 1) rdbtn.setChecked(true);
-                        //rdbtn.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
-                        rdbtn.setButtonDrawable(null);
-                        rdbtn.setBackgroundResource(R.drawable.table_bg);
-                        rdbtn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
-                        rdbtn.setPadding(2,2,2,2);
-                        rdbtn.setId(View.generateViewId());
-                        rdbtn.setText(String.valueOf(colNums));
-                        linear.addView(rdbtn);
+                        if(colNums > totalCells){
+                            LinearLayout viewLayout = new LinearLayout(context);
+                            LinearLayout.LayoutParams viewParam = new LinearLayout.LayoutParams(0, RadioGridGroup.LayoutParams.MATCH_PARENT, 1);
+                            viewLayout.setLayoutParams(viewParam);
+                            linear.addView(viewLayout);
+                            break;
+                        }else {
+                            RadioButton rdbtn = new RadioButton(context);
+                            RadioGridGroup.LayoutParams tableParam = new RadioGridGroup.LayoutParams(0, RadioGridGroup.LayoutParams.MATCH_PARENT, 1);
+                            tableParam.setMargins(4, 4, 4, 4);
+                            rdbtn.setLayoutParams(tableParam);
+                            if (col == 1 && row == 1) rdbtn.setChecked(true);
+                            rdbtn.setButtonDrawable(null);
+                            rdbtn.setBackgroundResource(R.drawable.table_bg);
+                            rdbtn.setGravity(Gravity.CENTER);
+                            rdbtn.setPadding(4, 4, 4, 4);
+                            rdbtn.setTextColor(context.getResources().getColorStateList(R.color.table_text));
+                            rdbtn.setTextSize(20);
+                            rdbtn.setTypeface(null, Typeface.BOLD);
+                            rdbtn.setId(View.generateViewId());
+                            rdbtn.setText(String.valueOf(colNums));
+                            linear.addView(rdbtn);
+                        }
                         colNums++;
                     }
                     ((ViewGroup) mView.findViewById(R.id.radioGroups)).addView(linear);
@@ -334,9 +345,9 @@ public class PlateFragment extends Fragment {
                             setPlateListRecycler(plateModel);
                             ((MainApp)getActivity()).setBadgeCount(0);
 
-                            Intent payIntent = new Intent(context, Pay.class);
-                            payIntent.putExtra("qr", queue_id + " " + customer_id);
-                            startActivity(payIntent);
+//                            Intent payIntent = new Intent(context, Pay.class);
+//                            payIntent.putExtra("qr", queue_id + " " + customer_id);
+//                            startActivity(payIntent);
 
                         } else {
                             Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
