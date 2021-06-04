@@ -7,7 +7,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:paddingTop="12dp"
-    tools:context=".MainApp">
+    tools:context=".activities.MainApp">
 
     <TextView
         android:id="@+id/alltime"
@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <com.giligans.queueapp.AutoFitRecyclerView
+    <com.giligans.queueapp.utils.AutoFitRecyclerView
         android:id="@+id/recently_item"
         android:layout_width="match_parent"
         android:layout_height="0dp"

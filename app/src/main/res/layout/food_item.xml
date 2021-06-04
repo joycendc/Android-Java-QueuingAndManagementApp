@@ -28,7 +28,7 @@
                 android:padding="8dp"
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:maxHeight="120dp"
+                android:maxHeight="140dp"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_menu_24dp"
                 android:adjustViewBounds="true"/>

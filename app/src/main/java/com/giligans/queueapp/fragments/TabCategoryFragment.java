@@ -20,11 +20,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.giligans.queueapp.DBContract;
-import com.giligans.queueapp.DBHelper;
-import com.giligans.queueapp.MainApp;
+import com.giligans.queueapp.utils.DBContract;
+import com.giligans.queueapp.utils.DBHelper;
+import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.VolleySingelton;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.models.FoodModel;
 import org.json.JSONArray;
@@ -38,11 +38,9 @@ import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class TabCategoryFragment extends Fragment {
     String ITEM_URL = HOST + "fetchitems.php";
-
     public RecyclerView foodListRecycler;
     public FoodItemAdapter foodListAdapter;
     public List<FoodModel> foodListList;
-
     FragmentManager fragmentManager;
     int catId;
     Context context;
@@ -89,6 +87,7 @@ public class TabCategoryFragment extends Fragment {
         }else{
             Toast.makeText(context, "PLEASE CONNECT TO OUR WIFI", Toast.LENGTH_SHORT).show();
         }
+
         setRecentlyViewedRecycler(foodListList);
         cursor.close();
         db.close();
@@ -96,7 +95,6 @@ public class TabCategoryFragment extends Fragment {
 
 
     private void loadItems(){
-        //db = dbHelper.getWritableDatabase();
         if(!((MainApp)getActivity()).checkNetworkConnection()) {
             readFromLocalDB();
         }else {
@@ -106,8 +104,6 @@ public class TabCategoryFragment extends Fragment {
                     @Override
                     public void onResponse(String response){
                         try {
-                            //db.execSQL(dbHelper.DROP_ITEM_TABLE);
-                            //db.execSQL(dbHelper.CREATE_ITEM_TABLE);
                             JSONArray items = new JSONArray(response);
                             for(int i = 0; i < items.length(); i++){
                                 JSONObject itemObject = items.getJSONObject(i);
@@ -117,10 +113,9 @@ public class TabCategoryFragment extends Fragment {
                                 String description = itemObject.getString("description");
                                 String price = itemObject.getString("price");
                                 String preptime = itemObject.getString("prep_time");
-                                //int cat_id = itemObject.getInt("id");
+                                int cat_id = itemObject.getInt("id");
                                 String url = HOST + "images/" + itemObject.getString("url");
 
-                                //dbHelper.saveItemsToLocalDB(name, description, price, preptime, cat_id, db);
                                 foodListList.add(new FoodModel(id, name, description, price, url, url));
                             }
                             setRecentlyViewedRecycler(foodListList);
@@ -135,7 +130,7 @@ public class TabCategoryFragment extends Fragment {
                         readFromLocalDB();
                     }
                 });
-            VolleySingelton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
+            VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
         }
     }
 

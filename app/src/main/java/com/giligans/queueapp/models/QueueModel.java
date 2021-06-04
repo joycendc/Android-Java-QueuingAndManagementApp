@@ -1,10 +1,20 @@
 package com.giligans.queueapp.models;
 
-public class CustomerModel implements Comparable, Cloneable {
-    public String id, name;
-    public CustomerModel(String id, String name) {
+public class QueueModel implements Comparable, Cloneable {
+    public String queue_id, id, name;
+
+    public QueueModel(String queue_id, String id, String name) {
+        this.queue_id = queue_id;
         this.id = id;
         this.name = name;
+    }
+
+    public String getQueueId() {
+        return queue_id;
+    }
+
+    public void setQueueId(String queue_id) {
+        this.queue_id = queue_id;
     }
 
     public String getId() {
@@ -25,7 +35,7 @@ public class CustomerModel implements Comparable, Cloneable {
 
     @Override
     public int compareTo(Object o) {
-        CustomerModel compare = (CustomerModel) o;
+        QueueModel compare = (QueueModel) o;
         if (compare.id == this.id && compare.name.equals(this.name)) {
             return 0;
         }
@@ -33,10 +43,10 @@ public class CustomerModel implements Comparable, Cloneable {
     }
 
     @Override
-    public CustomerModel clone() {
-        CustomerModel clone;
+    public QueueModel clone() {
+        QueueModel clone;
         try {
-            clone = (CustomerModel) super.clone();
+            clone = (QueueModel) super.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e); //should not happen
         }

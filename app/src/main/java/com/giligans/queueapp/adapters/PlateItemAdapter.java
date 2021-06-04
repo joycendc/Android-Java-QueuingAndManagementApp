@@ -8,14 +8,16 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.giligans.queueapp.MainApp;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.interfaces.TotalClickListener;
+import com.giligans.queueapp.activities.MainApp;
+import com.giligans.queueapp.interfaces.TotalChangedListener;
 import com.giligans.queueapp.models.PlateModel;
 import com.google.gson.Gson;
 
@@ -25,12 +27,12 @@ public class PlateItemAdapter extends RecyclerView.Adapter<PlateItemAdapter.Plat
     Context context;
     ArrayList<PlateModel> plateModel;
     int qty;
-    private TotalClickListener totalClickListener;
+    private TotalChangedListener totalChangedListener;
 
-    public PlateItemAdapter(Context context, TotalClickListener totalClickListener , ArrayList<PlateModel> plateModel) {
+    public PlateItemAdapter(Context context, TotalChangedListener totalChangedListener, ArrayList<PlateModel> plateModel) {
         this.context = context;
         this.plateModel = plateModel;
-        this.totalClickListener = totalClickListener;
+        this.totalChangedListener = totalChangedListener;
     }
 
     public void updateList(ArrayList<PlateModel> plateModel){
@@ -77,7 +79,14 @@ public class PlateItemAdapter extends RecyclerView.Adapter<PlateItemAdapter.Plat
                     for (PlateModel p : plateModel) {
                         sum += p.getTotal();
                     }
-                    totalClickListener.onItemClick("₱ " + String.format("%,d", sum));
+                    totalChangedListener.onItemClick("₱ " + String.format("%,d", sum));
+                    SharedPreferences sp = context.getSharedPreferences("plate_list", Context.MODE_PRIVATE);
+                    String json = sp.getString("orderlist", null);
+                    SharedPreferences.Editor editor = context.getSharedPreferences("plate_list", Context.MODE_PRIVATE).edit();
+                    Gson gson = new Gson();
+                    json = gson.toJson(plateModel);
+                    editor.putString("orderlist", json);
+                    editor.commit();
                 }
             }
         });
@@ -97,7 +106,14 @@ public class PlateItemAdapter extends RecyclerView.Adapter<PlateItemAdapter.Plat
                     for(PlateModel p : plateModel){
                         sum += p.getTotal();
                     }
-                    totalClickListener.onItemClick("₱ " + String.format("%,d", sum));
+                    totalChangedListener.onItemClick("₱ " + String.format("%,d", sum));
+                    SharedPreferences sp = context.getSharedPreferences("plate_list", Context.MODE_PRIVATE);
+                    String json = sp.getString("orderlist", null);
+                    SharedPreferences.Editor editor = context.getSharedPreferences("plate_list", Context.MODE_PRIVATE).edit();
+                    Gson gson = new Gson();
+                    json = gson.toJson(plateModel);
+                    editor.putString("orderlist", json);
+                    editor.commit();
                 }
 
             }

@@ -22,9 +22,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
-import com.giligans.queueapp.MainApp;
+import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.VolleySingelton;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.giligans.queueapp.models.PlateModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
@@ -95,7 +95,7 @@ public class ProducDetailsFragment extends Fragment {
 
 
         if(((MainApp)getActivity()).connectivity){ addToPlate.setEnabled(true); }
-        if(((MainApp)getActivity()).mTimerRunning){ addToPlate.setEnabled(false); }
+        addToPlate.setEnabled(!((MainApp)getActivity()).inqueue);
 
         inc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,7 +218,7 @@ public class ProducDetailsFragment extends Fragment {
                 return params;
             }
         };
-        VolleySingelton.getInstance(getContext()).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
 
     }
 
@@ -257,7 +257,7 @@ public class ProducDetailsFragment extends Fragment {
                 return params;
             }
         };
-        VolleySingelton.getInstance(getContext()).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
 }

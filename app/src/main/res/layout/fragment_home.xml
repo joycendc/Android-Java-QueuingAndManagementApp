@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:paddingTop="12dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainApp">
+    tools:context=".activities.MainApp">
 
     <EditText
         android:id="@+id/editText"
@@ -23,7 +23,7 @@
         android:paddingStart="12dp"
         />
 
-    <com.giligans.queueapp.AutoFitRecyclerView
+    <com.giligans.queueapp.utils.AutoFitRecyclerView
         android:id="@+id/recently_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

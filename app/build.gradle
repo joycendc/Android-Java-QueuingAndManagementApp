@@ -20,16 +20,16 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "HOST", "\"http://192.168.254.144/\""
-//            buildConfigField "String", "HOST", "\"http://192.168.254.152/\""
+           // buildConfigField "String", "HOST", "\"http://192.168.254.144/Giligans/\""
+            buildConfigField "String", "HOST", "\"http://192.168.254.152/Giligans/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""
 
 
         }
         release {
-            buildConfigField "String", "HOST", "\"http://192.168.254.144/\""
-//            buildConfigField "String", "HOST", "\"http://192.168.254.152/\""
+           // buildConfigField "String", "HOST", "\"http://192.168.254.144/Giligans/\""
+            buildConfigField "String", "HOST", "\"http://192.168.254.152/Giligans/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""
             minifyEnabled true
@@ -76,6 +76,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.2.0"
     implementation "androidx.work:work-runtime:2.5.0"
     implementation 'com.qhutch.elevationimageview:elevationimageview:2.4'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
 }
 repositories {

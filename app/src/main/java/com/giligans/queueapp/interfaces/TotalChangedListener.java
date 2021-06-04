@@ -1,5 +1,5 @@
 package com.giligans.queueapp.interfaces;
 
-public interface TotalClickListener {
+public interface TotalChangedListener {
     void onItemClick(String text);
 }

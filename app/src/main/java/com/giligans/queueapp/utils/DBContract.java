@@ -1,4 +1,4 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.utils;
 
 public class DBContract {
 

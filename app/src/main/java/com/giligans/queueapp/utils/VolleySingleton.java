@@ -1,23 +1,23 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.utils;
 
 import android.content.Context;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
 
-public class VolleySingelton {
-    private static VolleySingelton mInstance;
+public class VolleySingleton {
+    private static VolleySingleton mInstance;
     private RequestQueue mRequestQueue;
     private static Context mCtx;
 
-    public VolleySingelton(Context conetxt) {
+    public VolleySingleton(Context conetxt) {
         mCtx = conetxt;
         mRequestQueue = getRequestQueu();
     }
 
-    public static synchronized VolleySingelton getInstance(Context context){
+    public static synchronized VolleySingleton getInstance(Context context){
         if(mInstance == null){
-            mInstance = new VolleySingelton(context);
+            mInstance = new VolleySingleton(context);
         }
         return mInstance;
     }

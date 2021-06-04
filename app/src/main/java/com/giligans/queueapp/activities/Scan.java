@@ -1,4 +1,4 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.activities;
 
 import com.journeyapps.barcodescanner.CaptureActivity;
 

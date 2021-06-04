@@ -1,4 +1,4 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -16,7 +16,11 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.giligans.queueapp.R;
 import com.giligans.queueapp.models.UserModel;
+import com.giligans.queueapp.utils.DBHelper;
+import com.giligans.queueapp.utils.SharedPrefManager;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -29,7 +33,7 @@ import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class MainActivity extends AppCompatActivity {
     final String LOGIN_URL = HOST + "register.php?apicall=login";
-    MaterialButton login;
+    MaterialButton login, guest;
     TextView signup;
     TextInputEditText emailField, passwordField;
     DBHelper db;
@@ -38,8 +42,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         db = new DBHelper(this);
         try {
-            db.createDataBase();
-            db.openDataBase();
+//            db.createDataBase();
+//            db.openDataBase();
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -60,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         passwordField = findViewById(R.id.passwordField);
         login = findViewById(R.id.login);
         signup = findViewById(R.id.signup);
+        guest = findViewById(R.id.guest);
 
 
 
@@ -74,6 +79,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), Registration.class);
                 startActivity(intent);
+            }
+        });
+
+        guest.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent guestLogin = new Intent(getApplicationContext(), MainApp.class);
+                guestLogin.putExtra("type", "guest");
+                startActivity(guestLogin);
             }
         });
     }
@@ -138,6 +151,6 @@ public class MainActivity extends AppCompatActivity {
                 return params;
             }
         };
-        VolleySingelton.getInstance(this).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
 }

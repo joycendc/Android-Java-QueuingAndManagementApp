@@ -7,18 +7,27 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -32,13 +41,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.giligans.queueapp.CustomersListener;
-import com.giligans.queueapp.MainApp;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.VolleySingelton;
+import com.giligans.queueapp.activities.MainApp;
+import com.giligans.queueapp.activities.Pay;
 import com.giligans.queueapp.adapters.PlateItemAdapter;
-import com.giligans.queueapp.interfaces.TotalClickListener;
+import com.giligans.queueapp.interfaces.TotalChangedListener;
 import com.giligans.queueapp.models.PlateModel;
+import com.giligans.queueapp.network.QueueListener;
+import com.giligans.queueapp.utils.RadioGridGroup;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
@@ -67,10 +78,14 @@ public class PlateFragment extends Fragment {
     ArrayList<PlateModel> orderlist;
     int time;
     PlateFragment plateFragment;
+    RadioButton radbtn;
+    String customer_id;
+    String queue_id;
+    int usedTables[];
 
     public PlateFragment() { }
 
-    private TotalClickListener totalClickListener = new TotalClickListener() {
+    private TotalChangedListener totalChangedListener = new TotalChangedListener() {
         @Override
         public void onItemClick(String text) {
             total.setText(text);
@@ -83,15 +98,12 @@ public class PlateFragment extends Fragment {
         plateFragment = this;
         context = getActivity();
         view = inflater.inflate(R.layout.fragment_plate, container, false);
-
         totalAmount = 0;
         plateModel = new ArrayList<PlateModel>();
         orderlist = new ArrayList<PlateModel>();
-
         placeOrder = (MaterialButton) view.findViewById(R.id.placeOrder);
         plateListRecycler = (RecyclerView) view.findViewById(R.id.plateRecyclerView);
         total = (TextView) view.findViewById(R.id.total);
-
 
         SharedPreferences sp = getActivity().getSharedPreferences("plate_list", Context.MODE_PRIVATE);
         String json = sp.getString("orderlist", null);
@@ -116,16 +128,134 @@ public class PlateFragment extends Fragment {
         }
 
         placeOrder.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
+
                 final AlertDialog.Builder alert = new AlertDialog.Builder(context);
                 View mView = getLayoutInflater().inflate(R.layout.placeorder_dialog,null);
-                final EditText txt_inputText = (EditText)mView.findViewById(R.id.txt_input);
+                final EditText inputText = (EditText)mView.findViewById(R.id.txt_input);
                 TextView message = (TextView) mView.findViewById(R.id.message);
                 MaterialButton btn_cancel = (MaterialButton)mView.findViewById(R.id.btn_cancel);
                 MaterialButton btn_okay = (MaterialButton)mView.findViewById(R.id.btn_okay);
+                CheckBox senior = (CheckBox) mView.findViewById(R.id.senior);
+                RadioGroup radioGroup = (RadioGroup) mView.findViewById(R.id.radioGroup);
+                RadioGridGroup table = (RadioGridGroup) mView.findViewById(R.id.radioGroups);
+                LinearLayout tableLayout = (LinearLayout) mView.findViewById(R.id.table);
                 message.setText("Are you sure you want to place your order with the total of " + total.getText() + " ?");
                 alert.setView(mView);
+
+                double totalCells = 17;
+                double cols = 6;
+                double calcRows = Math.ceil(totalCells / cols);
+
+                int colNums = 1;
+                for(int row = 1; row <= calcRows; row++)
+                {
+                    LinearLayout linear = new LinearLayout(context);
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    linear.setLayoutParams(params);
+                    linear.setOrientation(LinearLayout.HORIZONTAL);
+
+                    for(int col = 1; col <= cols; col++) {
+                        if(colNums > totalCells) break;
+                        RadioButton rdbtn = new RadioButton(context);
+                        rdbtn.setLayoutParams (new RadioGridGroup.LayoutParams(0, RadioGridGroup.LayoutParams.MATCH_PARENT, 1));
+                        //if(col == 1 && row == 1) rdbtn.setChecked(true);
+                        //rdbtn.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+                        rdbtn.setButtonDrawable(null);
+                        rdbtn.setBackgroundResource(R.drawable.table_bg);
+                        rdbtn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+                        rdbtn.setPadding(2,2,2,2);
+                        rdbtn.setId(View.generateViewId());
+                        rdbtn.setText(String.valueOf(colNums));
+                        linear.addView(rdbtn);
+                        colNums++;
+                    }
+                    ((ViewGroup) mView.findViewById(R.id.radioGroups)).addView(linear);
+                }
+
+//                int allTables[] = new int[17];
+//                for(int i = 1; i <= 17; i++){ allTables[i-1] = i; }
+//
+//                usedTables = new int[4];
+//                for(int i = 1; i <= 4; i++){ usedTables[i-1] = i; }
+//
+//                int[] availableTables = IntStream.concat(IntStream.of(allTables), IntStream.of(usedTables))
+//                        .filter(x -> !IntStream.of(allTables).anyMatch(y -> y == x) || !IntStream.of(usedTables).anyMatch(z -> z == x))
+//                        .toArray();
+//
+//                //Toast.makeText(context, Arrays.toString(availableTables), Toast.LENGTH_LONG).show();
+//
+//                int tableCol = 0;
+//                for(int row = 0; row < calcRows; row++)
+//                {
+//                    LinearLayout linear = new LinearLayout(context);
+//                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+//                    linear.setLayoutParams(params);
+//                    linear.setOrientation(LinearLayout.HORIZONTAL);
+//
+//                    for(int col = 0; col < cols; col++) {
+//                        if(tableCol >= availableTables.length) break;
+//                        RadioButton rdbtn = new RadioButton(context);
+//                        rdbtn.setLayoutParams (new RadioGridGroup.LayoutParams(0, RadioGridGroup.LayoutParams.MATCH_PARENT, 1));
+//                        if(col == 0 && row == 0) rdbtn.setChecked(true);
+//                        rdbtn.setButtonTintList(ColorStateList.valueOf(getResources().getColor(R.color.colorPrimary)));
+//                        rdbtn.setGravity(Gravity.START | Gravity.CENTER_VERTICAL);
+//                        rdbtn.setPadding(2,2,2,2);
+//                        rdbtn.setId(View.generateViewId());
+//                        rdbtn.setText(String.valueOf(availableTables[tableCol]));
+//                        linear.addView(rdbtn);
+//                        tableCol++;
+//
+//                    }
+//                    ((ViewGroup) mView.findViewById(R.id.radioGroups)).addView(linear);
+//                }
+
+                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGroup group, int checkedId) {
+                        RadioButton radbtn = (RadioButton) mView.findViewById(checkedId);
+                        if(radbtn.getId() == R.id.radioButton2){
+                            tableLayout.setVisibility(View.GONE);
+                        }else{
+                            tableLayout.setVisibility(View.VISIBLE);
+                        }
+                    }
+                });
+
+                //radbtn = (RadioButton) mView.findViewById();
+                radbtn = new RadioButton(context);
+
+                table.setOnCheckedChangeListener(new RadioGridGroup.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(RadioGridGroup group, int checkedId) {
+                        radbtn = (RadioButton) mView.findViewById(checkedId);
+                    }
+                });
+
+                btn_okay.setEnabled(false);
+                inputText.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        try {
+                            if (s.toString().length() > 0 && (Integer.parseInt(s.toString()) >= totalAmount)) {
+                                btn_okay.setEnabled(true);
+                            } else {
+                                inputText.setError("Insufficient Amount !");
+                                btn_okay.setEnabled(false);
+                            }
+                        } catch(NumberFormatException e) {
+                            Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+                    @Override
+                    public void afterTextChanged(Editable s) {}
+                });
                 final AlertDialog alertDialog = alert.create();
                 alertDialog.setCanceledOnTouchOutside(false);
                 btn_cancel.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +267,14 @@ public class PlateFragment extends Fragment {
                 btn_okay.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        insertToDB();
+                        int type = radioGroup.getCheckedRadioButtonId();
+                        RadioButton radioType = (RadioButton) mView.findViewById(type);
+                        int tab = table.getCheckedRadioButtonId();
+                        RadioButton tableNum = (RadioButton) mView.findViewById(tab);
+                        String number = tableNum != null ? tableNum.getText().toString() : "0";
+
+                        insertToDB(inputText.getText().toString(), radioType.getText().toString().equals("DINE IN") ? 1 : 0, senior.isChecked() ? 1 : 0, number);
+
                         total.setText("");
 
                         FragmentTransaction ft =  getActivity().getSupportFragmentManager().beginTransaction();
@@ -146,99 +283,106 @@ public class PlateFragment extends Fragment {
                         ft.commit();
                         totalAmount = 0;
                         ((MainApp)getActivity()).bottomNav.setSelectedItemId(R.id.navigation_line);
+                        ((MainApp)getActivity()).inqueue = true;
 
                         final Handler handler = new Handler(Looper.getMainLooper());
-                                handler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        Intent serviceIntent = new Intent(context, CustomersListener.class);
-                                        serviceIntent.putExtra("inputExtra", "Test");
-                                        ContextCompat.startForegroundService(context, serviceIntent);
-                                    }
-                                }, 1000);
-
-
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent serviceIntent = new Intent(context, QueueListener.class);
+                                    serviceIntent.putExtra("inputExtra", "Test");
+                                    ContextCompat.startForegroundService(context, serviceIntent);
+                                }
+                            }, 1000);
                         alertDialog.dismiss();
                     }
                 });
                 alertDialog.show();
             }
         });
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+        customer_id = !((MainApp)getActivity()).guest ? sharedPreferences.getString("keyid", null) : "0";
+
+        int uuid = Integer.parseInt(customer_id) + (!((MainApp)getActivity()).guest ? 1000 : 2000);
+        queue_id = String.valueOf(uuid);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        placeOrder.setEnabled(!((MainApp)getActivity()).inqueue && totalAmount > 0);
         fragmentManager = getActivity().getSupportFragmentManager();
     }
 
-    void insertToDB(){
-        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("login", Context.MODE_PRIVATE);
-        final String name = sharedPreferences.getString("keyfname", null);
-        final int amount = totalAmount;
+    void insertToDB(String cash, int type, int isSenior, String table){
+        int amount = totalAmount;
+        Toast.makeText(context, cash + " " + type + " " + isSenior + " " + table, Toast.LENGTH_LONG).show();
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, INSERT_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            JSONObject obj = new JSONObject(response);
-                            if (!obj.getBoolean("error")) {
-                                SharedPreferences sp = getActivity().getSharedPreferences("plate_list", Context.MODE_PRIVATE);
-                                sp.edit().clear().commit();
-                                Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try {
+                        JSONObject obj = new JSONObject(response);
+                        if (!obj.getBoolean("error")) {
+                            SharedPreferences sp = getActivity().getSharedPreferences("plate_list", Context.MODE_PRIVATE);
+                            sp.edit().clear().commit();
+                            Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
 
-                                plateModel = new ArrayList<PlateModel>();
-                                setPlateListRecycler(plateModel);
-                                ((MainApp)getActivity()).setBadgeCount(0);
-                                //((MainApp) getActivity()).getTime();
+                            plateModel = new ArrayList<PlateModel>();
+                            setPlateListRecycler(plateModel);
+                            ((MainApp)getActivity()).setBadgeCount(0);
 
-//                                final Handler handler = new Handler(Looper.getMainLooper());
-//                                handler.postDelayed(new Runnable() {
-//                                    @Override
-//                                    public void run() {
-//                                        ((MainApp) getActivity()).startTimer();
-//                                    }
-//                                }, 2500);
-                            } else {
-                                Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                            Intent payIntent = new Intent(context, Pay.class);
+                            payIntent.putExtra("qr", queue_id + " " + customer_id);
+                            startActivity(payIntent);
 
-                            }
-                        }catch (Exception e){
-                            Toast.makeText(context, e.getMessage() + " here",  Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+
                         }
+                    }catch (Exception e){
+                        Toast.makeText(context, e.getMessage() + " here",  Toast.LENGTH_LONG).show();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getContext(), volleyError.toString() + " order", Toast.LENGTH_LONG).show();
-                    }
-                }) {
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Toast.makeText(getContext(), volleyError.toString() + " order", Toast.LENGTH_LONG).show();
+                }
+            }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                String name = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null);
-                String id = sharedPreferences.getString("keyid", null);
+                String name = !((MainApp)getActivity()).guest ? sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null) : "GUEST";
                 String data = new Gson().toJson(orderlist);
-                params.put("customer_id", id);
+
+                ((MainApp)getActivity()).queueid = queue_id;
+
+                params.put("queue_id", queue_id);
+                params.put("customer_id", customer_id);
                 params.put("customer_name", name);
                 params.put("orderlist", data);
                 params.put("time", "1");
+                params.put("cash", cash);
+                params.put("type", String.valueOf(type));
+                params.put("senior", String.valueOf(isSenior));
+                params.put("table_number", table );
 
                 return params;
             }
         };
-        VolleySingelton.getInstance(context).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
 
     }
 
     public void setPlateListRecycler(ArrayList<PlateModel> plateModel) {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false);
         plateListRecycler.setLayoutManager(gridLayoutManager);
-        plateItemAdapter = new PlateItemAdapter(context, totalClickListener, plateModel);
+        plateItemAdapter = new PlateItemAdapter(context, totalChangedListener, plateModel);
         plateListRecycler.setAdapter(plateItemAdapter);
 
         ItemTouchHelper.SimpleCallback touchHelperCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -282,7 +426,7 @@ public class PlateFragment extends Fragment {
                                 sum += p.getTotal();
                             }
 
-                           // totalClickListener.onItemClick("₱ " + String.format("%,d", sum));
+                           // totalChangedListener.onItemClick("₱ " + String.format("%,d", sum));
                             total.setText("TOTAL : ₱ " + String.format("%,d", sum));
 
                         }

@@ -1,4 +1,4 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.giligans.queueapp.utils.DBContract;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,8 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context){
         super(context, DBContract.DB_NAME, null, DB_VERSION);
         this.context = context;
-        DB_PATH = context.getDatabasePath(DBContract.DB_NAME)
-            .toString();
+        DB_PATH = context.getDatabasePath(DBContract.DB_NAME).toString();
     }
 
     public void createDataBase() throws IOException {
@@ -52,8 +53,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 copyDataBase();
             }
             catch (IOException e) {
-                throw new Error(
-                        "Error copying database");
+                throw new Error("Error copying database");
             }
         }
     }
@@ -63,10 +63,7 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase checkDB = null;
         try {
             String myPath = DB_PATH;
-            checkDB = SQLiteDatabase
-                .openDatabase(
-                    myPath, null,
-                    SQLiteDatabase.OPEN_READONLY);
+            checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
         }
         catch (SQLiteException e) {
             // database doesn't exist yet.
@@ -80,16 +77,13 @@ public class DBHelper extends SQLiteOpenHelper {
 
     private void copyDataBase() throws IOException {
         // Open your local db as the input stream
-        InputStream myInput
-                = context.getAssets()
-                .open(DBContract.DB_NAME);
+        InputStream myInput  = context.getAssets().open(DBContract.DB_NAME);
 
         // Path to the just created empty db
         String outFileName = DB_PATH;
 
         // Open the empty db as the output stream
-        OutputStream myOutput
-                = new FileOutputStream(outFileName);
+        OutputStream myOutput = new FileOutputStream(outFileName);
 
         // transfer bytes from the
         // inputfile to the outputfile
@@ -108,18 +102,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public void openDataBase() throws SQLException {
         // Open the database
         String myPath = DB_PATH;
-        myDataBase = SQLiteDatabase
-                .openDatabase(
-                        myPath, null,
-                        SQLiteDatabase.OPEN_READONLY);
+        myDataBase = SQLiteDatabase.openDatabase( myPath, null,SQLiteDatabase.OPEN_READONLY);
     }
 
     @Override
     public synchronized void close()
     {
         // close the database.
-        if (myDataBase != null)
-            myDataBase.close();
+        if (myDataBase != null)  myDataBase.close();
         super.close();
     }
 
@@ -137,17 +127,17 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public Cursor readItemsFromLocalDB(SQLiteDatabase db){
-        String[] projection = {DBContract.NAME, DBContract.DESC, DBContract.PRICE, DBContract.PREPTIME, DBContract.NAME, DBContract.CAT_ID};
+        String[] projection = {DBContract.ID, DBContract.NAME, DBContract.DESC, DBContract.PRICE, DBContract.PREPTIME, DBContract.NAME, DBContract.CAT_ID};
         return (db.query(DBContract.TABLE_NAME, projection, null, null, null, null, null));
     }
 
     public Cursor readItemsFromLocalDB(SQLiteDatabase db, int id){
-        String[] projection = {DBContract.NAME, DBContract.DESC, DBContract.PRICE, DBContract.PREPTIME, DBContract.NAME, DBContract.CAT_ID};
+        String[] projection = {DBContract.ID, DBContract.NAME, DBContract.DESC, DBContract.PRICE, DBContract.PREPTIME, DBContract.NAME, DBContract.CAT_ID};
         return (db.query(DBContract.TABLE_NAME, projection, "cat_id=?", new String[] { String.valueOf(id) }, null, null, null));
     }
 
     public Cursor readItemsFromLocalDB(SQLiteDatabase db, String query){
-        String[] projection = {DBContract.NAME, DBContract.DESC, DBContract.PRICE, DBContract.PREPTIME, DBContract.NAME, DBContract.CAT_ID};
+        String[] projection = {DBContract.ID, DBContract.NAME, DBContract.DESC, DBContract.PRICE, DBContract.PREPTIME, DBContract.NAME, DBContract.CAT_ID};
         return (db.query(DBContract.TABLE_NAME, projection, DBContract.NAME + " LIKE ?", new String[] { "%" +query+"%" }, null, null, null));
     }
 

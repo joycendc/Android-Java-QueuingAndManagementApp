@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
-    android:paddingTop="12dp"
-    tools:context=".MainApp">
+
+    tools:context=".activities.MainApp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="5dp"
+        android:paddingTop="12dp"
+        >
 
     <TextView
         android:id="@+id/empty"
@@ -22,7 +28,16 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/lineRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="match_parent" />
 
-</FrameLayout>
+
+    </FrameLayout>
+    <Button
+        android:id="@+id/payBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:text="Generate QR for Payment"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

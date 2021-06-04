@@ -1,23 +1,19 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.activities;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -31,8 +27,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -45,6 +39,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.giligans.queueapp.R;
 import com.giligans.queueapp.fragments.FavoritesFragment;
 import com.giligans.queueapp.fragments.HomeFragment;
 import com.giligans.queueapp.fragments.LineFragment;
@@ -53,8 +48,12 @@ import com.giligans.queueapp.fragments.ProducDetailsFragment;
 import com.giligans.queueapp.fragments.RecentOrders;
 import com.giligans.queueapp.fragments.TabCategoryFragment;
 import com.giligans.queueapp.fragments.UserFragment;
-import com.giligans.queueapp.models.CustomerModel;
+import com.giligans.queueapp.models.QueueModel;
 import com.giligans.queueapp.models.PlateModel;
+import com.giligans.queueapp.network.QueueListener;
+import com.giligans.queueapp.utils.DBHelper;
+import com.giligans.queueapp.utils.SharedPrefManager;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -72,7 +71,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
@@ -80,6 +78,7 @@ import java.util.UUID;
 import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class MainApp extends AppCompatActivity {
+    String ITEM_URL = HOST + "fetchitems.php";
     final String FETCH_URL = HOST + "fetchorders.php";
     String REMOVE = HOST + "orderdone.php";
     final String GET_TIME = HOST + "gettime.php";
@@ -92,7 +91,7 @@ public class MainApp extends AppCompatActivity {
     private long mEndTime;
     public boolean mTimerRunning;
     public BottomNavigationView bottomNav;
-    public ArrayList<CustomerModel> customer;
+    public ArrayList<QueueModel> customer;
     Handler handler;
     Runnable runnable;
     ProducDetailsFragment product;
@@ -111,9 +110,15 @@ public class MainApp extends AppCompatActivity {
     boolean orderDone;
     AlertDialog.Builder resDialog;
     public int tabPos;
+    DBHelper dbHelper;
+    SQLiteDatabase db;
+    public boolean inqueue;
+    public boolean guest;
+    public String queueid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        inqueue = false;
         line = new LineFragment();
         home =  new FavoritesFragment();
         categories = new HomeFragment();
@@ -189,7 +194,7 @@ public class MainApp extends AppCompatActivity {
         if (savedInstanceState == null) { getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit(); }
 
         if(getItemCount() > 0){ setBadgeCount(getItemCount()); }
-        customer = new ArrayList<CustomerModel>();
+        customer = new ArrayList<QueueModel>();
         bottomNav.setSelectedItemId(R.id.navigation_dashboard);
 
         connectivity = false;
@@ -198,9 +203,62 @@ public class MainApp extends AppCompatActivity {
             switchTheme.setChecked(true);
         }
 
+
         tabPos = 0;
 
         resDialog =  new AlertDialog.Builder(this);
+        dbHelper = new DBHelper(getApplicationContext());
+        fetchItemsFromServer();
+    }
+
+    public void openScanner(){
+        IntentIntegrator intentIntegrator = new IntentIntegrator(MainApp.this);
+        intentIntegrator.setPrompt("For flash use volume up key and volume down to turn it off ");
+        intentIntegrator.setBeepEnabled(true);
+        intentIntegrator.setOrientationLocked(true);
+        intentIntegrator.setCaptureActivity(Scan.class);
+        intentIntegrator.initiateScan();
+    }
+
+    void fetchItemsFromServer(){
+        if (checkNetworkConnection()) {
+            db = dbHelper.getWritableDatabase();
+            StringRequest stringRequest = new StringRequest(Request.Method.GET, ITEM_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            db.execSQL(dbHelper.DROP_ITEM_TABLE);
+                            db.execSQL(dbHelper.CREATE_ITEM_TABLE);
+                            JSONArray items = new JSONArray(response);
+
+                            for (int i = 0; i < items.length(); i++) {
+                                JSONObject itemObject = items.getJSONObject(i);
+
+                                int id = itemObject.getInt("id");
+                                String name = itemObject.getString("name");
+                                String description = itemObject.getString("description");
+                                String price = itemObject.getString("price");
+                                String preptime = itemObject.getString("prep_time");
+                                int cat_id = itemObject.getInt("cat_id");
+                                //String url = HOST + "images/" + itemObject.getString("url");
+
+                                dbHelper.saveItemsToLocalDB(id, name, description, price, preptime, cat_id, db);
+                            }
+
+                        } catch (JSONException e) {
+                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                });
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        }
     }
 
     @Override
@@ -308,7 +366,7 @@ public class MainApp extends AppCompatActivity {
                         connectivity = false;
                     }
                 });
-            VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+            VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         }else{
             new AlertDialog.Builder(this)
                 .setTitle("Warning")
@@ -356,7 +414,7 @@ public class MainApp extends AppCompatActivity {
                 fragmentClass = RecentOrders.class;
                 break;
             case R.id.nav_third_fragment:
-                if(!mTimerRunning) {
+                if(!inqueue) {
                     new AlertDialog.Builder(this)
                         .setTitle("Logout")
                         .setMessage("Are you sure you want to logout ?")
@@ -436,15 +494,20 @@ public class MainApp extends AppCompatActivity {
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
+                    customer = new ArrayList<QueueModel>();
                     try {
                         JSONArray items = new JSONArray(response);
                         for (int i = 0; i < items.length(); i++) {
                             JSONObject itemObject = items.getJSONObject(i);
 
-                            int id = itemObject.getInt("customer_id");
+                            String queue_id = itemObject.getString("queue_id");
+                            String id = itemObject.getString("customer_id");
                             String name = itemObject.getString("customer_name");
 
-                            customer.add(new CustomerModel(id+"", name));
+                            customer.add(new QueueModel(queue_id, id, name));
+                        }
+                        if (line.isAdded()) {
+                            line.queueAdapter.update(customer);
                         }
                     } catch (JSONException e) { e.printStackTrace(); }
                 }
@@ -452,94 +515,27 @@ public class MainApp extends AppCompatActivity {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), error.getMessage() + " line no response", Toast.LENGTH_SHORT).show();
+                    getLine();
                 }
             });
 
         final Handler handler = new Handler();
-        handler.postDelayed( new Runnable() {
+        handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
                 if (line.isAdded()) {
-                    line.customerAdapter.update(customer);
-                    if(line.customerAdapter.getItemCount() == 0){
+                    if(line.queueAdapter.getItemCount() == 0){
                         line.empty.setVisibility(View.VISIBLE);
+
                     }else{
                         line.empty.setVisibility(View.INVISIBLE);
                     }
+                    if(inqueue) line.pay.setVisibility(View.VISIBLE);
                 }
-                handler.postDelayed(this, 600);
-                customer = new ArrayList<CustomerModel>();
+                handler.postDelayed(this, 500);
             }
-        }, 600 );
-    }
-
-    void finishNa(){
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.clear().apply();
-
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, REMOVE,
-            new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    try {
-                        JSONObject obj = new JSONObject(response);
-                        if (!obj.getBoolean("error")) {
-                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), error.getMessage() + " finish", Toast.LENGTH_SHORT).show();
-                }
-            }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                String id = sharedPreferences.getString("keyid", null);
-                params.put("customer_id", id);
-                return params;
-            }
-        };
-        VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-    }
-
-    public void getTime(){
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_TIME,
-            new Response.Listener<String>(){
-                @Override
-                public void onResponse(String response){
-                    try {
-                        mTimeLeftInMillis = Integer.parseInt(response) > 0 ? Integer.parseInt(response) * min : 1 * min;
-                    } catch (Exception e) {
-                        Log.e("TIME", e.getMessage());
-                    }
-                }
-            },
-            new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error){
-                    Toast.makeText(getApplicationContext(), error.getMessage() + " time", Toast.LENGTH_SHORT).show();
-                }
-            }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<String, String>();
-                SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                String id = sharedPreferences.getString("keyid", null);
-                params.put("customer_id", id);
-                return params;
-            }
-        };
-        VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+        }, 500);
     }
 
     public void orderDone(){
@@ -549,7 +545,8 @@ public class MainApp extends AppCompatActivity {
                 @Override
                 public void onResponse(String response){
                     if(!Boolean.parseBoolean(response)){
-                        Intent serviceIntent = new Intent(getApplicationContext(), CustomersListener.class);
+                        inqueue = true;
+                        Intent serviceIntent = new Intent(getApplicationContext(), QueueListener.class);
                         serviceIntent.putExtra("inputExtra", "Test");
                         ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
                     }
@@ -570,91 +567,7 @@ public class MainApp extends AppCompatActivity {
                 return params;
             }
         };
-        VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
-
-    }
-
-    public void startTimer(){
-        //orderDone();
-        timer.setVisibility(View.VISIBLE);
-        mEndTime = System.currentTimeMillis() + mTimeLeftInMillis;
-        mCountDownTimer = new CountDownTimer(mTimeLeftInMillis, 1000) {
-            @Override
-            public void onTick(long millisUntilFinished) {
-                mTimeLeftInMillis = millisUntilFinished;
-                if(mTimeLeftInMillis + 500 > 30000 && mTimeLeftInMillis - 500 < 30000){
-                    String message = "30s Left";
-                    NotificationCompat.Builder builder = new NotificationCompat.Builder(MainApp.this, "Notification");
-                    builder.setSmallIcon(R.drawable.ic_fastfood_24dp);
-                    builder.setContentTitle("30s Left !");
-                    builder.setContentText(message);
-                    builder.setAutoCancel(true);
-
-                    Intent i = new Intent(MainApp.this, Notification.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    i.putExtra("message", message);
-                    PendingIntent pendingIntent =  PendingIntent.getActivity(MainApp.this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                    builder.setContentIntent(pendingIntent);
-
-                    NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainApp.this);
-                    managerCompat.notify(1, builder.build());
-                    Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                    // Vibrate for 500 milliseconds
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {  v.vibrate(VibrationEffect.createOneShot(1500, VibrationEffect.DEFAULT_AMPLITUDE)); }
-                    else { v.vibrate(500); }
-                }
-                updateCountDownText();
-            }
-            @Override
-            public void onFinish() {
-                timer.setVisibility(View.INVISIBLE);
-                mTimerRunning = false;
-                mTimeLeftInMillis = 0;
-                //finishNa();
-                Toast.makeText(getApplicationContext(), "YOU'RE ORDER IS READY !", Toast.LENGTH_LONG).show();
-                String message = "Please go to the counter now";
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(MainApp.this, "Notification");
-                builder.setSmallIcon(R.drawable.ic_fastfood_24dp);
-                builder.setContentTitle("Your order is ready !");
-                builder.setContentText(message);
-                builder.setAutoCancel(true);
-
-                Intent i = new Intent(MainApp.this, Notification.class);
-                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                i.putExtra("message", message);
-                PendingIntent pendingIntent =  PendingIntent.getActivity(MainApp.this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                builder.setContentIntent(pendingIntent);
-
-                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(MainApp.this);
-                managerCompat.notify(1, builder.build());
-                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                // Vibrate for 500 milliseconds
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {  v.vibrate(VibrationEffect.createOneShot(1500, VibrationEffect.DEFAULT_AMPLITUDE)); }
-                else { v.vibrate(1500); }
-            }
-        }.start();
-        mTimerRunning = true;
-    }
-
-    private void updateCountDownText() {
-        int minutes = (int) (mTimeLeftInMillis / 1000) / 60;
-        int seconds = (int) (mTimeLeftInMillis / 1000) % 60;
-        String timeLeftFormatted = String.format(Locale.getDefault(), "%02d:%02d", minutes, seconds);
-        timer.setText(timeLeftFormatted);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(mTimerRunning) {
-            SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putLong("millisLeft", mTimeLeftInMillis);
-            editor.putBoolean("timerRunning", mTimerRunning);
-            editor.putLong("endTime", mEndTime);
-            editor.apply();
-        }
-        if (mCountDownTimer != null) { mCountDownTimer.cancel(); }
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
     @Override
@@ -669,32 +582,24 @@ public class MainApp extends AppCompatActivity {
         orderDone();
         Bundle extras = getIntent().getExtras();
         String method = (extras != null) ? extras.getString("inline") : "";
-        if (method.equals("inline")) bottomNav.setSelectedItemId(R.id.navigation_line);
+        String checkGuest = (extras != null) ? extras.getString("type") : "";
+
+        try {
+            guest = checkGuest.equals("guest");
+            if (method.equals("inline")) {
+                inqueue = true;
+                bottomNav.setSelectedItemId(R.id.navigation_line);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
         timer.setVisibility(View.INVISIBLE);
-//        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-//        mTimeLeftInMillis = prefs.getLong("millisLeft", 0);
-//        mTimerRunning = prefs.getBoolean("timerRunning", false);
-//        updateCountDownText();
-//        timer.setVisibility(View.INVISIBLE);
-//        if (mTimerRunning) {
-//            mEndTime = prefs.getLong("endTime", 0);
-//            mTimeLeftInMillis = mEndTime - System.currentTimeMillis();
-//            if (mTimeLeftInMillis < 0) {
-//                mTimeLeftInMillis = 0;
-//                mTimerRunning = false;
-//                mTimeLeftInMillis = START_TIME_IN_MILLIS;
-//                updateCountDownText();
-//            }
-//            else {
-//                //startTimer();
-//            }
-//        }else{
-//            SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-//            SharedPreferences.Editor editor = sharedPreferences.edit();
-//            editor.clear();
-//            editor.apply();
-//        }
+        if(guest){
+            settings.setVisibility(View.GONE);
+            settings2.setVisibility(View.GONE);
+            nvDrawer.setVisibility(View.GONE);
+        }
     }
     public void setFragment(int item){
         Fragment selectedFragment = null;
@@ -717,7 +622,6 @@ public class MainApp extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                 selectedFragment).setTransition(FragmentTransaction.TRANSIT_NONE).commit();
     }
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {

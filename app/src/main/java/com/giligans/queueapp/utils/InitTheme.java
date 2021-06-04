@@ -1,4 +1,4 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.utils;
 
 import android.app.Application;
 import android.content.Context;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainApp">
+    tools:context=".activities.MainApp">
 
 <!--    <androidx.recyclerview.widget.RecyclerView-->
 <!--        android:id="@+id/foods"-->
@@ -15,7 +15,7 @@
 <!--        app:layout_constraintEnd_toEndOf="parent"-->
 <!--        app:layout_constraintStart_toStartOf="parent" />-->
 
-    <com.giligans.queueapp.AutoFitRecyclerView
+    <com.giligans.queueapp.utils.AutoFitRecyclerView
         android:id="@+id/foods"
         android:layout_width="0dp"
         android:layout_height="match_parent"

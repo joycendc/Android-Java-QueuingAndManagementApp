@@ -4,23 +4,43 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".activities.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/guest"
+            android:layout_width="0dp"
+            android:layout_height="65dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginEnd="30dp"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="Login as Guest"
+            android:textAllCaps="false"
+            android:textSize="25sp"
+            app:cornerRadius="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/signup" />
+
+        <ImageView
             android:id="@+id/textView"
-            android:layout_width="173dp"
+            android:layout_width="0dp"
             android:layout_height="51dp"
             android:layout_marginTop="10dp"
-            android:clickable="true"
-            android:gravity="center"
-            android:text="Giligans Menu"
-            android:textSize="24sp"
-            android:textStyle="bold"
+            android:layout_marginStart="15dp"
+            android:gravity="center|start"
+            android:scaleType="fitStart"
+            android:src="@drawable/ic_logo"
+            app:tint="@color/colorPrimary"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -33,10 +53,10 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="100dp"
             android:layout_marginEnd="20dp"
+            android:background="@android:color/transparent"
             android:ems="10"
             android:freezesText="false"
             app:boxBackgroundColor="@android:color/transparent"
-            android:background="@android:color/transparent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
@@ -57,14 +77,14 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginEnd="20dp"
+            android:background="@android:color/transparent"
             android:ems="10"
             app:boxBackgroundColor="@android:color/transparent"
-            android:background="@android:color/transparent"
-            app:passwordToggleTint="@color/colorPrimary"
-            app:passwordToggleEnabled="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/emailFieldLayout"
-            app:layout_constraintTop_toBottomOf="@+id/emailFieldLayout">
+            app:layout_constraintTop_toBottomOf="@+id/emailFieldLayout"
+            app:passwordToggleEnabled="true"
+            app:passwordToggleTint="@color/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/passwordField"

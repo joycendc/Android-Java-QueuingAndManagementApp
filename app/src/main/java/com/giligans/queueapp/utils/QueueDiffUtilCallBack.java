@@ -1,17 +1,17 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.utils;
 
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 
-import com.giligans.queueapp.models.CustomerModel;
+import com.giligans.queueapp.models.QueueModel;
 
 import java.util.ArrayList;
 
-public class MyDiffUtilCallBack extends DiffUtil.Callback {
-    ArrayList<CustomerModel> newList;
-    ArrayList<CustomerModel> oldList;
+public class QueueDiffUtilCallBack extends DiffUtil.Callback {
+    ArrayList<QueueModel> newList;
+    ArrayList<QueueModel> oldList;
 
-    public MyDiffUtilCallBack(ArrayList<CustomerModel> newList, ArrayList<CustomerModel> oldList) {
+    public QueueDiffUtilCallBack(ArrayList<QueueModel> newList, ArrayList<QueueModel> oldList) {
         this.newList = newList;
         this.oldList = oldList;
     }
@@ -33,8 +33,8 @@ public class MyDiffUtilCallBack extends DiffUtil.Callback {
 
     @Override
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-        final CustomerModel oldCustomer = oldList.get(oldItemPosition);
-        final CustomerModel newCustomer = newList.get(newItemPosition);
+        final QueueModel oldCustomer = oldList.get(oldItemPosition);
+        final QueueModel newCustomer = newList.get(newItemPosition);
 
         return oldCustomer.getName().equals(newCustomer.getName());
     }

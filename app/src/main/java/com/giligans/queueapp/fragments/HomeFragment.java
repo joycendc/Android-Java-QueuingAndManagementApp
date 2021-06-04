@@ -17,7 +17,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -26,28 +25,25 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
-
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
-import com.giligans.queueapp.AutoFitRecyclerView;
-import com.giligans.queueapp.DBContract;
-import com.giligans.queueapp.DBHelper;
-import com.giligans.queueapp.MainApp;
+import com.giligans.queueapp.utils.AutoFitRecyclerView;
+import com.giligans.queueapp.utils.DBContract;
+import com.giligans.queueapp.utils.DBHelper;
+import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.VolleySingelton;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.adapters.TabViewPagerAdapter;
 import com.giligans.queueapp.models.FoodModel;
 import com.google.android.material.tabs.TabLayout;
 import com.qhutch.elevationimageview.ElevationImageView;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -94,7 +90,6 @@ public class HomeFragment extends Fragment {
         this.pos = pos;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -111,7 +106,6 @@ public class HomeFragment extends Fragment {
         tabLayout.setupWithViewPager(firstViewPager);
         adapter = new TabViewPagerAdapter(getChildFragmentManager(), context);
 
-
         editText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
@@ -127,7 +121,6 @@ public class HomeFragment extends Fragment {
                     categoryview.setVisibility(View.GONE);
                     loadItems(QUERY_URL);
                 }
-
             }
             @Override
             public void afterTextChanged(Editable s) {}
@@ -159,7 +152,6 @@ public class HomeFragment extends Fragment {
         foodItemAdapter.updateList(foodModelList);
         cursor.close();
         db.close();
-
     }
 
     private void loadItems(String query){
@@ -170,41 +162,40 @@ public class HomeFragment extends Fragment {
         }else {
             foodModelList = new ArrayList<>();
             StringRequest stringRequest = new StringRequest(Request.Method.GET, QUERY_URL,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                JSONArray items = new JSONArray(response);
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONArray items = new JSONArray(response);
 
-                                for (int i = 0; i < items.length(); i++) {
-                                    JSONObject itemObject = items.getJSONObject(i);
+                            for (int i = 0; i < items.length(); i++) {
+                                JSONObject itemObject = items.getJSONObject(i);
 
-                                    int id = itemObject.getInt("id");
-                                    String name = itemObject.getString("name");
-                                    String description = itemObject.getString("description");
-                                    String price = itemObject.getString("price");
-                                    String preptime = itemObject.getString("prep_time");
-                                    int cat_id = itemObject.getInt("cat_id");
-                                    String url = HOST + "images/" + itemObject.getString("url");
+                                int id = itemObject.getInt("id");
+                                String name = itemObject.getString("name");
+                                String description = itemObject.getString("description");
+                                String price = itemObject.getString("price");
+                                String preptime = itemObject.getString("prep_time");
+                                int cat_id = itemObject.getInt("cat_id");
+                                String url = HOST + "images/" + itemObject.getString("url");
 
-                                    foodModelList.add(new FoodModel(id, name, description, price, url, url));
-                                }
-                                foodItemAdapter.updateList(foodModelList);
-                            } catch (JSONException e) {
-                                Toast.makeText(context, e.getMessage() + " load query", Toast.LENGTH_SHORT).show();
+                                foodModelList.add(new FoodModel(id, name, description, price, url, url));
                             }
+                            foodItemAdapter.updateList(foodModelList);
+                        } catch (JSONException e) {
+                            Toast.makeText(context, e.getMessage() + " load query", Toast.LENGTH_SHORT).show();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            Uri uri = Uri.parse(query);
-                            String param = uri.getQueryParameter("query");
-                            readFromLocalDB(param);
-                        }
-                    });
-            VolleySingelton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
-            //Volley.newRequestQueue(getActivity().getApplicationContext()).add(stringRequest);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Uri uri = Uri.parse(query);
+                        String param = uri.getQueryParameter("query");
+                        readFromLocalDB(param);
+                    }
+                });
+            VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
         }
     }
 
@@ -219,8 +210,6 @@ public class HomeFragment extends Fragment {
             fragmentManager = getFragmentManager();
         }
     }
-
-
 
     void readFromLocalDB(){
         db = dbHelper.getReadableDatabase();
@@ -299,7 +288,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         );
-        adapter.SetOnSelectView(tabLayout, 1);
+        adapter.SetOnSelectView(tabLayout, 0);
 
         cursor.close();
         db.close();
@@ -397,7 +386,6 @@ public class HomeFragment extends Fragment {
                             }
                         );
 
-
                         tabLayout.setScrollPosition(pos,0f,true);
                         viewPager.setCurrentItem(pos);
                         adapter.SetOnSelectView(tabLayout, pos);
@@ -413,8 +401,7 @@ public class HomeFragment extends Fragment {
                         readFromLocalDB();
                     }
                 });
-            VolleySingelton.getInstance(context).addToRequestQueue(stringRequest);
-            //Volley.newRequestQueue(context).add(stringRequest);
+            VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
         }
     }
 

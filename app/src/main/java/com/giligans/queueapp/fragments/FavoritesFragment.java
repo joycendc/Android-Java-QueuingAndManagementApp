@@ -8,24 +8,29 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.VolleySingelton;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.models.FoodModel;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +59,9 @@ public class FavoritesFragment extends Fragment {
         empty = (TextView) view.findViewById(R.id.empty);
         foodModelList = new ArrayList<>();
         loadItems();
+        if(((MainApp)getActivity()).guest){
+            empty.setText("Not Available for Guest");
+        }
 
         return view;
     }
@@ -117,7 +125,7 @@ public class FavoritesFragment extends Fragment {
                 return params;
             }
         };
-        VolleySingelton.getInstance(context).addToRequestQueue(stringRequest);
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
     private void setRecentlyViewedRecycler(List<FoodModel> foodModelDataList) {

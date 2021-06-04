@@ -1,4 +1,4 @@
-package com.giligans.queueapp;
+package com.giligans.queueapp.network;
 
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -28,7 +28,10 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-import com.giligans.queueapp.models.CustomerModel;
+import com.giligans.queueapp.activities.MainApp;
+import com.giligans.queueapp.R;
+import com.giligans.queueapp.models.QueueModel;
+import com.giligans.queueapp.utils.VolleySingleton;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,11 +40,11 @@ import java.util.Map;
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 import static com.giligans.queueapp.BuildConfig.HOST;
 
-public class CustomersListener extends Service {
+public class QueueListener extends Service {
     final String GET_USER = HOST + "getuser.php";
     boolean orderDone;
     Context context;
-    public ArrayList<CustomerModel> customer;
+    public ArrayList<QueueModel> customer;
     Handler handler;
     Runnable runnable;
     boolean queued;
@@ -114,6 +117,7 @@ public class CustomersListener extends Service {
                     SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("login", Context.MODE_PRIVATE);
                     String id = sharedPreferences.getString("keyid", null);
                     params.put("customer_id", id);
+                    params.put("queue", "queueListener");
                     return params;
                 }
             };
@@ -121,11 +125,11 @@ public class CustomersListener extends Service {
             runnable = new Runnable() {
                 @Override
                 public void run() {
-                    VolleySingelton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                    VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
                     if (orderDone) {
                         Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                        // Vibrate for 500 milliseconds
+                        // Vibrate for 1000 milliseconds
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             v.vibrate(VibrationEffect.createOneShot(1000, VibrationEffect.EFFECT_DOUBLE_CLICK));
                         } else {
@@ -149,6 +153,10 @@ public class CustomersListener extends Service {
 
                         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
                         managerCompat.notify(1, builder.build());
+
+                        Intent newIntent = new Intent(getApplicationContext(), MainApp.class);
+                        newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(newIntent);
                     }
                     if (!orderDone) handler.postDelayed(this, 100);
                 }

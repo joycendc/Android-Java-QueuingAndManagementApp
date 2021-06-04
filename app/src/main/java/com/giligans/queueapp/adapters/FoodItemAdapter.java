@@ -63,8 +63,6 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Recent
 
         holder.imageView.setElevation(10);
 
-
-
         ProducDetailsFragment pdf = new ProducDetailsFragment(
                 foodModelList.get(position).getId(),
                 foodModelList.get(position).getName(),
@@ -83,10 +81,6 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Recent
                             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                             .addToBackStack(null)
                             .commit();
-//                    int size =  ((MainApp) view.getContext()).bottomNav.getMenu().size();
-//                    for (int i = 0; i < size; i++) {
-//                        ((MainApp) view.getContext()).bottomNav.getMenu().getItem(i).setChecked(false);
-//                    }
                 }catch(NullPointerException e){
                     Toast.makeText(context,e.getMessage(), Toast.LENGTH_LONG).show();
                 }
