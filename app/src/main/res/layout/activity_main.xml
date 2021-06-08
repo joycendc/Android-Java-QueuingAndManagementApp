@@ -13,24 +13,6 @@
         android:layout_alignParentTop="true">
 
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/guest"
-            android:layout_width="0dp"
-            android:layout_height="65dp"
-            android:layout_marginStart="30dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginEnd="30dp"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="Login as Guest"
-            android:textAllCaps="false"
-            android:textSize="25sp"
-            app:cornerRadius="20dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/signup" />
-
         <ImageView
             android:id="@+id/textView"
             android:layout_width="0dp"
@@ -51,7 +33,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="100dp"
+            android:layout_marginTop="200dp"
             android:layout_marginEnd="20dp"
             android:background="@android:color/transparent"
             android:ems="10"
@@ -62,47 +44,22 @@
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/emailField"
+                android:id="@+id/mobileNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
+                android:hint="Mobile Number"
+                android:inputType="number"
                 android:singleLine="true"
-                android:text="jdoe@mail.mail" />
+                android:text="000000" />
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/passwordFieldLayout"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="20dp"
-            android:background="@android:color/transparent"
-            android:ems="10"
-            app:boxBackgroundColor="@android:color/transparent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/emailFieldLayout"
-            app:layout_constraintTop_toBottomOf="@+id/emailFieldLayout"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/colorPrimary">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/passwordField"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Password"
-                android:inputType="textPassword"
-                android:singleLine="true"
-                android:text="1234" />
-
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/login"
             android:layout_width="0dp"
             android:layout_height="65dp"
             android:layout_marginStart="30dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="36dp"
             android:layout_marginEnd="30dp"
             android:gravity="center"
             android:padding="10dp"
@@ -113,8 +70,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/passwordFieldLayout" />
-
+            app:layout_constraintTop_toBottomOf="@+id/emailFieldLayout" />
 
         <TextView
             android:id="@+id/signup"

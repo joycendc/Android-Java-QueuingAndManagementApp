@@ -20,13 +20,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.giligans.queueapp.utils.DBContract;
-import com.giligans.queueapp.utils.DBHelper;
-import com.giligans.queueapp.activities.MainApp;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.utils.VolleySingleton;
+import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.models.FoodModel;
+import com.giligans.queueapp.utils.DBContract;
+import com.giligans.queueapp.utils.DBHelper;
+import com.giligans.queueapp.utils.VolleySingleton;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,6 +48,8 @@ public class TabCategoryFragment extends Fragment {
     Context context;
     DBHelper dbHelper;
     SQLiteDatabase db;
+    ShimmerFrameLayout shimmerFrameLayout;
+
 
     public TabCategoryFragment() { }
 
@@ -59,6 +63,11 @@ public class TabCategoryFragment extends Fragment {
         context = getActivity();
         View view = inflater.inflate(R.layout.fragment_tab_category, container, false);
         foodListRecycler = (RecyclerView) view.findViewById(R.id.foods);
+
+        shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmerLayout);
+
+
+
         if(catId > 0) ITEM_URL = HOST + "fetchitemscat.php?id=" + catId;
         dbHelper = new DBHelper(context);
         loadItems();
@@ -70,6 +79,18 @@ public class TabCategoryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setRecentlyViewedRecycler(foodListList);
         fragmentManager = getActivity().getSupportFragmentManager();
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        shimmerFrameLayout.startShimmer();
+        super.onViewStateRestored(savedInstanceState);
+    }
+
+    @Override
+    public void onDestroyView() {
+        shimmerFrameLayout.stopShimmer();
+        super.onDestroyView();
     }
 
     void readFromLocalDB(){
@@ -89,6 +110,9 @@ public class TabCategoryFragment extends Fragment {
         }
 
         setRecentlyViewedRecycler(foodListList);
+        shimmerFrameLayout.startShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
+        foodListRecycler.setVisibility(View.VISIBLE);
         cursor.close();
         db.close();
     }
@@ -119,6 +143,9 @@ public class TabCategoryFragment extends Fragment {
                                 foodListList.add(new FoodModel(id, name, description, price, url, url));
                             }
                             setRecentlyViewedRecycler(foodListList);
+                            shimmerFrameLayout.startShimmer();
+                            shimmerFrameLayout.setVisibility(View.GONE);
+                            foodListRecycler.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
                             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
@@ -131,6 +158,7 @@ public class TabCategoryFragment extends Fragment {
                     }
                 });
             VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
+
         }
     }
 

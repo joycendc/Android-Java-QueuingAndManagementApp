@@ -10,13 +10,16 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
@@ -25,25 +28,29 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
+
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
-import com.giligans.queueapp.utils.AutoFitRecyclerView;
-import com.giligans.queueapp.utils.DBContract;
-import com.giligans.queueapp.utils.DBHelper;
-import com.giligans.queueapp.activities.MainApp;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.utils.VolleySingleton;
+import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.adapters.TabViewPagerAdapter;
 import com.giligans.queueapp.models.FoodModel;
+import com.giligans.queueapp.utils.AutoFitRecyclerView;
+import com.giligans.queueapp.utils.DBContract;
+import com.giligans.queueapp.utils.DBHelper;
+import com.giligans.queueapp.utils.VolleySingleton;
 import com.google.android.material.tabs.TabLayout;
 import com.qhutch.elevationimageview.ElevationImageView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -81,6 +88,7 @@ public class HomeFragment extends Fragment {
     AutoFitRecyclerView recently_item;
     LinearLayout categoryview;
     int pos;
+    ShimmerFrameLayout shimmerFrameLayout;
 
     public HomeFragment() {
         this.pos = 0;
@@ -101,6 +109,7 @@ public class HomeFragment extends Fragment {
         editText = (EditText) rootView.findViewById(R.id.editText);
         recently_item = (AutoFitRecyclerView) rootView.findViewById(R.id.recently_item);
         categoryview = (LinearLayout) rootView.findViewById(R.id.categoryview);
+        shimmerFrameLayout = (ShimmerFrameLayout) rootView.findViewById(R.id.shimmerLayout);
 
         tabLayout = (TabLayout) rootView.findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(firstViewPager);
@@ -113,11 +122,13 @@ public class HomeFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (s.toString().length() == 0) {
+                    shimmerFrameLayout.stopShimmer();
+                    shimmerFrameLayout.setVisibility(View.GONE);
                     recently_item.setVisibility(View.GONE);
                     categoryview.setVisibility(View.VISIBLE);
                 } else {
                     QUERY_URL = HOST + "searchitems.php?query=" + s.toString();
-                    recently_item.setVisibility(View.VISIBLE);
+                    shimmerFrameLayout.setVisibility(View.VISIBLE);
                     categoryview.setVisibility(View.GONE);
                     loadItems(QUERY_URL);
                 }
@@ -125,6 +136,18 @@ public class HomeFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {}
         });
+        editText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                boolean handled = false;
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+
+                    handled = true;
+                }
+                return handled;
+            }
+        });
+
 
         return rootView;
     }
@@ -182,6 +205,9 @@ public class HomeFragment extends Fragment {
                                 foodModelList.add(new FoodModel(id, name, description, price, url, url));
                             }
                             foodItemAdapter.updateList(foodModelList);
+                            shimmerFrameLayout.startShimmer();
+                            shimmerFrameLayout.setVisibility(View.GONE);
+                            recently_item.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
                             Toast.makeText(context, e.getMessage() + " load query", Toast.LENGTH_SHORT).show();
                         }
@@ -209,6 +235,11 @@ public class HomeFragment extends Fragment {
             setRecentlyViewedRecycler(foodModelList);
             fragmentManager = getFragmentManager();
         }
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
     }
 
     void readFromLocalDB(){
@@ -320,7 +351,6 @@ public class HomeFragment extends Fragment {
                         }
                         firstViewPager.setAdapter(adapter);
 
-
                         CardView tab = (CardView) LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.custom_tab, null);
 //                            tab.setCardBackgroundColor(Color.TRANSPARENT);
 //                            tab.setCardElevation(0);
@@ -409,7 +439,6 @@ public class HomeFragment extends Fragment {
         favoriteFoodsRecycler.setHasFixedSize(true);
         favoriteFoodsRecycler.setItemAnimator(new DefaultItemAnimator());
         foodItemAdapter = new FoodItemAdapter(context, fragmentManager, foodModelDataList);
-        foodItemAdapter.setStateRestorationPolicy(RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY);
         favoriteFoodsRecycler.setAdapter(foodItemAdapter);
     }
 }

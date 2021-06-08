@@ -113,7 +113,6 @@ public class MainApp extends AppCompatActivity {
     DBHelper dbHelper;
     SQLiteDatabase db;
     public boolean inqueue;
-    public boolean guest;
     public String queueid;
 
     @Override
@@ -508,6 +507,9 @@ public class MainApp extends AppCompatActivity {
                         }
                         if (line.isAdded()) {
                             line.queueAdapter.update(customer);
+                            line.shimmerFrameLayout.startShimmer();
+                            line.shimmerFrameLayout.setVisibility(View.GONE);
+                            line.customerRecycler.setVisibility(View.VISIBLE);
                         }
                     } catch (JSONException e) { e.printStackTrace(); }
                 }
@@ -582,10 +584,9 @@ public class MainApp extends AppCompatActivity {
         orderDone();
         Bundle extras = getIntent().getExtras();
         String method = (extras != null) ? extras.getString("inline") : "";
-        String checkGuest = (extras != null) ? extras.getString("type") : "";
+
 
         try {
-            guest = checkGuest.equals("guest");
             if (method.equals("inline")) {
                 inqueue = true;
                 bottomNav.setSelectedItemId(R.id.navigation_line);
@@ -595,38 +596,37 @@ public class MainApp extends AppCompatActivity {
         }
 
         timer.setVisibility(View.INVISIBLE);
-        if(guest){
-            settings.setVisibility(View.GONE);
-            settings2.setVisibility(View.GONE);
-            nvDrawer.setVisibility(View.GONE);
-        }
     }
-    public void setFragment(int item){
-        Fragment selectedFragment = null;
-        switch (item) {
-            case R.id.navigation_home:
-                selectedFragment = new FavoritesFragment();
-                break;
-            case R.id.navigation_dashboard:
-                selectedFragment = new HomeFragment(tabPos);
-                break;
-            case R.id.navigation_notifications:
-                selectedFragment = new PlateFragment();
-                break;
-            case R.id.navigation_line:
-                selectedFragment = line;
-                break;
-            default:
-                break;
-        }
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                selectedFragment).setTransition(FragmentTransaction.TRANSIT_NONE).commit();
+    public synchronized void setFragment(int item){
+//        if(item == R.id.navigation_line) {
+//
+//        }else {
+            Fragment selectedFragment = null;
+            switch (item) {
+                case R.id.navigation_home:
+                    selectedFragment = new FavoritesFragment();
+                    break;
+                case R.id.navigation_dashboard:
+                    selectedFragment = new HomeFragment(tabPos);
+                    break;
+                case R.id.navigation_notifications:
+                    selectedFragment = new PlateFragment();
+                    break;
+                case R.id.navigation_line:
+                    selectedFragment = line;
+                    break;
+                default:
+                    break;
+            }
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    selectedFragment).setTransition(FragmentTransaction.TRANSIT_NONE).commit();
+       // }
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
         new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            public synchronized boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 Fragment selectedFragment = null;
                 switch (item.getItemId()) {
                     case R.id.navigation_home:

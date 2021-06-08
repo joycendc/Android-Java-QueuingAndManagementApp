@@ -21,11 +21,10 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.R;
-import com.giligans.queueapp.utils.VolleySingleton;
 import com.giligans.queueapp.adapters.FoodItemAdapter;
 import com.giligans.queueapp.models.FoodModel;
+import com.giligans.queueapp.utils.VolleySingleton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,9 +58,6 @@ public class FavoritesFragment extends Fragment {
         empty = (TextView) view.findViewById(R.id.empty);
         foodModelList = new ArrayList<>();
         loadItems();
-        if(((MainApp)getActivity()).guest){
-            empty.setText("Not Available for Guest");
-        }
 
         return view;
     }

@@ -33,9 +33,9 @@ import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class MainActivity extends AppCompatActivity {
     final String LOGIN_URL = HOST + "register.php?apicall=login";
-    MaterialButton login, guest;
+    MaterialButton login;
     TextView signup;
-    TextInputEditText emailField, passwordField;
+    TextInputEditText mobileNumberField;
     DBHelper db;
 
     @Override
@@ -60,17 +60,16 @@ public class MainActivity extends AppCompatActivity {
 
 
         getSupportActionBar().hide();
-        emailField = findViewById(R.id.emailField);
-        passwordField = findViewById(R.id.passwordField);
+        mobileNumberField = findViewById(R.id.mobileNumber);
         login = findViewById(R.id.login);
         signup = findViewById(R.id.signup);
-        guest = findViewById(R.id.guest);
+
 
 
 
         login.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                passwordField.onEditorAction(EditorInfo.IME_ACTION_DONE);
+                mobileNumberField.onEditorAction(EditorInfo.IME_ACTION_DONE);
                 userLogin();
             }
         });
@@ -81,27 +80,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        guest.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent guestLogin = new Intent(getApplicationContext(), MainApp.class);
-                guestLogin.putExtra("type", "guest");
-                startActivity(guestLogin);
-            }
-        });
     }
 
     void userLogin(){
-        final String email = emailField.getText().toString();
-        final String password = passwordField.getText().toString();
-        if(TextUtils.isEmpty(email)){
-            emailField.setError("Please Enter your Emaill !");
-            emailField.requestFocus();
-            return;
-        }
-        if(TextUtils.isEmpty(password)){
-            passwordField.setError("Please Enter your Password !");
-            passwordField.requestFocus();
+        final String number = mobileNumberField.getText().toString();
+        if(TextUtils.isEmpty(number)){
+            mobileNumberField.setError("Please Enter your Mobile Number !");
+            mobileNumberField.requestFocus();
             return;
         }
 
@@ -121,8 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                         userJson.getString("id"),
                                         userJson.getString("fname"),
                                         userJson.getString("lname"),
-                                        userJson.getString("mobile"),
-                                        userJson.getString("email")
+                                        userJson.getString("mobile")
                                 );
 
                                 SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -146,8 +130,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
-                params.put("email", email);
-                params.put("password", password);
+                params.put("mobile", number);
                 return params;
             }
         };

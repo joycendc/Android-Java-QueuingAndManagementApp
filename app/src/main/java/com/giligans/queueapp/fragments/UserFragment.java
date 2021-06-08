@@ -17,8 +17,7 @@ import com.giligans.queueapp.activities.MainApp;
 import com.giligans.queueapp.R;
 
 public class UserFragment extends Fragment {
-
-    EditText fname, lname, email, mobile;
+    EditText fname, lname, mobile;
     ImageView back;
 
     public UserFragment(){ }
@@ -29,9 +28,8 @@ public class UserFragment extends Fragment {
 
         fname = (EditText) view.findViewById(R.id.fname);
         lname = (EditText) view.findViewById(R.id.lname);
-        email = (EditText) view.findViewById(R.id.email);
         back = (ImageView) view.findViewById(R.id.back2);
-        mobile = (EditText) view.findViewById(R.id.mobile);
+        mobile = (EditText) view.findViewById(R.id.confirmNumber);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,8 +46,6 @@ public class UserFragment extends Fragment {
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
         fname.setText(sharedPreferences.getString("keyfname", null));
         lname.setText(sharedPreferences.getString("keylname", null));
-        email.setText(sharedPreferences.getString("keyemail", null));
         mobile.setText(sharedPreferences.getString("keymobile", null));
-
     }
 }

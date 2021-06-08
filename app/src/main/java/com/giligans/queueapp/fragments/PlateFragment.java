@@ -79,8 +79,6 @@ public class PlateFragment extends Fragment {
     int time;
     PlateFragment plateFragment;
     RadioButton radbtn;
-    String customer_id;
-    String queue_id;
     int usedTables[];
 
     public PlateFragment() { }
@@ -311,11 +309,7 @@ public class PlateFragment extends Fragment {
                 alertDialog.show();
             }
         });
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-        customer_id = !((MainApp)getActivity()).guest ? sharedPreferences.getString("keyid", null) : "0";
 
-        int uuid = Integer.parseInt(customer_id) + (!((MainApp)getActivity()).guest ? 1000 : 2000);
-        queue_id = String.valueOf(uuid);
         return view;
     }
 
@@ -368,8 +362,11 @@ public class PlateFragment extends Fragment {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-                String name = !((MainApp)getActivity()).guest ? sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null) : "GUEST";
+                String name = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null);
                 String data = new Gson().toJson(orderlist);
+                String customer_id = sharedPreferences.getString("keyid", null);
+                int uuid = Integer.parseInt(customer_id) + 1000;
+                String queue_id = String.valueOf(uuid);
 
                 ((MainApp)getActivity()).queueid = queue_id;
 

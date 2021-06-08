@@ -1,7 +1,6 @@
 package com.giligans.queueapp.utils;
 
 public class DBContract {
-
     public static final String DB_NAME = "itemDB";
     public static final String TABLE_NAME = "items";
     public static final String SYNC_STATUS = "syncstatus";
@@ -15,6 +14,4 @@ public class DBContract {
     public static final String CAT_TABLE_NAME = "category";
     public static final String CATID = "id";
     public static final String CAT_NAME = "name";
-
-
 }

@@ -10,7 +10,6 @@ public class SharedPrefManager {
     private static final String KEY_FNAME = "keyfname";
     private static final String KEY_LNAME = "keylname";
     private static final String KEY_MOBILE ="keymobile";
-    private static final String KEY_EMAIL = "keyemail";
     private static final String KEY_ID = "keyid";
     private static SharedPrefManager mInstance;
     private static Context context;
@@ -33,13 +32,12 @@ public class SharedPrefManager {
         editor.putString(KEY_FNAME, user.getFname());
         editor.putString(KEY_LNAME, user.getLname());
         editor.putString(KEY_MOBILE, user.getMobile());
-        editor.putString(KEY_EMAIL, user.getEmail());
         editor.apply();
     }
 
     public boolean isLoggedIn(){
         SharedPreferences sharedPreferences = context.getSharedPreferences(SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(KEY_EMAIL, null) != null;
+        return sharedPreferences.getString(KEY_MOBILE, null) != null;
     }
 
     public UserModel getUser(){
@@ -48,8 +46,7 @@ public class SharedPrefManager {
                 sharedPreferences.getString(KEY_ID, null),
                 sharedPreferences.getString(KEY_FNAME, null),
                 sharedPreferences.getString(KEY_LNAME, null),
-                sharedPreferences.getString(KEY_MOBILE, null),
-                sharedPreferences.getString(KEY_EMAIL, null)
+                sharedPreferences.getString(KEY_MOBILE, null)
         );
     }
 
@@ -59,5 +56,4 @@ public class SharedPrefManager {
         editor.clear();
         editor.apply();
     }
-
 }

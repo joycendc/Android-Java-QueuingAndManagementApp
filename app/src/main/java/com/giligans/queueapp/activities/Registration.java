@@ -27,7 +27,7 @@ import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class Registration extends AppCompatActivity {
     final String SIGNUP_URL = HOST + "register.php?apicall=signup";
-    TextInputEditText fnameField, lnameField, emailField, mobileField, passField, passConfirmField;
+    TextInputEditText fnameField, lnameField, confirmField, mobileField;
     Button signup;
 
     @Override
@@ -42,10 +42,8 @@ public class Registration extends AppCompatActivity {
         signup = findViewById(R.id.signup);
         fnameField = findViewById(R.id.firstName);
         lnameField = findViewById(R.id.lastName);
-        emailField = findViewById(R.id.emailField);
-        mobileField = findViewById(R.id.mobile);
-        passField = findViewById(R.id.passwordField);
-        passConfirmField = findViewById(R.id.passwordFieldConfirm);
+        mobileField = findViewById(R.id.mobileNumber);
+        confirmField = findViewById(R.id.confirmNumber);
 
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,10 +56,8 @@ public class Registration extends AppCompatActivity {
     void registerUser(){
         final String fname = fnameField.getText().toString();
         final String lname = lnameField.getText().toString();
-        final String email = emailField.getText().toString();
         final String mobile = mobileField.getText().toString();
-        final String password = passField.getText().toString();
-        final String passConfirm = passConfirmField.getText().toString();
+        final String confirm = confirmField.getText().toString();
 
         if(TextUtils.isEmpty(fname)){
             fnameField.setError("Please Enter your First name !");
@@ -73,67 +69,55 @@ public class Registration extends AppCompatActivity {
             lnameField.requestFocus();
             return;
         }
-        if(TextUtils.isEmpty(email)){
-            emailField.setError("Please Enter your Email !");
-            emailField.requestFocus();
-            return;
-        }
         if(TextUtils.isEmpty(mobile)){
-            mobileField.setError("Please Enter your Mobile Number !");
+            mobileField.setError("Please Enter your Email !");
             mobileField.requestFocus();
             return;
         }
-        if(TextUtils.isEmpty(password)){
-            passField.setError("Please Enter your Password!");
-            passField.requestFocus();
+        if(TextUtils.isEmpty(confirm)){
+            confirmField.setError("Please Enter your Mobile Number !");
+            confirmField.requestFocus();
             return;
         }
-        if(TextUtils.isEmpty(passConfirm)){
-            passConfirmField.setError("Please Confirm your Password!");
-            passConfirmField.requestFocus();
-            return;
-        }
-        if(!password.equals(passConfirm)){
-            passConfirmField.setError("Password didnt match !");
-            passField.setError("Password didnt match !");
+
+        if(!mobile.equals(confirm)){
+            mobileField.setError("Password didnt match !");
+            confirmField.setError("Password didnt match !");
             return;
         }
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, SIGNUP_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        try{
-                            JSONObject obj = new JSONObject(response);
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    try{
+                        JSONObject obj = new JSONObject(response);
 
-                            if (!obj.getBoolean("error")) {
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                                finish();
+                        if (!obj.getBoolean("error")) {
+                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
+                            finish();
 
-                            }else{
-                                Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
-                            }
-
-                        }catch (Exception e){
-                            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }else{
+                            Toast.makeText(getApplicationContext(), obj.getString("message"), Toast.LENGTH_LONG).show();
                         }
+
+                    }catch (Exception e){
+                        Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        Toast.makeText(getApplicationContext(), volleyError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                }) {
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    Toast.makeText(getApplicationContext(), volleyError.toString(), Toast.LENGTH_LONG).show();
+                }
+            }) {
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("fname", fname);
                 params.put("lname", lname);
                 params.put("mobile", mobile);
-                params.put("email", email);
-                params.put("password", password
-                );
                 return params;
             }
         };

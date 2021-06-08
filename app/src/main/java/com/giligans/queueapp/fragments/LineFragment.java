@@ -16,9 +16,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.giligans.queueapp.activities.MainApp;
-import com.giligans.queueapp.activities.Pay;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.giligans.queueapp.R;
+import com.giligans.queueapp.activities.Pay;
 import com.giligans.queueapp.adapters.QueueAdapter;
 import com.giligans.queueapp.models.QueueModel;
 
@@ -32,6 +32,7 @@ public class LineFragment extends Fragment {
     public Button pay;
     String customer_id;
     String queue_id;
+    public ShimmerFrameLayout shimmerFrameLayout;
 
     public LineFragment(){ }
 
@@ -42,11 +43,12 @@ public class LineFragment extends Fragment {
         empty = (TextView) view.findViewById(R.id.empty);
         customer = new ArrayList<>();
         pay = (Button) view.findViewById(R.id.payBtn);
+        shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmerLayout);
 
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-        customer_id = !((MainApp)getActivity()).guest ? sharedPreferences.getString("keyid", null) : "0";
+        customer_id = sharedPreferences.getString("keyid", null);
 
-        int uuid = Integer.parseInt(customer_id) + (!((MainApp)getActivity()).guest ? 1000 : 2000);
+        int uuid = Integer.parseInt(customer_id) + 1000;
         queue_id = String.valueOf(uuid);
 
         pay.setOnClickListener(new View.OnClickListener() {
