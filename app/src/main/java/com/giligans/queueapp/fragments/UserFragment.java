@@ -34,7 +34,7 @@ public class UserFragment extends Fragment {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((MainApp)getActivity()).setFragment(((MainApp)getActivity()).bottomNav.getSelectedItemId());
+                ((MainApp)getActivity()).onBackPressed();
             }
         });
         return view;

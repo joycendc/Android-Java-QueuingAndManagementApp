@@ -59,33 +59,47 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
         String keyname = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null);
         holder.name.setText("CUSTOMER " + (position + 1));
         holder.id.setText(customer.get(position).getQueueId());
-        if (position == 0) {
-            holder.card.setCardBackgroundColor(Color.parseColor("#f70d1a"));
-            if (customer.get(position).getName().equals(keyname)) {
-                holder.name.setText("You (" + keyname.toUpperCase() + ")");
-                holder.card.setCardBackgroundColor(Color.parseColor("#ff8c00"));
-                holder.name.setTextColor(Color.parseColor("#ffffffff"));
-                holder.id.setTextColor(Color.parseColor("#ffffffff"));
-                holder.status.setTextColor(Color.parseColor("#ffffffff"));
-                holder.image.setColorFilter(context.getResources().getColor(R.color.white));
-            }
-            holder.status.setText("NOW SERVING");
-        } else {
+
+        if (customer.get(position).getStatus().equals("0")) {
             if (customer.get(position).getName().equals(keyname)) {
                 holder.name.setText("You ( " + keyname.toUpperCase() + " )");
-                holder.card.setCardBackgroundColor(Color.parseColor("#009d00"));
-                holder.name.setTextColor(Color.parseColor("#ffffffff"));
-                holder.id.setTextColor(Color.parseColor("#ffffffff"));
-                holder.status.setTextColor(Color.parseColor("#ffffffff"));
-                holder.image.setColorFilter(context.getResources().getColor(R.color.white));
-            }else{
-                holder.card.setCardBackgroundColor(Color.parseColor("#ffffffff"));
-                holder.name.setTextColor(Color.parseColor("#ff000000"));
-                holder.id.setTextColor(Color.parseColor("#ff000000"));
-                holder.status.setTextColor(Color.parseColor("#ff000000"));
-                holder.image.setColorFilter(context.getResources().getColor(R.color.black));
             }
-            holder.status.setText("IN LINE");
+            holder.card.setCardBackgroundColor(Color.parseColor("#009d00"));
+            holder.name.setTextColor(Color.parseColor("#ffffffff"));
+            holder.id.setTextColor(Color.parseColor("#ffffffff"));
+            holder.status.setTextColor(Color.parseColor("#ffffffff"));
+            holder.image.setColorFilter(context.getResources().getColor(R.color.white));
+            holder.status.setText("UNPAID");
+
+        } else {
+            if (position == 0) {
+                holder.card.setCardBackgroundColor(Color.parseColor("#f70d1a"));
+                if (customer.get(position).getName().equals(keyname)) {
+                    holder.name.setText("You (" + keyname.toUpperCase() + ")");
+                    holder.card.setCardBackgroundColor(Color.parseColor("#ff8c00"));
+                    holder.name.setTextColor(Color.parseColor("#ffffffff"));
+                    holder.id.setTextColor(Color.parseColor("#ffffffff"));
+                    holder.status.setTextColor(Color.parseColor("#ffffffff"));
+                    holder.image.setColorFilter(context.getResources().getColor(R.color.white));
+                }
+                holder.status.setText("NOW SERVING");
+            } else {
+                if (customer.get(position).getName().equals(keyname)) {
+                    holder.name.setText("You ( " + keyname.toUpperCase() + " )");
+                    holder.card.setCardBackgroundColor(Color.parseColor("#009d00"));
+                    holder.name.setTextColor(Color.parseColor("#ffffffff"));
+                    holder.id.setTextColor(Color.parseColor("#ffffffff"));
+                    holder.status.setTextColor(Color.parseColor("#ffffffff"));
+                    holder.image.setColorFilter(context.getResources().getColor(R.color.white));
+                } else {
+                    holder.card.setCardBackgroundColor(Color.parseColor("#ffffffff"));
+                    holder.name.setTextColor(Color.parseColor("#ff000000"));
+                    holder.id.setTextColor(Color.parseColor("#ff000000"));
+                    holder.status.setTextColor(Color.parseColor("#ff000000"));
+                    holder.image.setColorFilter(context.getResources().getColor(R.color.black));
+                }
+                holder.status.setText("IN LINE (PAID)");
+            }
         }
     }
 

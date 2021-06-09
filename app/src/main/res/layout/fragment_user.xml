@@ -15,12 +15,10 @@
         android:ems="10"
         android:inputType="number"
         android:text="Name"
-        app:layout_constraintBottom_toTopOf="@+id/button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
-        app:layout_constraintVertical_bias="0.039" />
+        app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
     <TextView
         android:id="@+id/textView12"
@@ -83,7 +81,7 @@
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:tint="@color/colorPrimary"
+        app:tint="@color/colorPrimary"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_back_24dp" />
@@ -116,14 +114,15 @@
 
     <Button
         android:id="@+id/button"
-        android:layout_width="228dp"
-        android:layout_height="68dp"
-        android:layout_marginBottom="168dp"
+        android:layout_width="356dp"
+        android:layout_height="66dp"
+        android:layout_marginTop="50dp"
         android:text="Update"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@+id/confirmNumber"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="@+id/confirmNumber"
+        app:layout_constraintTop_toBottomOf="@+id/confirmNumber" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

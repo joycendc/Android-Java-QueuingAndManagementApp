@@ -1,12 +1,13 @@
 package com.giligans.queueapp.models;
 
 public class QueueModel implements Comparable, Cloneable {
-    public String queue_id, id, name;
+    public String queue_id, id, name, status;
 
-    public QueueModel(String queue_id, String id, String name) {
+    public QueueModel(String queue_id, String id, String name, String status) {
         this.queue_id = queue_id;
         this.id = id;
         this.name = name;
+        this.status = status;
     }
 
     public String getQueueId() {
@@ -31,6 +32,14 @@ public class QueueModel implements Comparable, Cloneable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

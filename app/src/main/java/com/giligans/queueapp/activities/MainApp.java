@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -48,8 +47,8 @@ import com.giligans.queueapp.fragments.ProducDetailsFragment;
 import com.giligans.queueapp.fragments.RecentOrders;
 import com.giligans.queueapp.fragments.TabCategoryFragment;
 import com.giligans.queueapp.fragments.UserFragment;
-import com.giligans.queueapp.models.QueueModel;
 import com.giligans.queueapp.models.PlateModel;
+import com.giligans.queueapp.models.QueueModel;
 import com.giligans.queueapp.network.QueueListener;
 import com.giligans.queueapp.utils.DBHelper;
 import com.giligans.queueapp.utils.SharedPrefManager;
@@ -59,8 +58,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
@@ -73,7 +70,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 import static com.giligans.queueapp.BuildConfig.HOST;
 
@@ -145,12 +141,12 @@ public class MainApp extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                IntentIntegrator intentIntegrator = new IntentIntegrator(MainApp.this);
-                intentIntegrator.setPrompt("For flash use volume up key and volume down to turn it off ");
-                intentIntegrator.setBeepEnabled(true);
-                intentIntegrator.setOrientationLocked(true);
-                intentIntegrator.setCaptureActivity(Scan.class);
-                intentIntegrator.initiateScan();
+//                IntentIntegrator intentIntegrator = new IntentIntegrator(MainApp.this);
+//                intentIntegrator.setPrompt("For flash use volume up key and volume down to turn it off ");
+//                intentIntegrator.setBeepEnabled(true);
+//                intentIntegrator.setOrientationLocked(true);
+//                intentIntegrator.setCaptureActivity(Scan.class);
+//                intentIntegrator.initiateScan();
             }
         });
 
@@ -210,15 +206,6 @@ public class MainApp extends AppCompatActivity {
         fetchItemsFromServer();
     }
 
-    public void openScanner(){
-        IntentIntegrator intentIntegrator = new IntentIntegrator(MainApp.this);
-        intentIntegrator.setPrompt("For flash use volume up key and volume down to turn it off ");
-        intentIntegrator.setBeepEnabled(true);
-        intentIntegrator.setOrientationLocked(true);
-        intentIntegrator.setCaptureActivity(Scan.class);
-        intentIntegrator.initiateScan();
-    }
-
     void fetchItemsFromServer(){
         if (checkNetworkConnection()) {
             db = dbHelper.getWritableDatabase();
@@ -244,6 +231,7 @@ public class MainApp extends AppCompatActivity {
 
                                 dbHelper.saveItemsToLocalDB(id, name, description, price, preptime, cat_id, db);
                             }
+                            db.close();
 
                         } catch (JSONException e) {
                             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -260,26 +248,36 @@ public class MainApp extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(intentResult.getContents() != null){
-            String id= UUID.randomUUID().toString();
-            String uid = id.substring(0, 5);
-            new AlertDialog.Builder(this)
-                .setTitle("Result")
-                .setMessage(intentResult.getContents())
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .show();
-        }else{
-            Toast.makeText(getApplicationContext(), "Please scan correctly !", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    public void openScanner(){
+//        IntentIntegrator intentIntegrator = new IntentIntegrator(MainApp.this);
+//        intentIntegrator.setPrompt("For flash use volume up key and volume down to turn it off ");
+//        intentIntegrator.setBeepEnabled(true);
+//        intentIntegrator.setOrientationLocked(true);
+//        intentIntegrator.setCaptureActivity(Scan.class);
+//        intentIntegrator.initiateScan();
+//    }
+//
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
+//        super.onActivityResult(requestCode, resultCode, data);
+//        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//        if(intentResult.getContents() != null){
+//            String id= UUID.randomUUID().toString();
+//            String uid = id.substring(0, 5);
+//            new AlertDialog.Builder(this)
+//                .setTitle("Result")
+//                .setMessage(intentResult.getContents())
+//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .show();
+//        }else{
+//            Toast.makeText(getApplicationContext(), "Please scan correctly !", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     void changeTheme(){
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
@@ -290,18 +288,18 @@ public class MainApp extends AppCompatActivity {
         this.recreate();
     }
 
-    public int loadTheme(){
-        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("Theme", Context.MODE_PRIVATE);
-        int theme = sharedPreferences.getInt("Theme", 1);
-        return theme;
-    }
-
-    void saveTheme(int theme){
-        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("Theme", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("theme", theme);
-        editor.apply();
-    }
+//    public int loadTheme(){
+//        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("Theme", Context.MODE_PRIVATE);
+//        int theme = sharedPreferences.getInt("Theme", 1);
+//        return theme;
+//    }
+//
+//    void saveTheme(int theme){
+//        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("Theme", Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putInt("theme", theme);
+//        editor.apply();
+//    }
 
     public boolean checkNetworkConnection(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -343,26 +341,9 @@ public class MainApp extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        resDialog
-                            .setTitle("Warning")
-                            .setMessage("Please connect to our wifi first to use this app or else you can only see the list of menus")
-                            .setPositiveButton("CONNECT", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                    startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                                    recreate();
-
-                                }
-                            })
-                            .setNegativeButton("CONTINUE", new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setCancelable(false)
-                            .show();
                         connectivity = false;
+                        isConnected();
+
                     }
                 });
             VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
@@ -502,8 +483,9 @@ public class MainApp extends AppCompatActivity {
                             String queue_id = itemObject.getString("queue_id");
                             String id = itemObject.getString("customer_id");
                             String name = itemObject.getString("customer_name");
+                            String status = itemObject.getString("status");
 
-                            customer.add(new QueueModel(queue_id, id, name));
+                            customer.add(new QueueModel(queue_id, id, name, status));
                         }
                         if (line.isAdded()) {
                             line.queueAdapter.update(customer);
@@ -557,6 +539,7 @@ public class MainApp extends AppCompatActivity {
             new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error){
+                    inqueue = false;
                     Toast.makeText(getApplicationContext(), error.getMessage() + "time", Toast.LENGTH_SHORT).show();
                 }
             }) {
@@ -585,7 +568,6 @@ public class MainApp extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         String method = (extras != null) ? extras.getString("inline") : "";
 
-
         try {
             if (method.equals("inline")) {
                 inqueue = true;
@@ -597,30 +579,27 @@ public class MainApp extends AppCompatActivity {
 
         timer.setVisibility(View.INVISIBLE);
     }
+
     public synchronized void setFragment(int item){
-//        if(item == R.id.navigation_line) {
-//
-//        }else {
-            Fragment selectedFragment = null;
-            switch (item) {
-                case R.id.navigation_home:
-                    selectedFragment = new FavoritesFragment();
-                    break;
-                case R.id.navigation_dashboard:
-                    selectedFragment = new HomeFragment(tabPos);
-                    break;
-                case R.id.navigation_notifications:
-                    selectedFragment = new PlateFragment();
-                    break;
-                case R.id.navigation_line:
-                    selectedFragment = line;
-                    break;
-                default:
-                    break;
-            }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                    selectedFragment).setTransition(FragmentTransaction.TRANSIT_NONE).commit();
-       // }
+        Fragment selectedFragment = null;
+        switch (item) {
+            case R.id.navigation_home:
+                selectedFragment = new FavoritesFragment();
+                break;
+            case R.id.navigation_dashboard:
+                selectedFragment = new HomeFragment(tabPos);
+                break;
+            case R.id.navigation_notifications:
+                selectedFragment = new PlateFragment();
+                break;
+            case R.id.navigation_line:
+                selectedFragment = line;
+                break;
+            default:
+                break;
+        }
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE).commit();
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
