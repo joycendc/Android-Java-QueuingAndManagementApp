@@ -12,19 +12,41 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.giligans.queueapp.utils.QueueDiffUtilCallBack;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.giligans.queueapp.R;
+import com.giligans.queueapp.activities.MainApp;
+import com.giligans.queueapp.models.OrderModel;
 import com.giligans.queueapp.models.QueueModel;
+import com.giligans.queueapp.utils.QueueDiffUtilCallBack;
+import com.giligans.queueapp.utils.VolleySingleton;
+import com.google.android.material.button.MaterialButton;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerViewHolder> {
+    final String FETCH_URL = HOST + "fetchorders.php";
     public ArrayList<QueueModel> customer;
     Context context;
+    RecyclerView ordersRecycler;
+    OrderAdapter orderAdapter;
+    ArrayList<OrderModel> orderList;
 
     public QueueAdapter(Context context, ArrayList<QueueModel> customer) {
         this.context = context;
@@ -101,6 +123,99 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                 holder.status.setText("IN LINE (PAID)");
             }
         }
+
+//        orderList = new ArrayList<>();
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+//        orderList.add(new OrderModel("test", "1", "1000", "10"));
+        fetchOrders();
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (customer.get(position).getName().equals(keyname)) {
+
+                    final AlertDialog.Builder alert = new AlertDialog.Builder(context);
+                    View mView = LayoutInflater.from(context).inflate(R.layout.order_details_dialog,null);
+                    MaterialButton btn_cancel = (MaterialButton)mView.findViewById(R.id.btn_cancel);
+                    MaterialButton btn_okay = (MaterialButton)mView.findViewById(R.id.btn_okay);
+                    ordersRecycler = (RecyclerView) mView.findViewById(R.id.orderList);
+
+                    alert.setView(mView);
+
+                    GridLayoutManager gridLayoutManager = new GridLayoutManager(context, 1, GridLayoutManager.VERTICAL, false);
+                    ordersRecycler.setLayoutManager(gridLayoutManager);
+                    ordersRecycler.setItemAnimator(null);
+                    orderAdapter = new OrderAdapter(context, orderList);
+                    ordersRecycler.setAdapter(orderAdapter);
+
+                    final AlertDialog alertDialog = alert.create();
+                    //alertDialog.setCanceledOnTouchOutside(false);
+
+                    btn_cancel.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                            ((MainApp) context).onBackPressed();
+                        }
+                    });
+                    btn_okay.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            alertDialog.dismiss();
+                        }
+                    });
+                    alertDialog.show();
+                }
+            }
+        });
+    }
+
+    void fetchOrders(){
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, FETCH_URL,
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    orderList = new ArrayList<OrderModel>();
+                   
+                    try {
+                        JSONArray items = new JSONArray(response);
+                        for (int i = 0; i < items.length(); i++) {
+                            JSONObject itemObject = items.getJSONObject(i);
+
+                            String name = itemObject.getString("item_name");
+                            String qty = itemObject.getString("qty");
+                            String price = itemObject.getString("price");
+                            String total = itemObject.getString("total");
+
+                            orderList.add(new OrderModel(name, qty, price, total));
+                        }
+
+                    } catch (JSONException e) { e.printStackTrace(); }
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+
+                }
+            })  {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+                String id = sharedPreferences.getString("keyid", null);
+                params.put("customer_id", id);
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
     @Override

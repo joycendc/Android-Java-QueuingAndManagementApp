@@ -24,7 +24,8 @@ import com.giligans.queueapp.models.QueueModel;
 
 import java.util.ArrayList;
 
-public class LineFragment extends Fragment {
+public class
+QueueFragment extends Fragment {
     public RecyclerView customerRecycler;
     public TextView empty;
     public QueueAdapter queueAdapter;
@@ -34,7 +35,7 @@ public class LineFragment extends Fragment {
     String queue_id;
     public ShimmerFrameLayout shimmerFrameLayout;
 
-    public LineFragment(){ }
+    public QueueFragment(){ }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -95,7 +95,7 @@ public class ProducDetailsFragment extends Fragment {
 
 
         if(((MainApp)getActivity()).connectivity){ addToPlate.setEnabled(true); }
-        addToPlate.setEnabled(!((MainApp)getActivity()).inqueue);
+        //addToPlate.setEnabled(!((MainApp)getActivity()).inqueue);
 
         inc.setOnClickListener(new View.OnClickListener() {
             @Override

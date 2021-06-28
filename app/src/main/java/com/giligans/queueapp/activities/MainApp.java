@@ -41,7 +41,7 @@ import com.android.volley.toolbox.Volley;
 import com.giligans.queueapp.R;
 import com.giligans.queueapp.fragments.FavoritesFragment;
 import com.giligans.queueapp.fragments.HomeFragment;
-import com.giligans.queueapp.fragments.LineFragment;
+import com.giligans.queueapp.fragments.QueueFragment;
 import com.giligans.queueapp.fragments.PlateFragment;
 import com.giligans.queueapp.fragments.ProducDetailsFragment;
 import com.giligans.queueapp.fragments.RecentOrders;
@@ -75,7 +75,7 @@ import static com.giligans.queueapp.BuildConfig.HOST;
 
 public class MainApp extends AppCompatActivity {
     String ITEM_URL = HOST + "fetchitems.php";
-    final String FETCH_URL = HOST + "fetchorders.php";
+    final String FETCH_URL = HOST + "fetchqueue.php";
     String REMOVE = HOST + "orderdone.php";
     final String GET_TIME = HOST + "gettime.php";
     final String GET_USER = HOST + "getuser.php";
@@ -91,7 +91,7 @@ public class MainApp extends AppCompatActivity {
     Handler handler;
     Runnable runnable;
     ProducDetailsFragment product;
-    LineFragment line;
+    QueueFragment line;
     public TabCategoryFragment tabcat;
     public FavoritesFragment home;
     public HomeFragment categories;
@@ -114,7 +114,7 @@ public class MainApp extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         inqueue = false;
-        line = new LineFragment();
+        line = new QueueFragment();
         home =  new FavoritesFragment();
         categories = new HomeFragment();
         plate = new PlateFragment();
