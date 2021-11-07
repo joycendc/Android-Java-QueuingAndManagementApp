@@ -75,7 +75,7 @@
     </com.facebook.shimmer.ShimmerFrameLayout>
 
 
-    <com.giligans.queueapp.utils.AutoFitRecyclerView
+    <com.oicen.queueapp.utils.AutoFitRecyclerView
         android:id="@+id/recently_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

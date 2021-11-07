@@ -54,12 +54,17 @@
 
 
     </FrameLayout>
+
     <Button
         android:id="@+id/payBtn"
-        android:layout_width="match_parent"
+        android:layout_width="400dp"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:text="Generate QR for Payment"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:text="Generate QR for Payment" />
 
 </RelativeLayout>

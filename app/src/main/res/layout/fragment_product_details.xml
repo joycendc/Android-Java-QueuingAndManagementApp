@@ -173,7 +173,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/addToPlate"
-                android:layout_width="0dp"
+                android:layout_width="400dp"
                 android:layout_height="55dp"
                 android:layout_marginStart="10dp"
                 android:layout_marginTop="15dp"
@@ -182,8 +182,8 @@
                 android:enabled="false"
                 android:padding="10dp"
                 android:text="Add to plate"
+                android:textAllCaps="true"
                 app:cornerRadius="20dp"
-                android:textAllCaps="false"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

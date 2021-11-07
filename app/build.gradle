@@ -6,7 +6,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "com.giligans.queueapp"
+        applicationId "com.oicen.queueapp"
         minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         debug {
-            buildConfigField "String", "HOST", "\"http://192.168.254.144/Giligans/\""
+            buildConfigField "String", "HOST", "\"http://192.168.254.144/API/\""
            // buildConfigField "String", "HOST", "\"http://192.168.254.152/Giligans/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""
@@ -28,7 +28,7 @@ android {
 
         }
         release {
-            buildConfigField "String", "HOST", "\"http://192.168.254.144/Giligans/\""
+            buildConfigField "String", "HOST", "\"http://192.168.254.144/API/\""
           //  buildConfigField "String", "HOST", "\"http://192.168.254.152/Giligans/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
 //            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""

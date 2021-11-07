@@ -54,7 +54,7 @@
         </RelativeLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <com.giligans.queueapp.utils.AutoFitRecyclerView
+    <com.oicen.queueapp.utils.AutoFitRecyclerView
         android:id="@+id/foods"
         android:layout_width="0dp"
         android:layout_height="match_parent"

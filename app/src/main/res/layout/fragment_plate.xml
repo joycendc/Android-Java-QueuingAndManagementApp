@@ -47,16 +47,17 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/placeOrder"
-            android:text="Place Order"
-            android:padding="8dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginLeft="10dp"
-            android:textAllCaps="false"
-            android:layout_alignParentBottom="true"
-            app:cornerRadius="20dp"
-            android:layout_width="match_parent"
+            android:layout_width="400dp"
             android:layout_height="match_parent"
-            android:enabled="false"/>
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:enabled="false"
+            android:padding="8dp"
+            android:text="Place Order"
+            android:textAllCaps="false"
+            app:cornerRadius="20dp" />
 
     </LinearLayout>
 
