@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="12dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.MainApp">
+
+    <EditText
+        android:id="@+id/editText"
+        android:background="@drawable/search_bg"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:drawableLeft="@drawable/ic_search_24dp"
+        android:drawablePadding="12dp"
+        android:ems="10"
+        android:hint="Search"
+        android:inputType="textPersonName"
+        android:imeOptions="actionSearch"
+        android:paddingStart="12dp"
+        />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editText"
+        app:layout_constraintVertical_bias="0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.gridlayout.widget.GridLayout
+                app:columnCount="2"
+                app:rowCount="3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                app:useDefaultMargins="true"
+                app:orientation="horizontal">
+
+                <!--add  several shimmer placeholder layout -->
+
+                <include  android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+
+            </androidx.gridlayout.widget.GridLayout>
+        </RelativeLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+
+    <com.oicen.queueapp.utils.AutoFitRecyclerView
+        android:id="@+id/recently_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:columnWidth="180dp"
+        android:numColumns="auto_fit"
+        android:padding="5dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout"
+        app:layout_constraintVertical_bias="0" />
+
+    <LinearLayout
+        android:id="@+id/categoryview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/alltime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="15dp"
+            android:text="Categories"
+            android:textColor="@color/colorPrimary"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:elevation="0dp"
+            android:layout_margin="10dp">
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                app:tabMode="scrollable"
+                app:tabMaxWidth="100dp"
+                app:tabGravity="fill"
+                app:tabIndicatorHeight="0dp"
+                app:tabBackground="@drawable/tab_bg"
+                app:tabPaddingBottom="0dp"
+                app:tabPaddingEnd="0dp"
+                app:tabPaddingStart="0dp"
+                app:tabPaddingTop="0dp" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+</LinearLayout>

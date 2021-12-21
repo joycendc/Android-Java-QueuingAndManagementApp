@@ -1,0 +1,41 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="listPreferredItemHeightSmall">70dp</item>
+        <item name="cardStyle">@style/CardView.LightStyle</item>
+        <item name="cardViewText">@style/CardViewTextLight</item>
+        <item name="categoryText">@color/black</item>
+    </style>
+
+    <style name="AppThemeDark" parent="Theme.MaterialComponents.DayNight">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="listPreferredItemHeightSmall">70dp</item>
+        <item name="cardStyle">@style/CardView.Dark</item>
+        <item name="cardViewText">@style/CardViewTextDark</item>
+        <item name="categoryText">@color/white</item>
+    </style>
+
+    <style name="CardView.LightStyle" parent="CardView.Light">
+        <item name="cardBackgroundColor">@color/colorPrimary</item>
+        <item name="cardElevation">10dp</item>
+    </style>
+
+    <style name="CardViewTextLight" parent="android:TextAppearance">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+    <style name="CardViewTextDark" parent="android:TextAppearance">
+        <item name="android:textColor">#fff</item>
+    </style>
+
+
+</resources>
