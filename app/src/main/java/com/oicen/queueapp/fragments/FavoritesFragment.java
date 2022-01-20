@@ -36,7 +36,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.oicen.queueapp.BuildConfig.HOST;
 
 public class FavoritesFragment extends Fragment {
     final String FAVE = ApiHelper.FAVE;

@@ -1,64 +1,54 @@
 package com.oicen.queueapp.models;
 
-public class FoodModel {
-    int id;
-    String name, description, price, imageUrl, bigimageurl;
+import static java.lang.Integer.parseInt;
 
-    public FoodModel(int id, String name, String description, String price, String
-            imageUrl, String bigimageurl) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.bigimageurl = bigimageurl;
+import com.oicen.queueapp.fragments.RecentOrdersFragment;
+
+import java.util.ArrayList;
+
+public class RecentModel {
+    public ArrayList<RecentOrderItem> object;
+    public String id;
+    public String date;
+
+    public RecentModel(ArrayList<RecentOrderItem> object) {
+        this.object = object;
     }
 
-    public int getId() {
-        return id;
+    public ArrayList<RecentOrderItem> getObject() {
+        return object;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setObject(ArrayList<RecentOrderItem> object) {
+        this.object = object;
     }
 
-    public String getBigimageurl() {
-        return bigimageurl;
+    public String getId() {
+        return object.get(0).getId();
     }
 
-    public void setBigimageurl(String bigimageurl) {
-        this.bigimageurl = bigimageurl;
+    public void setId(String id) {
+        this.object.get(0).setId(id);
     }
 
-    public String getName() {
-        return name;
+    public String getDate() {
+        return object.get(0).getDate();
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDate(String date) {
+        this.object.get(0).setDate(date);
     }
 
-    public String getDescription() {
-        return description;
+    public String getTotal() {
+        int total = 0;
+        for (RecentOrderItem obj: object) {
+            total = total + parseInt(obj.getTotal());
+        }
+
+        return String.valueOf(total);
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getPrice() {
-        return price;
-    }
-
-    public void setPrice(String price) {
-        this.price = price;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setTotal(int pos, String total) {
+        this.object.get(pos).setTotal(total);
     }
 }

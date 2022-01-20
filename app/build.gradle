@@ -19,19 +19,12 @@ android {
     }
 
     buildTypes {
+        def ipList = getLocalIPv4();
         debug {
-            buildConfigField "String", "HOST", "\"http://192.168.254.144/API/\""
-           // buildConfigField "String", "HOST", "\"http://192.168.254.152/Giligans/\""
-//            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
-//            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""
-
-
+            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(0) + '/API/"'
         }
         release {
-            buildConfigField "String", "HOST", "\"http://192.168.254.144/API/\""
-          //  buildConfigField "String", "HOST", "\"http://192.168.254.152/Giligans/\""
-//            buildConfigField "String", "HOST", "\"http://192.168.254.103/\""
-//            buildConfigField "String", "HOST", "\"http://192.168.0.22/\""
+            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(0) + '/API/"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -82,4 +75,16 @@ dependencies {
 }
 repositories {
     mavenCentral()
+}
+
+static def getLocalIPv4() {
+    def ip4s = []
+    NetworkInterface.getNetworkInterfaces()
+        .findAll { it.isUp() && !it.isLoopback() && !it.isVirtual() }
+        .each {
+            it.getInetAddresses()
+                .findAll { !it.isLoopbackAddress() && it instanceof Inet4Address }
+                .each { ip4s << it.getHostAddress() }
+        }
+    return ip4s
 }

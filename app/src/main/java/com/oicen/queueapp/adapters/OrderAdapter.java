@@ -33,7 +33,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         holder.name.setText(order.get(position).getName());
         holder.qty.setText(order.get(position).getQty());
-        holder.total.setText(order.get(position).getName());
+        holder.total.setText("₱ " + order.get(position).getTotal());
     }
 
     @Override

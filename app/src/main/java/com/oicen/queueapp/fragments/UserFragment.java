@@ -15,10 +15,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.oicen.queueapp.R;
 import com.oicen.queueapp.activities.MainApp;
+import com.oicen.queueapp.utils.ApiHelper;
+import com.oicen.queueapp.utils.VolleySingleton;
+
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserFragment extends Fragment {
+    String UPDATE_USER = ApiHelper.UPDATE_USER;
     EditText fname, lname, mobile;
     ImageView back;
     Button update;
@@ -53,7 +66,9 @@ public class UserFragment extends Fragment {
                     toggleInput(fname, false);
                     toggleInput(lname, false);
                     toggleInput(mobile, false);
-                    Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+
+                    updateUser();
+
                 }
 
                 update.setText(update.getText().equals("EDIT") ? "UPDATE" : "EDIT");
@@ -64,48 +79,53 @@ public class UserFragment extends Fragment {
     }
 
     void toggleInput(EditText input, Boolean bool){
-//        input.setFocusable(bool);
-//        input.setClickable(bool);
-//        input.setCursorVisible(bool);
-
+        input.setFocusable(bool);
+        input.setClickable(bool);
+        input.setCursorVisible(bool);
     }
 
     void updateUser(){
-//        StringRequest stringRequest = new StringRequest(Request.Method.POST, FAVE,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        try {
-//                            JSONObject obj = new JSONObject(response);
-//                            if (!obj.getBoolean("error")) {
-//                                String status = obj.getString("status");
-//
-//                                Toast.makeText(getActivity().getApplicationContext(), status, Toast.LENGTH_SHORT).show();
-//                            }
-//                        }catch (Exception e){
-//                            isFave = false;
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                },
-//                new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//
-//                    }
-//                }) {
-//            @Override
-//            protected Map<String, String> getParams() throws AuthFailureError {
-//                Map<String, String> params = new HashMap<String, String>();
-//                SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
-//                String id = sharedPreferences.getString("keyid", null);
-//                params.put("customer_id", id);
-//                params.put("item_id", String.valueOf(item_id));
-//                params.put("fave", mode);
-//                return params;
-//            }
-//        };
-//        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, UPDATE_USER,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            String status = obj.getString("status");
+                            if (!obj.getBoolean("error")) {
+
+
+                                Toast.makeText(getActivity().getApplicationContext(), status, Toast.LENGTH_SHORT).show();
+                            }
+                            Toast.makeText(getActivity().getApplicationContext(), status, Toast.LENGTH_SHORT).show();
+
+                        }catch (Exception e){
+                            Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+
+                            e.printStackTrace();
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                }) {
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
+                String id = sharedPreferences.getString("keyid", null);
+                params.put("customer_id", id);
+                params.put("fname", fname.getText().toString());
+                params.put("lname", lname.getText().toString());
+                params.put("mobile", mobile.getText().toString());
+
+                return params;
+            }
+        };
+        VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 
     @Override

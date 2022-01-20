@@ -18,6 +18,7 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
@@ -33,6 +34,7 @@ import com.oicen.queueapp.adapters.RecentAdapter;
 import com.oicen.queueapp.models.FoodModel;
 import com.oicen.queueapp.models.QueueModel;
 import com.oicen.queueapp.models.RecentModel;
+import com.oicen.queueapp.models.RecentOrderItem;
 import com.oicen.queueapp.utils.ApiHelper;
 import com.oicen.queueapp.utils.VolleySingleton;
 
@@ -45,7 +47,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class RecentOrders extends Fragment {
+public class RecentOrdersFragment extends Fragment {
     final String RECENT_ORDERS = ApiHelper.RECENT_ORDERS;
     RecyclerView recentRecycler;
     RecentAdapter recentAdapter;
@@ -56,7 +58,7 @@ public class RecentOrders extends Fragment {
     ShimmerFrameLayout shimmerFrameLayout;
 
 
-    public RecentOrders(){ }
+    public RecentOrdersFragment(){ }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -67,7 +69,8 @@ public class RecentOrders extends Fragment {
         recentRecycler = (RecyclerView) view.findViewById(R.id.recentRecyclerView);
 
         empty = (TextView) view.findViewById(R.id.empty);
-        recents = new ArrayList<>();
+        recents = new ArrayList<RecentModel>();
+
         loadItems();
 
         //shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmerLayout);
@@ -83,18 +86,19 @@ public class RecentOrders extends Fragment {
         }
     }
 
+
+
     private void loadItems(){
-        recents = new ArrayList<>();
+        recents = new ArrayList<RecentModel>();
         StringRequest stringRequest = new StringRequest(Request.Method.POST, RECENT_ORDERS,
                 new Response.Listener<String>(){
-
                     @Override
                     public void onResponse(String response){
                         try {
                             JSONArray items = new JSONArray(response);
 
-                            ArrayList<ArrayList<ArrayList<String>>> outer = new ArrayList<ArrayList<ArrayList<String>>>();
-                            ArrayList<ArrayList<String>> inner = new ArrayList<ArrayList<String>>();
+                            ArrayList<ArrayList<RecentOrderItem>> outer = new ArrayList<ArrayList<RecentOrderItem>>();
+                            ArrayList<RecentOrderItem> inner = new ArrayList<RecentOrderItem>();
                             ArrayList<String> core = new ArrayList<String>();
                             ArrayList<String> done = new ArrayList<String>();
 
@@ -112,61 +116,46 @@ public class RecentOrders extends Fragment {
 
                                 for(int j = i + 1; j < items.length(); j++) {
                                     if(i == j - 1){
-                                        core.add(id);
-                                        core.add(date);
-                                        core.add(item_name);
-                                        core.add(qty);
-                                        core.add(price);
-                                        core.add(total);
-                                        inner.add(core);
-                                        core = new ArrayList<String>();
+                                        inner.add(new RecentOrderItem(id, date, item_name, qty, price, total));
                                     }
 
                                     JSONObject itemObject2 = items.getJSONObject(j);
                                     String id2 = itemObject2.getString("id");
                                     String date2 = itemObject2.getString("date");
-                                    String item_name2 = itemObject.getString("item_name");
-                                    String qty2 = itemObject.getString("qty");
-                                    String price2 = itemObject.getString("price");
-                                    String total2 = itemObject.getString("total");
+                                    String item_name2 = itemObject2.getString("item_name");
+                                    String qty2 = itemObject2.getString("qty");
+                                    String price2 = itemObject2.getString("price");
+                                    String total2 = itemObject2.getString("total");
 
                                     if (date.equals(date2)){
-                                        core.add(id2);
-                                        core.add(date2);
-                                        core.add(item_name2);
-                                        core.add(qty2);
-                                        core.add(price2);
-                                        core.add(total2);
-                                        inner.add(core);
-                                        core = new ArrayList<String>();
+                                        inner.add(new RecentOrderItem(id2, date2, item_name2, qty2, price2, total2));
                                     }
                                 }
 
                                 if(!done.contains(date)){
                                     if(i == items.length() - 1){
-                                        core.add(id);
-                                        core.add(date);
-                                        core.add(item_name);
-                                        core.add(qty);
-                                        core.add(price);
-                                        core.add(total);
-                                        inner.add(core);
-                                        core = new ArrayList<String>();
+                                        inner.add(new RecentOrderItem(id, date, item_name, qty, price, total));
                                     }
                                     done.add(date);
                                 }
 
                                 if(!inner.isEmpty()) {
                                     outer.add(inner);
-                                    inner = new ArrayList<ArrayList<String>>();
+                                    inner = new ArrayList<RecentOrderItem>();
                                 }
                             }
 
-                            for(ArrayList<ArrayList<String>> outerList : outer){
-                                recents.add(new RecentModel(outerList));
+                            for(ArrayList<RecentOrderItem> innerList : outer){
+                                recents.add(new RecentModel(innerList));
+
+                                for(RecentOrderItem item : innerList){
+                                    System.out.println(item.getItem_name() +
+                                        " " + item.getDate() +
+                                        " " + item.getPrice() + " " + item.getTotal());
+                                }
                             }
 
-                            setRecentlyViewedRecycler(recents);
+                            setRecentOrdersRecycler(recents);
 
                             if(recentAdapter.getItemCount() == 0){
                                 empty.setVisibility(View.VISIBLE);
@@ -198,7 +187,9 @@ public class RecentOrders extends Fragment {
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
-    private void setRecentlyViewedRecycler(ArrayList<RecentModel> recents) {
+    private void setRecentOrdersRecycler(ArrayList<RecentModel> recents) {
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getContext(), 1, GridLayoutManager.VERTICAL, false);
+        recentRecycler.setLayoutManager(gridLayoutManager);
         recentRecycler.setHasFixedSize(true);
         recentRecycler.setItemAnimator(new DefaultItemAnimator());
         recentAdapter = new RecentAdapter(context, fragmentManager, recents);

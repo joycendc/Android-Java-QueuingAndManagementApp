@@ -1,5 +1,6 @@
 package com.oicen.queueapp.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -76,7 +77,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull CustomerViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull CustomerViewHolder holder, @SuppressLint("RecyclerView") int position) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("login", Context.MODE_PRIVATE);
         String keyname = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null);
         holder.name.setText("CUSTOMER " + (position + 1));
@@ -136,6 +137,9 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                         MaterialButton btn_cancel = (MaterialButton) mView.findViewById(R.id.btn_cancel);
                         MaterialButton btn_okay = (MaterialButton) mView.findViewById(R.id.btn_okay);
                         ordersRecycler = (RecyclerView) mView.findViewById(R.id.orderList);
+                        TextView total = (TextView) mView.findViewById(R.id.total);
+
+                        total.setVisibility(View.GONE);
 
                         alert.setView(mView);
 
