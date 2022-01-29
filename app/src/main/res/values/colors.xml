@@ -6,4 +6,12 @@
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="shimmer">#aaa</color>
+    <color name="queueUnpaid">#ffeeeeee</color>
+    <color name="queueUnpaidOther">#ffdddddd</color>
+    <color name="queuePaid">#4CAF50</color>
+    <color name="queuePaidOther">#009d00</color>
+    <color name="queueServingOther">#f70d1a</color>
+    <color name="queueServingSelf">#ff8c00</color>
+    <color name="queueTextDark">#000</color>
+    <color name="queueTextLight">#fff</color>
 </resources>

@@ -1,5 +1,7 @@
 package com.oicen.queueapp.fragments;
 
+import static com.oicen.queueapp.BuildConfig.HOST;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -38,7 +40,7 @@ import java.util.Map;
 
 
 public class FavoritesFragment extends Fragment {
-    final String FAVE = ApiHelper.FAVE;
+    final String FAVE = HOST + ApiHelper.FAVE;
     RecyclerView favoriteFoodsRecycler;
     FoodItemAdapter foodItemAdapter;
     ArrayList<FoodModel> foodModelList;
@@ -86,7 +88,7 @@ public class FavoritesFragment extends Fragment {
                             String name = itemObject.getString("name");
                             String description = itemObject.getString("description");
                             String price = itemObject.getString("price");
-                            String url = ApiHelper.IMAGE_PATH  + itemObject.getString("url");
+                            String url = HOST + ApiHelper.IMAGE_PATH  + itemObject.getString("url");
 
                             foodModelList.add(new FoodModel(id, name, description, price, url, url));
                         }

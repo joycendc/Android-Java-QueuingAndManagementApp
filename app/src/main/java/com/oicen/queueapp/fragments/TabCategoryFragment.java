@@ -40,7 +40,7 @@ import java.util.List;
 import static com.oicen.queueapp.BuildConfig.HOST;
 
 public class TabCategoryFragment extends Fragment {
-    String ITEM_URL = ApiHelper.ITEM_URL;
+    String ITEM_URL = HOST + ApiHelper.ITEM_URL;
     public RecyclerView foodListRecycler;
     public FoodItemAdapter foodListAdapter;
     public List<FoodModel> foodListList;
@@ -66,7 +66,7 @@ public class TabCategoryFragment extends Fragment {
 
         shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmerLayout);
 
-        if(catId > 0) ITEM_URL = ApiHelper.ITEM_URLCAT + catId;
+        if(catId > 0) ITEM_URL = HOST + ApiHelper.ITEM_URLCAT + catId;
         dbHelper = new DBHelper(context);
         loadItems();
         return view;

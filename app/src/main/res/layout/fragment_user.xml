@@ -44,12 +44,8 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
-        android:clickable="true"
-        android:cursorVisible="true"
-        android:editable="true"
         android:ems="10"
-        android:enabled="true"
-        android:focusable="true"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -77,12 +73,8 @@
         android:layout_marginStart="25dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
-        android:clickable="true"
-        android:cursorVisible="true"
-        android:editable="true"
         android:ems="10"
-        android:enabled="true"
-        android:focusable="true"
+        android:focusable="false"
         android:inputType="textPersonName"
         android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
@@ -132,12 +124,24 @@
         android:layout_width="356dp"
         android:layout_height="66dp"
         android:layout_marginTop="50dp"
-        android:text="EDIT"
+        android:text="Edit"
+        android:textAllCaps="false"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="@+id/confirmNumber"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="@+id/confirmNumber"
         app:layout_constraintTop_toBottomOf="@+id/confirmNumber" />
+
+    <Button
+        android:id="@+id/cancel"
+        android:layout_width="356dp"
+        android:layout_height="66dp"
+        android:text="Cancel"
+        android:textAllCaps="false"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="@+id/confirmNumber"
+        app:layout_constraintStart_toStartOf="@+id/confirmNumber"
+        app:layout_constraintTop_toBottomOf="@+id/button" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

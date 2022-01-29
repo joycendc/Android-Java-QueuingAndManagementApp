@@ -1,7 +1,10 @@
 package com.oicen.queueapp.fragments;
 
+import static com.oicen.queueapp.BuildConfig.HOST;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +34,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class UserFragment extends Fragment {
-    String UPDATE_USER = ApiHelper.UPDATE_USER;
+    String UPDATE_USER = HOST + ApiHelper.UPDATE_USER;
     EditText fname, lname, mobile;
     ImageView back;
-    Button update;
+    Button update, cancel;
 
     public UserFragment(){ }
 
@@ -47,6 +50,7 @@ public class UserFragment extends Fragment {
         back = (ImageView) view.findViewById(R.id.back2);
         mobile = (EditText) view.findViewById(R.id.confirmNumber);
         update = (Button) view.findViewById(R.id.button);
+        cancel = (Button) view.findViewById(R.id.cancel);
 
         back.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +62,7 @@ public class UserFragment extends Fragment {
         update.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(update.getText().equals("EDIT")){
+                if(update.getText().equals("Edit")){
                     toggleInput(fname, true);
                     toggleInput(lname, true);
                     toggleInput(mobile, true);
@@ -71,17 +75,37 @@ public class UserFragment extends Fragment {
 
                 }
 
-                update.setText(update.getText().equals("EDIT") ? "UPDATE" : "EDIT");
+                update.setText(update.getText().equals("Edit") ? "Update" : "Edit");
+                update.setBackgroundColor(update.getText().equals("Edit") ? getResources().getColor(R.color.colorPrimary) : Color.parseColor("#009d00"));
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                update.setText("Edit");
+                update.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
+                toggleInput(fname, false);
+                toggleInput(lname, false);
+                toggleInput(mobile, false);
+                cancel.setVisibility(View.INVISIBLE);
             }
         });
 
         return view;
     }
 
+
     void toggleInput(EditText input, Boolean bool){
         input.setFocusable(bool);
-        input.setClickable(bool);
-        input.setCursorVisible(bool);
+        input.setFocusableInTouchMode(bool);
+        if(bool){
+            input.setBackgroundColor(Color.parseColor("#eeeeee"));
+            cancel.setVisibility(View.VISIBLE);
+        }else {
+            input.setBackgroundColor(Color.parseColor("#ffffff"));
+            cancel.setVisibility(View.INVISIBLE);
+        }
     }
 
     void updateUser(){
@@ -93,7 +117,6 @@ public class UserFragment extends Fragment {
                             JSONObject obj = new JSONObject(response);
                             String status = obj.getString("status");
                             if (!obj.getBoolean("error")) {
-
 
                                 Toast.makeText(getActivity().getApplicationContext(), status, Toast.LENGTH_SHORT).show();
                             }
@@ -118,9 +141,9 @@ public class UserFragment extends Fragment {
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences("login", Context.MODE_PRIVATE);
                 String id = sharedPreferences.getString("keyid", null);
                 params.put("customer_id", id);
-                params.put("fname", fname.getText().toString());
-                params.put("lname", lname.getText().toString());
-                params.put("mobile", mobile.getText().toString());
+                params.put("first_name", fname.getText().toString());
+                params.put("last_name", lname.getText().toString());
+                params.put("mobile_number", mobile.getText().toString());
 
                 return params;
             }

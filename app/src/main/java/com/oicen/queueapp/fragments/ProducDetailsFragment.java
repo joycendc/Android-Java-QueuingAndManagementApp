@@ -1,5 +1,7 @@
 package com.oicen.queueapp.fragments;
 
+import static com.oicen.queueapp.BuildConfig.HOST;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -40,7 +42,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ProducDetailsFragment extends Fragment {
-    final String FAVE = ApiHelper.FAVE;
+    final String FAVE = HOST + ApiHelper.FAVE;
     ImageView back, food;
     CardView img;
     String name;

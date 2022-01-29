@@ -9,6 +9,7 @@ import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -27,6 +28,7 @@ import com.oicen.queueapp.R;
 import com.oicen.queueapp.activities.MainApp;
 import com.oicen.queueapp.models.OrderModel;
 import com.oicen.queueapp.models.QueueModel;
+import com.oicen.queueapp.utils.ApiHelper;
 import com.oicen.queueapp.utils.QueueDiffUtilCallBack;
 import com.oicen.queueapp.utils.VolleySingleton;
 import com.google.android.material.button.MaterialButton;
@@ -42,7 +44,7 @@ import java.util.Map;
 import static com.oicen.queueapp.BuildConfig.HOST;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerViewHolder> {
-    final String FETCH_URL = HOST + "getOrders.php";
+    final String FETCH_URL = HOST + ApiHelper.GET_ORDERS;
     public ArrayList<QueueModel> customer;
     Context context;
     RecyclerView ordersRecycler;
@@ -87,39 +89,42 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
             if (customer.get(position).getName().equals(keyname)) {
                 holder.name.setText("You ( " + keyname.toUpperCase() + " )");
             }
-            holder.card.setCardBackgroundColor(Color.parseColor("#009d00"));
-            holder.name.setTextColor(Color.parseColor("#ffffffff"));
-            holder.id.setTextColor(Color.parseColor("#ffffffff"));
-            holder.status.setTextColor(Color.parseColor("#ffffffff"));
-            holder.image.setColorFilter(context.getResources().getColor(R.color.white));
+            holder.card.setCardBackgroundColor(context.getResources().getColor(R.color.queueUnpaidOther));
+            holder.name.setTextColor(context.getResources().getColor(R.color.queueTextDark));
+            holder.id.setTextColor(context.getResources().getColor(R.color.queueTextDark));
+            holder.status.setTextColor(context.getResources().getColor(R.color.queueTextDark));
+            holder.image.setColorFilter(context.getResources().getColor(R.color.queueTextDark));
+            if (customer.get(position).getName().equals(keyname)) {
+                holder.card.setCardBackgroundColor(context.getResources().getColor(R.color.queueUnpaid));
+            }
             holder.status.setText("UNPAID");
 
         } else {
             if (position == 0) {
-                holder.card.setCardBackgroundColor(Color.parseColor("#f70d1a"));
+                holder.card.setCardBackgroundColor(context.getResources().getColor(R.color.queueServingOther));
                 if (customer.get(position).getName().equals(keyname)) {
                     holder.name.setText("You (" + keyname.toUpperCase() + ")");
-                    holder.card.setCardBackgroundColor(Color.parseColor("#ff8c00"));
-                    holder.name.setTextColor(Color.parseColor("#ffffffff"));
-                    holder.id.setTextColor(Color.parseColor("#ffffffff"));
-                    holder.status.setTextColor(Color.parseColor("#ffffffff"));
-                    holder.image.setColorFilter(context.getResources().getColor(R.color.white));
+                    holder.card.setCardBackgroundColor(context.getResources().getColor(R.color.queueServingSelf));
+                    holder.name.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.id.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.status.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.image.setColorFilter(context.getResources().getColor(R.color.queueTextLight));
                 }
                 holder.status.setText("NOW SERVING");
             } else {
                 if (customer.get(position).getName().equals(keyname)) {
                     holder.name.setText("You ( " + keyname.toUpperCase() + " )");
-                    holder.card.setCardBackgroundColor(Color.parseColor("#009d00"));
-                    holder.name.setTextColor(Color.parseColor("#ffffffff"));
-                    holder.id.setTextColor(Color.parseColor("#ffffffff"));
-                    holder.status.setTextColor(Color.parseColor("#ffffffff"));
-                    holder.image.setColorFilter(context.getResources().getColor(R.color.white));
+                    holder.card.setCardBackgroundColor(context.getResources().getColor(R.color.queuePaid));
+                    holder.name.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.id.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.status.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.image.setColorFilter(context.getResources().getColor(R.color.queueTextLight));
                 } else {
-                    holder.card.setCardBackgroundColor(Color.parseColor("#ffeeeeee"));
-                    holder.name.setTextColor(Color.parseColor("#ff000000"));
-                    holder.id.setTextColor(Color.parseColor("#ff000000"));
-                    holder.status.setTextColor(Color.parseColor("#ff000000"));
-                    holder.image.setColorFilter(context.getResources().getColor(R.color.black));
+                    holder.card.setCardBackgroundColor(context.getResources().getColor(R.color.queuePaidOther));
+                    holder.name.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.id.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.status.setTextColor(context.getResources().getColor(R.color.queueTextLight));
+                    holder.image.setColorFilter(context.getResources().getColor(R.color.queueTextLight));
                 }
                 holder.status.setText("IN LINE (PAID)");
             }

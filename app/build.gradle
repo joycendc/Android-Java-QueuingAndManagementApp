@@ -21,10 +21,12 @@ android {
     buildTypes {
         def ipList = getLocalIPv4();
         debug {
-            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(0) + '/API/"'
+            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(1) + '/API/"'
+//            buildConfigField "String", "HOST", '"https://kumpares-management.000webhostapp.com/API/"'
         }
         release {
-            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(0) + '/API/"'
+            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(1) + '/API/"'
+//            buildConfigField "String", "HOST", '"https://kumpares-management.000webhostapp.com/API/"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

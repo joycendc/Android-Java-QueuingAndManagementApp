@@ -26,8 +26,10 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.oicen.queueapp.BuildConfig.HOST;
+
 public class MainActivity extends AppCompatActivity {
-    final String LOGIN_URL = ApiHelper.LOGIN_URL;
+    final String LOGIN_URL = HOST + ApiHelper.LOGIN_URL;
     MaterialButton login;
     TextView signup;
     TextInputEditText mobileNumberField;
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        db = new DBHelper(this);
+        //db = new DBHelper(this);
         try {
 //            db.createDataBase();
 //            db.openDataBase();
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         }catch (Exception e){
-                            Toast.makeText(getApplicationContext(), e.getMessage() + " catch", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getApplicationContext(), "This number is not registered !", Toast.LENGTH_LONG).show();
                         }
                     }
                 },

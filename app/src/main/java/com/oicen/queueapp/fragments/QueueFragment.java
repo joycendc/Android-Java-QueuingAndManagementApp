@@ -9,7 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContract;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -18,11 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.oicen.queueapp.R;
+import com.oicen.queueapp.activities.MainApp;
 import com.oicen.queueapp.activities.Pay;
 import com.oicen.queueapp.adapters.QueueAdapter;
 import com.oicen.queueapp.models.QueueModel;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class
 QueueFragment extends Fragment {
@@ -57,12 +65,24 @@ QueueFragment extends Fragment {
             public void onClick(View view) {
                 Intent payIntent = new Intent(getContext(), Pay.class);
                 payIntent.putExtra("qr", queue_id + " " + customer_id);
-                startActivity(payIntent);
+                startActivityForResult(payIntent, 1);
             }
         });
         pay.setVisibility(View.GONE);
 
         return view;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            Bundle values = data.getExtras();
+            if(values != null){
+                String message = data.getStringExtra("result");
+                Toast.makeText(getContext(), message, Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override

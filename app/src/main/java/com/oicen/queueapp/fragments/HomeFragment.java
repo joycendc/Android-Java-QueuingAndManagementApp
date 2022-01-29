@@ -58,8 +58,8 @@ import java.util.List;
 import static com.oicen.queueapp.BuildConfig.HOST;
 
 public class HomeFragment extends Fragment {
-    String QUERY_URL = ApiHelper.QUERY_URL;
-    final String CATEGORY_URL =  ApiHelper.CATEGORY_URL;
+    String QUERY_URL = HOST + ApiHelper.QUERY_URL;
+    final String CATEGORY_URL = HOST + ApiHelper.CATEGORY_URL;
     public TabLayout tabLayout;
     public ViewPager firstViewPager;
     public TabViewPagerAdapter adapter;
@@ -120,6 +120,7 @@ public class HomeFragment extends Fragment {
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
                     categoryview.setVisibility(View.GONE);
                     loadItems(QUERY_URL);
+                    System.out.println(QUERY_URL);
                 }
             }
             @Override
@@ -188,7 +189,7 @@ public class HomeFragment extends Fragment {
                                 String description = itemObject.getString("description");
                                 String price = itemObject.getString("price");
                                 int cat_id = itemObject.getInt("cat_id");
-                                String url = ApiHelper.IMAGE_PATH + itemObject.getString("url");
+                                String url = HOST + ApiHelper.IMAGE_PATH + itemObject.getString("url");
 
                                 foodModelList.add(new FoodModel(id, name, description, price, url, url));
                             }
@@ -336,7 +337,7 @@ public class HomeFragment extends Fragment {
                             int id = itemObject.getInt("id");
                             String name = itemObject.getString("name");
 
-                            tabIcons[i] = ApiHelper.CAT_PATH + name + ".png";
+                            tabIcons[i] = HOST + ApiHelper.CAT_PATH + name + ".png";
 
                             adapter.addFragment(new TabCategoryFragment(id), name);
                             dbHelper.saveCatToLocalDB(name, db);

@@ -11,30 +11,6 @@
         android:layout_height="wrap_content"
         android:padding="10dp">
 
-<!--        <LinearLayout-->
-<!--            android:id="@+id/table"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:orientation="vertical"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/senior">-->
-
-<!--            <TextView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginBottom="10dp"-->
-<!--                android:text="SELECT TABLE FOR DINE IN"-->
-<!--                android:textColor="@color/colorPrimary"-->
-<!--                android:textSize="22sp"-->
-<!--                android:textStyle="bold" />-->
-
-
-<!--            <include layout="@layout/table_radio" />-->
-
-<!--        </LinearLayout>-->
-
         <TextView
             android:id="@+id/message"
             android:layout_width="0dp"
@@ -50,36 +26,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
-<!--        <TextView-->
-<!--            android:id="@+id/textView4"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="10dp"-->
-<!--            android:text="Enter your Cash to Proceed"-->
-<!--            android:textAlignment="center"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textStyle="bold"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/radioGroup"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/senior"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/senior" />-->
-
-<!--        <EditText-->
-<!--            android:id="@+id/txt_input"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:background="#ddd"-->
-<!--            android:hint="Enter your Cash"-->
-<!--            android:inputType="number"-->
-<!--            android:padding="8dp"-->
-<!--            android:textSize="20sp"-->
-<!--            app:layout_constraintBottom_toBottomOf="parent"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/textView4"-->
-<!--            app:layout_constraintHorizontal_bias="0.0"-->
-<!--            app:layout_constraintStart_toStartOf="@+id/textView4"-->
-<!--            app:layout_constraintTop_toBottomOf="@+id/textView4"-->
-<!--            app:layout_constraintVertical_bias="0.152" />-->
-
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_cancel"
             android:layout_width="150dp"
@@ -93,7 +39,7 @@
             android:textSize="18sp"
             app:cornerRadius="20dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editNote" />
+            app:layout_constraintTop_toBottomOf="@+id/noteFieldLayout" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btn_okay"
@@ -108,7 +54,7 @@
             android:textSize="18sp"
             app:cornerRadius="20dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/editNote" />
+            app:layout_constraintTop_toBottomOf="@+id/noteFieldLayout" />
 
         <RadioGroup
             android:id="@+id/radioGroup"
@@ -150,7 +96,7 @@
         <CheckBox
             android:id="@+id/senior"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="10dp"
             android:buttonTint="@color/colorPrimary"
             android:padding="10dp"
@@ -159,17 +105,38 @@
             app:layout_constraintStart_toStartOf="@+id/radioGroup"
             app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
 
-        <EditText
-            android:id="@+id/editNote"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/noteFieldLayout"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="20"
+            android:freezesText="false"
             android:hint="Notes..."
-            android:inputType="textPersonName"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
             app:layout_constraintEnd_toEndOf="@+id/senior"
             app:layout_constraintStart_toStartOf="@+id/senior"
-            app:layout_constraintTop_toBottomOf="@+id/senior" />
+            app:layout_constraintTop_toBottomOf="@+id/senior" >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editNote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+<!--        <EditText-->
+<!--            android:id="@+id/editNote"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:ems="20"-->
+<!--            android:hint="Notes..."-->
+<!--            android:inputType="textPersonName"-->
+<!--            android:paddingTop="10dp"-->
+<!--            android:paddingBottom="10dp"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/senior"-->
+<!--            app:layout_constraintStart_toStartOf="@+id/senior"-->
+<!--            app:layout_constraintTop_toBottomOf="@+id/senior" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

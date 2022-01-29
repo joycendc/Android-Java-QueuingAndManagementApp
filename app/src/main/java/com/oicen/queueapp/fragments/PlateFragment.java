@@ -1,5 +1,7 @@
 package com.oicen.queueapp.fragments;
 
+import static com.oicen.queueapp.BuildConfig.HOST;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -37,6 +39,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.material.textfield.TextInputEditText;
 import com.oicen.queueapp.R;
 import com.oicen.queueapp.activities.MainApp;
 import com.oicen.queueapp.adapters.PlateItemAdapter;
@@ -58,7 +61,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PlateFragment extends Fragment {
-    final String INSERT_URL = ApiHelper.INSERT_URL;
+    final String INSERT_URL = HOST + ApiHelper.INSERT_URL;
     RecyclerView plateListRecycler;
     public PlateItemAdapter plateItemAdapter;
     ArrayList<PlateModel> plateModel;
@@ -112,7 +115,7 @@ public class PlateFragment extends Fragment {
                     final AlertDialog.Builder alert = new AlertDialog.Builder(context);
                     View mView = getLayoutInflater().inflate(R.layout.placeorder_dialog, null);
                     TextView message = (TextView) mView.findViewById(R.id.message);
-                    EditText note = (EditText) mView.findViewById(R.id.editNote);
+                    TextInputEditText note = (TextInputEditText) mView.findViewById(R.id.editNote);
                     MaterialButton btn_cancel = (MaterialButton) mView.findViewById(R.id.btn_cancel);
                     MaterialButton btn_okay = (MaterialButton) mView.findViewById(R.id.btn_okay);
                     CheckBox senior = (CheckBox) mView.findViewById(R.id.senior);

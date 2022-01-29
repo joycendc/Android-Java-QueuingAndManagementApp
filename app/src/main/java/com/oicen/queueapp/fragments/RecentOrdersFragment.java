@@ -1,5 +1,7 @@
 package com.oicen.queueapp.fragments;
 
+import static com.oicen.queueapp.BuildConfig.HOST;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -48,7 +50,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RecentOrdersFragment extends Fragment {
-    final String RECENT_ORDERS = ApiHelper.RECENT_ORDERS;
+    final String RECENT_ORDERS = HOST + ApiHelper.RECENT_ORDERS;
     RecyclerView recentRecycler;
     RecentAdapter recentAdapter;
     ArrayList<RecentModel> recents;

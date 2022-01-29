@@ -31,27 +31,35 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:ignore="MissingConstraints">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
             android:orientation="vertical">
 
             <!--add  several shimmer placeholder layout -->
 
             <include layout="@layout/queue_item_shimmer"></include>
+
             <include layout="@layout/queue_item_shimmer"></include>
+
             <include layout="@layout/queue_item_shimmer"></include>
+
             <include layout="@layout/queue_item_shimmer"></include>
+
             <include layout="@layout/queue_item_shimmer"></include>
+
             <include layout="@layout/queue_item_shimmer"></include>
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lineRecyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/lineRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="50dp"
+            android:visibility="gone" />
 
 
     </FrameLayout>
@@ -65,9 +73,11 @@
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginBottom="0dp"
         android:padding="15dp"
         android:text="Generate QR for Payment"
+        android:textAllCaps="false"
+        android:textSize="16sp"
         app:cornerRadius="10dp" />
 
 </RelativeLayout>

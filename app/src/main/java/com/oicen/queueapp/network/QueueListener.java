@@ -39,9 +39,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
+import static com.oicen.queueapp.BuildConfig.HOST;
 
 public class QueueListener extends Service {
-    final String GET_USER = ApiHelper.GET_USER;
+    final String GET_USER = HOST + ApiHelper.GET_USER;
     boolean orderDone;
     Context context;
     public ArrayList<QueueModel> customer;
@@ -165,7 +166,7 @@ public class QueueListener extends Service {
 
                         Intent i = new Intent(getApplicationContext(), MainApp.class);
                         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        //i.putExtra("message", message);
+
                         PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
                         builder.setContentIntent(pendingIntent);
 
@@ -173,6 +174,7 @@ public class QueueListener extends Service {
                         managerCompat.notify(1, builder.build());
 
                         Intent newIntent = new Intent(getApplicationContext(), MainApp.class);
+                        newIntent.putExtra("done", true);
                         newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(newIntent);
                     }

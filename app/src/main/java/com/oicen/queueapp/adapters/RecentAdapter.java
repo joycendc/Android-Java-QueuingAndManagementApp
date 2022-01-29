@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -80,6 +81,10 @@ public class RecentAdapter extends RecyclerView.Adapter<RecentAdapter.RecentOrde
                 View mView = LayoutInflater.from(context).inflate(R.layout.order_details_dialog, null);
                 MaterialButton btn_cancel = (MaterialButton) mView.findViewById(R.id.btn_cancel);
                 MaterialButton btn_okay = (MaterialButton) mView.findViewById(R.id.btn_okay);
+                Button cancel = (Button) mView.findViewById(R.id.cancel);
+
+                cancel.setVisibility(View.GONE);
+
                 TextView title = (TextView) mView.findViewById(R.id.message);
                 TextView total = (TextView) mView.findViewById(R.id.total);
                 ordersRecycler = (RecyclerView) mView.findViewById(R.id.orderList);

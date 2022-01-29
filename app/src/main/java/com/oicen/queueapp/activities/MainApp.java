@@ -22,6 +22,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -81,16 +85,15 @@ import java.util.Objects;
 import static com.oicen.queueapp.BuildConfig.HOST;
 
 public class MainApp extends AppCompatActivity {
-    String ITEM_URL = ApiHelper.ITEM_URL;
-    final String FETCH_URL = ApiHelper.FETCH_URL;
-    String REMOVE = HOST + ApiHelper.REMOVE;
-    final String GET_TIME = ApiHelper.GET_TIME;
-    final String GET_USER = ApiHelper.GET_USER;
-    final String INIT = ApiHelper.INIT;
+    String ITEM_URL = HOST + ApiHelper.ITEM_URL;
+    final String FETCH_URL = HOST + ApiHelper.FETCH_URL;
+    final String GET_USER = HOST + ApiHelper.GET_USER;
+    final String INIT = HOST + ApiHelper.INIT;
+    //final String GET_TIME = HOST + ApiHelper.GET_TIME;
+    //String REMOVE = HOST + ApiHelper.REMOVE;
+
     public BottomNavigationView bottomNav;
     public ArrayList<QueueModel> customer;
-    Handler handler;
-    Runnable runnable;
     ProducDetailsFragment product;
     QueueFragment line;
     public TabCategoryFragment tabcat;
@@ -98,7 +101,7 @@ public class MainApp extends AppCompatActivity {
     public HomeFragment categories;
     public PlateFragment plate;
     ImageView settings, settings2;
-    TextView textView, greeting;
+    TextView textView, greeting;    
     private DrawerLayout mDrawer;
     private NavigationView nvDrawer;
     SwitchCompat switchTheme;
@@ -133,7 +136,6 @@ public class MainApp extends AppCompatActivity {
         setContentView(R.layout.activity_main_app);
         isConnected();
 
-
         top = (ConstraintLayout) findViewById(R.id.topBar);
 
         settings = (ImageView) findViewById(R.id.settings);
@@ -141,24 +143,11 @@ public class MainApp extends AppCompatActivity {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
-        textView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-//                IntentIntegrator intentIntegrator = new IntentIntegrator(MainApp.this);
-//                intentIntegrator.setPrompt("For flash use volume up key and volume down to turn it off ");
-//                intentIntegrator.setBeepEnabled(true);
-//                intentIntegrator.setOrientationLocked(true);
-//                intentIntegrator.setCaptureActivity(Scan.class);
-//                intentIntegrator.initiateScan();
-            }
-        });
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //showMessage(new ApiHelper(getApplicationContext()).getHotspotAddress() + " test");
-
+               
                 mDrawer.openDrawer(nvDrawer);
             }
         });
@@ -212,9 +201,6 @@ public class MainApp extends AppCompatActivity {
         orderPaid();
     }
 
-
-
-
     public void showMessage(String text){
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
     }
@@ -223,86 +209,43 @@ public class MainApp extends AppCompatActivity {
         if (checkNetworkConnection()) {
             db = dbHelper.getWritableDatabase();
             StringRequest stringRequest = new StringRequest(Request.Method.GET, ITEM_URL,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            try {
-                                db.execSQL(dbHelper.DROP_ITEM_TABLE);
-                                db.execSQL(dbHelper.CREATE_ITEM_TABLE);
-                                JSONArray items = new JSONArray(response);
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            db.execSQL(dbHelper.DROP_ITEM_TABLE);
+                            db.execSQL(dbHelper.CREATE_ITEM_TABLE);
+                            JSONArray items = new JSONArray(response);
 
-                                for (int i = 0; i < items.length(); i++) {
-                                    JSONObject itemObject = items.getJSONObject(i);
+                            for (int i = 0; i < items.length(); i++) {
+                                JSONObject itemObject = items.getJSONObject(i);
 
-                                    int id = itemObject.getInt("id");
-                                    String name = itemObject.getString("name");
-                                    String description = itemObject.getString("description");
-                                    String price = itemObject.getString("price");
-                                    int cat_id = itemObject.getInt("cat_id");
-                                    //String url = HOST + "images/" + itemObject.getString("url");
+                                int id = itemObject.getInt("id");
+                                String name = itemObject.getString("name");
+                                String description = itemObject.getString("description");
+                                String price = itemObject.getString("price");
+                                int cat_id = itemObject.getInt("cat_id");
+                                //String url = HOST + "images/" + itemObject.getString("url");
 
-                                    dbHelper.saveItemsToLocalDB(id, name, description, price, cat_id, db);
-                                }
-                                db.close();
-
-                            } catch (JSONException e) {
-                                showMessage("serverFetchErr" + e.getMessage());
+                                dbHelper.saveItemsToLocalDB(id, name, description, price, cat_id, db);
                             }
-                        }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
+                            db.close();
 
+                        } catch (JSONException e) {
+                            showMessage("serverFetchErr" + e.getMessage());
+                            db.close();
                         }
-                    });
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        db.close();
+                    }
+                });
             VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         }
     }
-
-//    public void openScanner(){
-//        IntentIntegrator intentIntegrator = new IntentIntegrator(MainApp.this);
-//        intentIntegrator.setPrompt("For flash use volume up key and volume down to turn it off ");
-//        intentIntegrator.setBeepEnabled(true);
-//        intentIntegrator.setOrientationLocked(true);
-//        intentIntegrator.setCaptureActivity(Scan.class);
-//        intentIntegrator.initiateScan();
-//    }
-//
-//
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data){
-//        super.onActivityResult(requestCode, resultCode, data);
-//        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//        if(intentResult.getContents() != null){
-//            String id= UUID.randomUUID().toString();
-//            String uid = id.substring(0, 5);
-//            new AlertDialog.Builder(this)
-//                .setTitle("Result")
-//                .setMessage(intentResult.getContents())
-//                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        dialog.dismiss();
-//                    }
-//                })
-//                .show();
-//        }else{
-//            Toast.makeText(getApplicationContext(), "Please scan correctly !", Toast.LENGTH_SHORT).show();
-//        }
-//    }
-
-    //    public int loadTheme(){
-//        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("Theme", Context.MODE_PRIVATE);
-//        int theme = sharedPreferences.getInt("Theme", 1);
-//        return theme;
-//    }
-//
-//    void saveTheme(int theme){
-//        SharedPreferences sharedPreferences = getApplication().getSharedPreferences("Theme", Context.MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putInt("theme", theme);
-//        editor.apply();
-//    }
 
     void changeTheme(){
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
@@ -313,7 +256,6 @@ public class MainApp extends AppCompatActivity {
         this.recreate();
     }
 
-
     public boolean checkNetworkConnection(){
         ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
@@ -323,76 +265,76 @@ public class MainApp extends AppCompatActivity {
     public void isConnected() {
         if (checkNetworkConnection()) {
             StringRequest stringRequest = new StringRequest(Request.Method.GET, INIT,
-                    new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            if(response.equals("OK")){
-                                connectivity = true;
-                            }else{
-                                resDialog
-                                        .setTitle("Warning")
-                                        .setMessage("Please connect to our wifi first to use this app or else you can only see the list of menus")
-                                        .setPositiveButton("CONNECT", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                                startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                                                recreate();
-                                            }
-                                        })
-                                        .setNegativeButton("CONTINUE", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                dialog.dismiss();
-                                            }
-                                        })
-                                        .setIcon(android.R.drawable.ic_dialog_alert)
-                                        .setCancelable(false)
-                                        .show();
-                            }
-                            getLine();
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        if(response.equals("OK")){
+                            connectivity = true;
+                        }else{
+                            resDialog
+                                .setTitle("Warning")
+                                .setMessage("Please connect to our wifi first to use this app or else you can only see the list of menus")
+                                .setPositiveButton("CONNECT", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                                        recreate();
+                                    }
+                                })
+                                .setNegativeButton("CONTINUE", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setIcon(android.R.drawable.ic_dialog_alert)
+                                .setCancelable(false)
+                                .show();
                         }
-                    },
-                    new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            connectivity = false;
-                            isConnected();
+                        getLine();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        connectivity = false;
+                        isConnected();
 
-                        }
-                    });
+                    }
+                });
             VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         }else{
             new AlertDialog.Builder(this)
-                    .setTitle("Warning")
-                    .setMessage("Please connect to our wifi named \"Giligans\" first to use this app or else you can only see the list of menus")
-                    .setPositiveButton("CONNECT", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                            startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-                            recreate();
+                .setTitle("Warning")
+                .setMessage("Please connect to our wifi named \"Giligans\" first to use this app or else you can only see the list of menus")
+                .setPositiveButton("CONNECT", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+                        recreate();
 
-                        }
-                    })
-                    .setNegativeButton("CONTINUE", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setCancelable(false)
-                    .show();
+                    }
+                })
+                .setNegativeButton("CONTINUE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setCancelable(false)
+                .show();
             connectivity = false;
         }
     }
 
     private void setupDrawerContent(NavigationView navigationView) {
         navigationView.setNavigationItemSelectedListener(
-                new NavigationView.OnNavigationItemSelectedListener() {
-                    @Override
-                    public boolean onNavigationItemSelected(@NotNull MenuItem menuItem) {
-                        selectDrawerItem(menuItem);
-                        return true;
-                    }
-                });
+            new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NotNull MenuItem menuItem) {
+                    selectDrawerItem(menuItem);
+                    return true;
+                }
+            });
     }
 
     public void selectDrawerItem(MenuItem menuItem) {
@@ -409,18 +351,18 @@ public class MainApp extends AppCompatActivity {
             case R.id.nav_third_fragment:
                 if(!inqueue) {
                     new AlertDialog.Builder(this)
-                            .setTitle("Logout")
-                            .setMessage("Are you sure you want to logout ?")
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    SharedPrefManager.getInstance(getApplicationContext()).logout();
-                                    finish();
-                                    startActivity(new Intent(getApplicationContext(), MainActivity.class));
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, null)
-                            .setIcon(android.R.drawable.ic_dialog_alert)
-                            .show();
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to logout ?")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                SharedPrefManager.getInstance(getApplicationContext()).logout();
+                                finish();
+                                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            }
+                        })
+                        .setNegativeButton(android.R.string.no, null)
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
                 }
                 break;
 //            case R.id.nav_switch:
@@ -484,43 +426,44 @@ public class MainApp extends AppCompatActivity {
 
     public void getLine(){
         final StringRequest stringRequest = new StringRequest(Request.Method.GET, FETCH_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        customer = new ArrayList<QueueModel>();
-                        try {
-                            JSONArray items = new JSONArray(response);
-                            for (int i = 0; i < items.length(); i++) {
-                                JSONObject itemObject = items.getJSONObject(i);
+            new Response.Listener<String>() {
+                @Override
+                public void onResponse(String response) {
+                    customer = new ArrayList<QueueModel>();
+                    try {
+                        JSONArray items = new JSONArray(response);
+                        for (int i = 0; i < items.length(); i++) {
+                            JSONObject itemObject = items.getJSONObject(i);
 
-                                String queue_id = itemObject.getString("queue_id");
-                                String id = itemObject.getString("customer_id");
-                                String name = itemObject.getString("customer_name");
-                                String status = itemObject.getString("status");
+                            String queue_id = itemObject.getString("queue_id");
+                            String id = itemObject.getString("customer_id");
+                            String name = itemObject.getString("customer_name");
+                            String status = itemObject.getString("status");
 
-                                customer.add(new QueueModel(queue_id, id, name, status));
-                            }
-                            if (line.isAdded()) {
-                                line.queueAdapter.update(customer);
-                                line.shimmerFrameLayout.startShimmer();
-                                line.shimmerFrameLayout.setVisibility(View.GONE);
-                                line.customerRecycler.setVisibility(View.VISIBLE);
-                            }
-                        } catch (JSONException e) { e.printStackTrace(); }
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        getLine();
-                    }
-                });
+                            customer.add(new QueueModel(queue_id, id, name, status));
+                        }
+                        if (line.isAdded()) {
+                            line.queueAdapter.update(customer);
+                            line.shimmerFrameLayout.startShimmer();
+                            line.shimmerFrameLayout.setVisibility(View.GONE);
+                            line.customerRecycler.setVisibility(View.VISIBLE);
+                        }
+                    } catch (JSONException e) { e.printStackTrace(); }
+                }
+            },
+            new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                getLine();
+            }
+        });
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
                 if (line.isAdded()) {
                     if(line.queueAdapter.getItemCount() == 0){
                         line.empty.setVisibility(View.VISIBLE);
@@ -538,27 +481,25 @@ public class MainApp extends AppCompatActivity {
     public void orderDone(){
         final RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_USER,
-                new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response){
-
-                        if(!Boolean.parseBoolean(response)){
-                            inqueue = true;
-                            bottomNav.setSelectedItemId(R.id.navigation_line);
-                            Intent serviceIntent = new Intent(getApplicationContext(), QueueListener.class);
-                            serviceIntent.putExtra("inputExtra", "Test");
-                            ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
-                        }
-
+            new Response.Listener<String>(){
+                @Override
+                public void onResponse(String response){
+                    if(!Boolean.parseBoolean(response)){
+                        inqueue = true;
+                        bottomNav.setSelectedItemId(R.id.navigation_line);
+                        Intent serviceIntent = new Intent(getApplicationContext(), QueueListener.class);
+                        serviceIntent.putExtra("inputExtra", "Test");
+                        ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
                     }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        inqueue = false;
-                        showMessage("orderDoneFetchErr" + error.getMessage());
-                    }
-                }) {
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error){
+                    inqueue = false;
+                    showMessage("orderDoneFetchErr" + error.getMessage());
+                }
+            }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
@@ -575,19 +516,19 @@ public class MainApp extends AppCompatActivity {
     public void orderPaid(){
         final RequestQueue requestQueue = Volley.newRequestQueue(getApplication());
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_USER,
-                new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response){
-                        isPaid = Boolean.parseBoolean(response);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error){
-                        isPaid = false;
-                        showMessage("orderDoneFetchErr" + error.getMessage());
-                    }
-                }) {
+            new Response.Listener<String>(){
+                @Override
+                public void onResponse(String response){
+                    isPaid = Boolean.parseBoolean(response);
+                }
+            },
+            new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error){
+                    isPaid = false;
+                    showMessage("orderDoneFetchErr" + error.getMessage());
+                }
+            }) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<String, String>();
@@ -605,14 +546,38 @@ public class MainApp extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         setFragment(bottomNav.getSelectedItemId());
+        orderPaid();
+        displayMessage();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         orderDone();
-
+        orderPaid();
+        displayMessage();
     }
+
+    void displayMessage(){
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            if(extras.getBoolean("done")){
+                resDialog
+                    .setTitle("Your order is ready !")
+                    .setMessage("PLEASE GO TO THE COUNTER NOW TO CLAIM YOUR ORDER.")
+                    .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setCancelable(false)
+                    .show();
+            }
+        }
+    }
+
+
 
     public synchronized void setFragment(int item){
         Fragment selectedFragment = null;
@@ -637,32 +602,32 @@ public class MainApp extends AppCompatActivity {
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public synchronized boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
-                    switch (item.getItemId()) {
-                        case R.id.navigation_home:
-                            selectedFragment = new FavoritesFragment();
-                            break;
-                        case R.id.navigation_dashboard:
-                            selectedFragment = new HomeFragment();
-                            break;
-                        case R.id.navigation_notifications:
-                            selectedFragment = new PlateFragment();
-                            break;
-                        case R.id.navigation_line:
-                            selectedFragment = line;
-                            break;
-                        default:
-                            selectedFragment = new FavoritesFragment();
-                            break;
-                    }
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                            selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
-                    return true;
+        new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public synchronized boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Fragment selectedFragment = null;
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+                        selectedFragment = new FavoritesFragment();
+                        break;
+                    case R.id.navigation_dashboard:
+                        selectedFragment = new HomeFragment();
+                        break;
+                    case R.id.navigation_notifications:
+                        selectedFragment = new PlateFragment();
+                        break;
+                    case R.id.navigation_line:
+                        selectedFragment = line;
+                        break;
+                    default:
+                        selectedFragment = new FavoritesFragment();
+                        break;
                 }
-            };
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                        selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                return true;
+            }
+        };
 
     private Fragment getVisibleFragment() {
         FragmentManager fragmentManager = MainApp.this.getSupportFragmentManager();

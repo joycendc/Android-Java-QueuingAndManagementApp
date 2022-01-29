@@ -1,5 +1,7 @@
 package com.oicen.queueapp.activities;
 
+import static com.oicen.queueapp.BuildConfig.HOST;
+
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -21,7 +23,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Registration extends AppCompatActivity {
-    final String SIGNUP_URL = ApiHelper.SIGNUP_URL;
+    final String SIGNUP_URL = HOST + ApiHelper.SIGNUP_URL;
     TextInputEditText fnameField, lnameField, confirmField, mobileField;
     Button signup;
 
