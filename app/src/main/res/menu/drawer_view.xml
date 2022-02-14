@@ -10,10 +10,10 @@
             android:icon="@drawable/ic_fastfood_24dp"
             android:title="Recent Orders" />
 
-<!--        <item android:id="@+id/nav_switch"-->
-<!--            app:actionLayout="@layout/action_view_switch"-->
-<!--            android:icon="@drawable/ic_theme_24dp"-->
-<!--            android:title="Dark Theme" />-->
+        <item android:id="@+id/nav_switch"
+            app:actionLayout="@layout/action_view_switch"
+            android:icon="@drawable/ic_theme_24dp"
+            android:title="Dark Theme" />
 
         <item
             android:id="@+id/nav_third_fragment"

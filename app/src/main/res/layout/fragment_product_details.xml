@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <com.qhutch.elevationimageview.ElevationImageView
+            <com.jsibbold.zoomage.ZoomageView
                 android:id="@+id/big_image"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
@@ -80,10 +80,33 @@
                 android:padding="10dp"
                 android:scaleType="fitCenter"
                 android:src="@drawable/ic_fastfood_24dp"
+                app:zoomage_restrictBounds="false"
+                app:zoomage_animateOnReset="true"
+                app:zoomage_autoResetMode="UNDER"
+                app:zoomage_autoCenter="true"
+                app:zoomage_zoomable="true"
+                app:zoomage_translatable="true"
+                app:zoomage_minScale="0.6"
+                app:zoomage_maxScale="8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                />
+
+<!--            <com.qhutch.elevationimageview.ElevationImageView-->
+<!--                android:id="@+id/big_image"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="300dp"-->
+<!--                android:layout_marginTop="10dp"-->
+<!--                android:maxHeight="360dp"-->
+<!--                android:padding="10dp"-->
+<!--                android:scaleType="fitCenter"-->
+<!--                android:src="@drawable/ic_fastfood_24dp"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.0"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent" />-->
 
             <TextView
                 android:id="@+id/productName"

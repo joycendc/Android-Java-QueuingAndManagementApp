@@ -12,7 +12,7 @@ public class VolleySingleton {
 
     public VolleySingleton(Context conetxt) {
         mCtx = conetxt;
-        mRequestQueue = getRequestQueu();
+        mRequestQueue = getRequestQueue();
     }
 
     public static synchronized VolleySingleton getInstance(Context context){
@@ -22,7 +22,7 @@ public class VolleySingleton {
         return mInstance;
     }
 
-    public RequestQueue getRequestQueu(){
+    public RequestQueue getRequestQueue(){
         if(mRequestQueue == null){
             mRequestQueue = Volley.newRequestQueue(mCtx.getApplicationContext());
         }
@@ -30,6 +30,6 @@ public class VolleySingleton {
     }
 
     public <T> void addToRequestQueue(Request<T> req){
-        getRequestQueu().add(req);
+        getRequestQueue().add(req);
     }
 }

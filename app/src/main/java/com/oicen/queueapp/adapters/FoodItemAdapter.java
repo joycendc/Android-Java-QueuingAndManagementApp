@@ -1,6 +1,7 @@
 package com.oicen.queueapp.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.oicen.queueapp.R;
 import com.oicen.queueapp.fragments.ProducDetailsFragment;
 import com.oicen.queueapp.models.FoodModel;
+import com.oicen.queueapp.utils.GlideApp;
 
 import java.util.List;
 
@@ -53,7 +55,7 @@ public class FoodItemAdapter extends RecyclerView.Adapter<FoodItemAdapter.Recent
         holder.name.setText(foodModelList.get(position).getName());
         holder.price.setText("₱ " + foodModelList.get(position).getPrice());
 
-        Glide.with(context)
+        GlideApp.with(context)
             .load(foodModelList.get(position).getImageUrl())
             .placeholder(R.drawable.ic_menu_24dp)
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)

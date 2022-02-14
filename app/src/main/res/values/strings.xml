@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">FoodOrderQueue</string>
+    <string name="app_name">Kumpares Ordering App</string>
     <string name="title_home">Favorites</string>
     <string name="title_dashboard">Home</string>
     <string name="title_notifications">Plate</string>

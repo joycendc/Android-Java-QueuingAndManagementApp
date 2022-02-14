@@ -16,6 +16,8 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -35,7 +37,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.oicen.queueapp.BuildConfig.HOST;
 
@@ -68,6 +72,8 @@ public class TabCategoryFragment extends Fragment {
 
         if(catId > 0) ITEM_URL = HOST + ApiHelper.ITEM_URLCAT + catId;
         dbHelper = new DBHelper(context);
+        shimmerFrameLayout.startShimmer();
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
         loadItems();
         return view;
     }
@@ -87,7 +93,6 @@ public class TabCategoryFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        shimmerFrameLayout.stopShimmer();
         super.onDestroyView();
     }
 
@@ -108,7 +113,7 @@ public class TabCategoryFragment extends Fragment {
         }
 
         setRecentlyViewedRecycler(foodListList);
-        shimmerFrameLayout.startShimmer();
+        shimmerFrameLayout.stopShimmer();
         shimmerFrameLayout.setVisibility(View.GONE);
         foodListRecycler.setVisibility(View.VISIBLE);
         cursor.close();
@@ -139,7 +144,7 @@ public class TabCategoryFragment extends Fragment {
                                 foodListList.add(new FoodModel(id, name, description, price, url, url));
                             }
                             setRecentlyViewedRecycler(foodListList);
-                            shimmerFrameLayout.startShimmer();
+                            shimmerFrameLayout.stopShimmer();
                             shimmerFrameLayout.setVisibility(View.GONE);
                             foodListRecycler.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
@@ -152,7 +157,18 @@ public class TabCategoryFragment extends Fragment {
                     public void onErrorResponse(VolleyError error){
                         readFromLocalDB();
                     }
-                });
+                }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                    return headers;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0, -1,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
 
         }

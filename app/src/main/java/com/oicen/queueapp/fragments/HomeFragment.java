@@ -29,11 +29,15 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.oicen.queueapp.R;
 import com.oicen.queueapp.activities.MainApp;
@@ -44,6 +48,7 @@ import com.oicen.queueapp.utils.ApiHelper;
 import com.oicen.queueapp.utils.AutoFitRecyclerView;
 import com.oicen.queueapp.utils.DBContract;
 import com.oicen.queueapp.utils.DBHelper;
+import com.oicen.queueapp.utils.GlideApp;
 import com.oicen.queueapp.utils.VolleySingleton;
 import com.google.android.material.tabs.TabLayout;
 import com.qhutch.elevationimageview.ElevationImageView;
@@ -53,7 +58,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static com.oicen.queueapp.BuildConfig.HOST;
 
@@ -78,6 +85,7 @@ public class HomeFragment extends Fragment {
     LinearLayout categoryview;
     int pos;
     ShimmerFrameLayout shimmerFrameLayout;
+    private View rootView = null;
 
     public HomeFragment() {
         this.pos = 0;
@@ -91,7 +99,8 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getActivity();
-        View rootView = inflater.inflate(R.layout.fragment_home, container, false);
+        if(rootView != null) return rootView;
+        rootView = inflater.inflate(R.layout.fragment_home, container, false);
         dbHelper = new DBHelper(context);
         favoriteFoodsRecycler = (RecyclerView) rootView.findViewById(R.id.recently_item);
         firstViewPager = (ViewPager) rootView.findViewById(R.id.viewpager_content);
@@ -117,6 +126,7 @@ public class HomeFragment extends Fragment {
                     categoryview.setVisibility(View.VISIBLE);
                 } else {
                     QUERY_URL = HOST + "searchItems.php?query=" + s.toString();
+                    shimmerFrameLayout.startShimmer();
                     shimmerFrameLayout.setVisibility(View.VISIBLE);
                     categoryview.setVisibility(View.GONE);
                     loadItems(QUERY_URL);
@@ -138,6 +148,8 @@ public class HomeFragment extends Fragment {
                 return handled;
             }
         });
+        shimmerFrameLayout.startShimmer();
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
 
         return rootView;
     }
@@ -194,7 +206,7 @@ public class HomeFragment extends Fragment {
                                 foodModelList.add(new FoodModel(id, name, description, price, url, url));
                             }
                             foodItemAdapter.updateList(foodModelList);
-                            shimmerFrameLayout.startShimmer();
+                            shimmerFrameLayout.stopShimmer();
                             shimmerFrameLayout.setVisibility(View.GONE);
                             recently_item.setVisibility(View.VISIBLE);
                         } catch (JSONException e) {
@@ -209,7 +221,19 @@ public class HomeFragment extends Fragment {
                         String param = uri.getQueryParameter("query");
                         readFromLocalDB(param);
                     }
-                });
+                }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                    return headers;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0, -1,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
             VolleySingleton.getInstance(getActivity().getApplicationContext()).addToRequestQueue(stringRequest);
         }
     }
@@ -366,11 +390,15 @@ public class HomeFragment extends Fragment {
                             tabText.setText(name);
                             icon = (ElevationImageView) tab.findViewById(R.id.icon);
 
-                            Glide.with(context)
+                            GlideApp.with(context.getApplicationContext())
                                 .load(tabIcons[i])
                                 .placeholder(R.drawable.ic_fastfood_24dp)
+                                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)
+                                .error(R.drawable.ic_fastfood_24dp))
                                 .dontAnimate()
                                 .into(icon);
+
+
                             icon.setElevation(8);
 
                             tabLayout.getTabAt(i).setCustomView(tab);
@@ -412,6 +440,8 @@ public class HomeFragment extends Fragment {
                         tabLayout.setScrollPosition(pos,0f,true);
                         viewPager.setCurrentItem(pos);
                         adapter.SetOnSelectView(tabLayout, pos);
+                        shimmerFrameLayout.stopShimmer();
+                        shimmerFrameLayout.setVisibility(View.GONE);
 
                     } catch (JSONException e) {
                         Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -423,7 +453,18 @@ public class HomeFragment extends Fragment {
                     public void onErrorResponse(VolleyError error) {
                         readFromLocalDB();
                     }
-                });
+                }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                    return headers;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0, -1,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
         }
     }

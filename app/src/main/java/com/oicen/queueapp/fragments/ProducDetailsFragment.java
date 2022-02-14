@@ -5,6 +5,7 @@ import static com.oicen.queueapp.BuildConfig.HOST;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,15 +20,19 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.oicen.queueapp.R;
 import com.oicen.queueapp.activities.MainApp;
 import com.oicen.queueapp.models.PlateModel;
 import com.oicen.queueapp.utils.ApiHelper;
+import com.oicen.queueapp.utils.GlideApp;
 import com.oicen.queueapp.utils.VolleySingleton;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
@@ -87,19 +92,21 @@ public class ProducDetailsFragment extends Fragment {
         proPrice.setText("₱ " + this.price);
         proDesc.setText(this.description);
 
-        Glide.with(getContext())
+        GlideApp.with(getContext())
                 .load(foodImage)
                 .placeholder(R.drawable.ic_fastfood_24dp)
+                .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)
+                .error(R.drawable.ic_fastfood_24dp))
+                .dontAnimate()
                 .into(food);
+
 
         food.setElevation(10);
 
         if(((MainApp)getActivity()).connectivity) addToPlate.setEnabled(true);
 
 
-
-
-            inc.setOnClickListener(new View.OnClickListener() {
+        inc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(qty < 10) qty++;
@@ -223,7 +230,17 @@ public class ProducDetailsFragment extends Fragment {
                 params.put("fave", "check");
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0, -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
 
     }
@@ -262,7 +279,17 @@ public class ProducDetailsFragment extends Fragment {
                 params.put("fave", mode);
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0, -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(getContext()).addToRequestQueue(stringRequest);
     }
 

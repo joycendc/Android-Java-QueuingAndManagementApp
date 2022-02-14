@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:singleLine="true"
-                android:text="000000" />
+                />
         </com.google.android.material.textfield.TextInputLayout>
 
 

@@ -39,6 +39,67 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="MissingConstraints"
+        android:visibility="gone"
+        android:layout_marginTop="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/alltime"
+        app:layout_constraintVertical_bias="0">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.gridlayout.widget.GridLayout
+                app:columnCount="3"
+                app:rowCount="4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
+                app:useDefaultMargins="true"
+                app:orientation="horizontal">
+
+                <!--add  several shimmer placeholder layout -->
+
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+                <include  android:layout_width="180dp"
+                    android:layout_height="wrap_content"
+                    layout="@layout/food_item_shimmer"></include>
+
+            </androidx.gridlayout.widget.GridLayout>
+        </RelativeLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
     <com.oicen.queueapp.utils.AutoFitRecyclerView
         android:id="@+id/recently_item"
         android:layout_width="match_parent"
@@ -50,7 +111,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/alltime"
+        app:layout_constraintTop_toBottomOf="@+id/shimmerLayout"
         app:layout_constraintVertical_bias="0" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -36,6 +36,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <activity
+            android:exported="true"
             android:name=".activities.MainActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait">

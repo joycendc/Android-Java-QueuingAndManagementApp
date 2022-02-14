@@ -38,6 +38,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -89,9 +91,6 @@ public class MainApp extends AppCompatActivity {
     final String FETCH_URL = HOST + ApiHelper.FETCH_URL;
     final String GET_USER = HOST + ApiHelper.GET_USER;
     final String INIT = HOST + ApiHelper.INIT;
-    //final String GET_TIME = HOST + ApiHelper.GET_TIME;
-    //String REMOVE = HOST + ApiHelper.REMOVE;
-
     public BottomNavigationView bottomNav;
     public ArrayList<QueueModel> customer;
     ProducDetailsFragment product;
@@ -134,6 +133,7 @@ public class MainApp extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main_app);
+
         isConnected();
 
         top = (ConstraintLayout) findViewById(R.id.topBar);
@@ -152,7 +152,7 @@ public class MainApp extends AppCompatActivity {
             }
         });
 
-//        switchTheme = (SwitchCompat) nvDrawer.getMenu().getItem(2).getActionView().findViewById(R.id.switchTheme);
+        switchTheme = (SwitchCompat) nvDrawer.getMenu().getItem(2).getActionView().findViewById(R.id.switchTheme);
 
         settings2 = (ImageView) nvDrawer.getHeaderView(0).findViewById(R.id.settings);
 
@@ -242,7 +242,18 @@ public class MainApp extends AppCompatActivity {
                     public void onErrorResponse(VolleyError error) {
                         db.close();
                     }
-                });
+                }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                    return headers;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0, -1,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         }
     }
@@ -300,7 +311,18 @@ public class MainApp extends AppCompatActivity {
                         isConnected();
 
                     }
-                });
+                }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                    return headers;
+                }
+            };
+
+            stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                    0, -1,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
             VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
         }else{
             new AlertDialog.Builder(this)
@@ -365,11 +387,11 @@ public class MainApp extends AppCompatActivity {
                         .show();
                 }
                 break;
-//            case R.id.nav_switch:
-//                switchTheme.setChecked(!switchTheme.isChecked());
-//
-//                changeTheme();
-//                break;
+            case R.id.nav_switch:
+                switchTheme.setChecked(!switchTheme.isChecked());
+
+                changeTheme();
+                break;
             default:
                 fragmentClass = null;
         }
@@ -425,7 +447,7 @@ public class MainApp extends AppCompatActivity {
     }
 
     public void getLine(){
-        final StringRequest stringRequest = new StringRequest(Request.Method.GET, FETCH_URL,
+         final StringRequest stringRequest = new StringRequest(Request.Method.GET, FETCH_URL,
             new Response.Listener<String>() {
                 @Override
                 public void onResponse(String response) {
@@ -449,6 +471,7 @@ public class MainApp extends AppCompatActivity {
                             line.customerRecycler.setVisibility(View.VISIBLE);
                         }
                     } catch (JSONException e) { e.printStackTrace(); }
+
                 }
             },
             new Response.ErrorListener() {
@@ -456,7 +479,20 @@ public class MainApp extends AppCompatActivity {
             public void onErrorResponse(VolleyError error) {
                 getLine();
             }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
+        };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0, -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
+        VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -471,11 +507,11 @@ public class MainApp extends AppCompatActivity {
                     }else{
                         line.empty.setVisibility(View.INVISIBLE);
                     }
-                    if(inqueue) line.pay.setVisibility(View.VISIBLE);
+                    if(inqueue && !isPaid) line.pay.setVisibility(View.VISIBLE);
                 }
-                handler.postDelayed(this, 500);
+                handler.postDelayed(this, 1000);
             }
-        }, 500);
+        }, 1000);
     }
 
     public void orderDone(){
@@ -483,12 +519,13 @@ public class MainApp extends AppCompatActivity {
         final StringRequest stringRequest = new StringRequest(Request.Method.POST, GET_USER,
             new Response.Listener<String>(){
                 @Override
-                public void onResponse(String response){
-                    if(!Boolean.parseBoolean(response)){
+                public void onResponse(String isInQueue){
+                    if(Boolean.parseBoolean(isInQueue)){
                         inqueue = true;
                         bottomNav.setSelectedItemId(R.id.navigation_line);
                         Intent serviceIntent = new Intent(getApplicationContext(), QueueListener.class);
                         serviceIntent.putExtra("inputExtra", "Test");
+                        serviceIntent.setAction("START_MAIN");
                         ContextCompat.startForegroundService(getApplicationContext(), serviceIntent);
                     }
                 }
@@ -509,7 +546,17 @@ public class MainApp extends AppCompatActivity {
                 params.put("queue", "queueListener");
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0, -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
@@ -538,7 +585,17 @@ public class MainApp extends AppCompatActivity {
                 params.put("paid", "paymentListener");
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0, -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
     }
 
@@ -553,7 +610,10 @@ public class MainApp extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        orderDone();
+        Bundle extras = getIntent().getExtras();
+        if(extras == null){
+            orderDone();
+        }
         orderPaid();
         displayMessage();
     }
@@ -576,8 +636,6 @@ public class MainApp extends AppCompatActivity {
             }
         }
     }
-
-
 
     public synchronized void setFragment(int item){
         Fragment selectedFragment = null;
@@ -623,8 +681,10 @@ public class MainApp extends AppCompatActivity {
                         selectedFragment = new FavoritesFragment();
                         break;
                 }
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                        selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                if (!getSupportFragmentManager().isDestroyed()) {
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                            selectedFragment).setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).commit();
+                }
                 return true;
             }
         };

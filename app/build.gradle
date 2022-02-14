@@ -2,31 +2,46 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion 30
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\hp\\Desktop\\Android\\app_keys.jks')
+            storePassword '197346285'
+            keyAlias 'key0'
+            keyPassword '197346285'
+        }
+        release {
+            storeFile file('C:\\Users\\hp\\Desktop\\Android\\app_keys.jks')
+            storePassword '197346285'
+            keyAlias 'key0'
+            keyPassword '197346285'
+        }
+    }
+    compileSdkVersion 31
     buildToolsVersion "30.0.2"
 
     defaultConfig {
         applicationId "com.oicen.queueapp"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
 
-        renderscriptTargetApi 18
+        renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        signingConfig signingConfigs.release
     }
 
     buildTypes {
         def ipList = getLocalIPv4();
         debug {
             buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(1) + '/API/"'
-//            buildConfigField "String", "HOST", '"https://kumpares-management.000webhostapp.com/API/"'
+//            buildConfigField "String", "HOST", '"https://kumpares-management.ml/API/"'
         }
         release {
-            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(1) + '/API/"'
-//            buildConfigField "String", "HOST", '"https://kumpares-management.000webhostapp.com/API/"'
+//            buildConfigField "String", "HOST", ipList.empty ? '""' : '"http://' + ipList.get(1) + '/API/"'
+            buildConfigField "String", "HOST", '"https://kumpares-management.ml/API/"'
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
@@ -53,26 +68,29 @@ android {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation 'androidx.appcompat:appcompat:1.3.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+    implementation 'com.google.android.material:material:1.5.0'
     implementation 'com.android.support.constraint:constraint-layout:2.0.4'
-    testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'com.android.volley:volley:1.2.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.github.bumptech.glide:glide:4.12.0'
+    implementation 'com.github.bumptech.glide:annotations:4.12.0'
+    implementation "com.github.bumptech.glide:okhttp3-integration:4.12.0"
     annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.core:core-ktx:1.5.0'
+    implementation 'androidx.core:core-ktx:1.7.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'com.journeyapps:zxing-android-embedded:3.4.0'
-    implementation 'androidx.recyclerview:recyclerview:1.2.0'
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+    implementation 'androidx.recyclerview:recyclerview:1.2.1'
     implementation 'com.qhutch.elevationimageview:elevationimageview:2.4'
     implementation 'androidx.gridlayout:gridlayout:1.0.0'
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
-    implementation 'androidx.fragment:fragment:1.1.0-rc03'
+    implementation 'androidx.fragment:fragment-ktx:1.4.1'
+    implementation 'com.jsibbold:zoomage:1.3.1'
 
 }
 repositories {

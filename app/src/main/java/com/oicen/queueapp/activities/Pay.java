@@ -6,12 +6,15 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -47,6 +50,7 @@ public class Pay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pay);
+
 
         getSupportActionBar().hide();
 
@@ -89,7 +93,7 @@ public class Pay extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             isPaid = Boolean.parseBoolean(response);
-
+                            Log.i("PAID",  " " + isPaid);
                         } catch (Exception e) {
                             e.printStackTrace(); }
                     }
@@ -109,23 +113,35 @@ public class Pay extends AppCompatActivity {
                     params.put("paid", "paymentListener");
                     return params;
                 }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
 
         final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        final Runnable runnable = new Runnable() {
             @Override
             public void run() {
+                stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                        0, -1,
+                        DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
                 VolleySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
 
                 if(isPaid){
+                    handler.removeCallbacks(this);
                     Intent i = new Intent();
                     i.putExtra("result", "Payment Success!");
                     setResult(RESULT_OK, i);
                     finish();
+                }else{
+                    handler.postDelayed(this, 1000);
                 }
-                handler.postDelayed(this, 500);
             }
-        }, 500);
+        };
     }
 
 

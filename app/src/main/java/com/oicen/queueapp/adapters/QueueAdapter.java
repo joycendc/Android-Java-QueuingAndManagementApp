@@ -2,24 +2,30 @@ package com.oicen.queueapp.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -28,6 +34,7 @@ import com.oicen.queueapp.R;
 import com.oicen.queueapp.activities.MainApp;
 import com.oicen.queueapp.models.OrderModel;
 import com.oicen.queueapp.models.QueueModel;
+import com.oicen.queueapp.network.QueueListener;
 import com.oicen.queueapp.utils.ApiHelper;
 import com.oicen.queueapp.utils.QueueDiffUtilCallBack;
 import com.oicen.queueapp.utils.VolleySingleton;
@@ -45,15 +52,18 @@ import static com.oicen.queueapp.BuildConfig.HOST;
 
 public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerViewHolder> {
     final String FETCH_URL = HOST + ApiHelper.GET_ORDERS;
+    final String CANCEL_URL = HOST + ApiHelper.REMOVE;
     public ArrayList<QueueModel> customer;
     Context context;
     RecyclerView ordersRecycler;
     OrderAdapter orderAdapter;
     ArrayList<OrderModel> orderList;
+    AlertDialog.Builder resDialog;
 
     public QueueAdapter(Context context, ArrayList<QueueModel> customer) {
         this.context = context;
         this.customer = customer;
+
     }
 
     public void update(ArrayList<QueueModel> newData){
@@ -80,6 +90,8 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
 
     @Override
     public void onBindViewHolder(@NonNull CustomerViewHolder holder, @SuppressLint("RecyclerView") int position) {
+
+        resDialog =  new AlertDialog.Builder(context);
         SharedPreferences sharedPreferences = context.getSharedPreferences("login", Context.MODE_PRIVATE);
         String keyname = sharedPreferences.getString("keyfname", null) + " " + sharedPreferences.getString("keylname", null);
         holder.name.setText("CUSTOMER " + (position + 1));
@@ -141,6 +153,7 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                         View mView = LayoutInflater.from(context).inflate(R.layout.order_details_dialog, null);
                         MaterialButton btn_cancel = (MaterialButton) mView.findViewById(R.id.btn_cancel);
                         MaterialButton btn_okay = (MaterialButton) mView.findViewById(R.id.btn_okay);
+                        Button cancelOrder = (Button) mView.findViewById(R.id.cancel);
                         ordersRecycler = (RecyclerView) mView.findViewById(R.id.orderList);
                         TextView total = (TextView) mView.findViewById(R.id.total);
 
@@ -170,11 +183,79 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                                 alertDialog.dismiss();
                             }
                         });
+                        cancelOrder.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                resDialog
+                                    .setTitle("Warning")
+                                    .setMessage("Are you sure to cancel your order ?")
+                                    .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            Intent serviceIntent = new Intent(context, QueueListener.class);
+                                            serviceIntent.setAction("STOP");
+                                            ContextCompat.startForegroundService(context, serviceIntent);
+
+                                            cancelOrder();
+                                            dialog.dismiss();
+
+                                        }
+                                    })
+                                    .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                                    .setIcon(android.R.drawable.ic_dialog_alert)
+                                    .setCancelable(false)
+                                    .show();
+                            }
+                        });
                         alertDialog.show();
                     }
                 }
             }
         });
+    }
+
+    void cancelOrder(){
+        final StringRequest stringRequest = new StringRequest(Request.Method.POST, CANCEL_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        try {
+                            JSONObject obj = new JSONObject(response);
+                            String message = obj.getString("message");
+                            if (!obj.getBoolean("error")) {
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            } else  {
+                                Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (Exception e) { e.printStackTrace(); }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+
+                    }
+                })  {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+                SharedPreferences sharedPreferences = context.getSharedPreferences("login", Context.MODE_PRIVATE);
+                String id = sharedPreferences.getString("keyid", null);
+                params.put("customer_id", id);
+                return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
+        };
+        VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 
     void fetchOrders(){
@@ -213,6 +294,12 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                 String id = sharedPreferences.getString("keyid", null);
                 params.put("customer_id", id);
                 return params;
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
             }
         };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);

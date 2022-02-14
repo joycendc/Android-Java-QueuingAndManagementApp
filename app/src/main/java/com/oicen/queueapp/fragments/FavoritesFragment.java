@@ -19,10 +19,12 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.oicen.queueapp.R;
 import com.oicen.queueapp.adapters.FoodItemAdapter;
 import com.oicen.queueapp.models.FoodModel;
@@ -47,6 +49,8 @@ public class FavoritesFragment extends Fragment {
     FragmentManager fragmentManager;
     TextView alltime, empty;
     Context context;
+    ShimmerFrameLayout shimmerFrameLayout;
+    private View view = null;
 
     public FavoritesFragment() { }
 
@@ -54,11 +58,16 @@ public class FavoritesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         context = getActivity();
+        if(view != null) return view;
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
         favoriteFoodsRecycler = (RecyclerView) view.findViewById(R.id.recently_item);
         alltime = (TextView) view.findViewById(R.id.alltime);
         empty = (TextView) view.findViewById(R.id.empty);
+        shimmerFrameLayout = (ShimmerFrameLayout) view.findViewById(R.id.shimmerLayout);
+
         foodModelList = new ArrayList<>();
+        shimmerFrameLayout.startShimmer();
+        shimmerFrameLayout.setVisibility(View.VISIBLE);
         loadItems();
 
         return view;
@@ -92,6 +101,8 @@ public class FavoritesFragment extends Fragment {
 
                             foodModelList.add(new FoodModel(id, name, description, price, url, url));
                         }
+                        shimmerFrameLayout.stopShimmer();
+                        shimmerFrameLayout.setVisibility(View.GONE);
                         setRecentlyViewedRecycler(foodModelList);
                         if(foodItemAdapter.getItemCount() == 0){
                             empty.setVisibility(View.VISIBLE);
@@ -120,7 +131,18 @@ public class FavoritesFragment extends Fragment {
                 params.put("fave", "fetch");
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0, -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
 

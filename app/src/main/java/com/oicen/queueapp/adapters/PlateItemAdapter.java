@@ -20,6 +20,7 @@ import com.oicen.queueapp.activities.MainApp;
 import com.oicen.queueapp.interfaces.TotalChangedListener;
 import com.oicen.queueapp.models.PlateModel;
 import com.google.gson.Gson;
+import com.oicen.queueapp.utils.GlideApp;
 
 import java.util.ArrayList;
 
@@ -55,7 +56,7 @@ public class PlateItemAdapter extends RecyclerView.Adapter<PlateItemAdapter.Plat
         holder.qty.setText(String.valueOf(plateModel.get(position).getQty()));
         holder.total.setText("₱ " + String.valueOf(String.format("%,d", plateModel.get(position).getTotal())));
 
-        Glide.with(context)
+        GlideApp.with(context)
             .load(plateModel.get(position).getBigimageurl())
             .placeholder(R.drawable.ic_menu_24dp)
             .apply(RequestOptions.diskCacheStrategyOf(DiskCacheStrategy.RESOURCE)

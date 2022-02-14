@@ -3,6 +3,7 @@ package com.oicen.queueapp.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
@@ -10,6 +11,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -49,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         else{ setTheme(R.style.AppTheme); }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         if (SharedPrefManager.getInstance(this).isLoggedIn()) {
             Intent intent = new Intent(getApplicationContext(), MainApp.class);
             startActivity(intent);
@@ -74,6 +77,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 
     void userLogin(){
@@ -83,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
             mobileNumberField.requestFocus();
             return;
         }
+
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, LOGIN_URL,
                 new Response.Listener<String>() {
@@ -112,6 +118,8 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                         }catch (Exception e){
+                            Log.e("volley", e.getMessage());
+
                             Toast.makeText(getApplicationContext(), "This number is not registered !", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -119,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
+                        Log.e("volley", volleyError.getMessage());
                         Toast.makeText(getApplicationContext(), "Please Connect to our Wifi first before using this app", Toast.LENGTH_LONG).show();
                     }
                 }) {
@@ -128,7 +137,19 @@ public class MainActivity extends AppCompatActivity {
                 params.put("mobile", number);
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                0, -1,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(this).addToRequestQueue(stringRequest);
     }
+
+
 }

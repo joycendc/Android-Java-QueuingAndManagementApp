@@ -35,6 +35,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -138,25 +140,7 @@ public class PlateFragment extends Fragment {
                             RadioButton radioType = (RadioButton) mView.findViewById(type);
                             insertToDB(note.getText().toString(), radioType.getText().toString().equals("DINE IN") ? 1 : 0, senior.isChecked() ? 1 : 0);
 
-                            total.setText("");
 
-                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
-                            ft.replace(R.id.fragment_container, new QueueFragment());
-                            ft.addToBackStack(null);
-                            ft.commit();
-                            totalAmount = 0;
-                            ((MainApp) getActivity()).bottomNav.setSelectedItemId(R.id.navigation_line);
-                            ((MainApp) getActivity()).inqueue = true;
-
-                            final Handler handler = new Handler(Looper.getMainLooper());
-                            handler.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    Intent serviceIntent = new Intent(context, QueueListener.class);
-                                    serviceIntent.putExtra("inputExtra", "Test");
-                                    ContextCompat.startForegroundService(context, serviceIntent);
-                                }
-                            }, 1000);
                             alertDialog.dismiss();
                         }
                     });
@@ -202,10 +186,31 @@ public class PlateFragment extends Fragment {
                 public void onResponse(String response) {
                     try {
                         JSONObject obj = new JSONObject(response);
+
                         if (!obj.getBoolean("error")) {
+                            total.setText("");
+
+                            FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
+                            ft.replace(R.id.fragment_container, new QueueFragment());
+                            ft.addToBackStack(null);
+                            ft.commit();
+                            totalAmount = 0;
+                            ((MainApp) getActivity()).bottomNav.setSelectedItemId(R.id.navigation_line);
+                            ((MainApp) getActivity()).inqueue = true;
+
+                            final Handler handler = new Handler(Looper.getMainLooper());
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Intent serviceIntent = new Intent(context, QueueListener.class);
+                                    serviceIntent.putExtra("plate", "plate");
+                                    serviceIntent.setAction("START");
+                                    ContextCompat.startForegroundService(context, serviceIntent);
+                                }
+                            }, 1000);
                             SharedPreferences sp = getActivity().getSharedPreferences("plate_list", Context.MODE_PRIVATE);
                             sp.edit().clear().commit();
-                            Toast.makeText(context, obj.getString("message"), Toast.LENGTH_LONG).show();
+                            ((MainApp) context).showMessage(obj.getString("message"));
 
                             plateModel = new ArrayList<PlateModel>();
                             setPlateListRecycler(plateModel);
@@ -248,7 +253,17 @@ public class PlateFragment extends Fragment {
 
                 return params;
             }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+                return headers;
+            }
         };
+
+        stringRequest.setRetryPolicy(new DefaultRetryPolicy(
+                DefaultRetryPolicy.DEFAULT_TIMEOUT_MS * 2, DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
 
     }
