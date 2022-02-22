@@ -24,6 +24,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.google.android.material.textfield.TextInputEditText;
 import com.oicen.queueapp.R;
 import com.oicen.queueapp.activities.MainApp;
 import com.oicen.queueapp.utils.ApiHelper;
@@ -36,7 +37,7 @@ import java.util.Map;
 
 public class UserFragment extends Fragment {
     String UPDATE_USER = HOST + ApiHelper.UPDATE_USER;
-    EditText fname, lname, mobile;
+    TextInputEditText fname, lname, mobile;
     ImageView back;
     Button update, cancel;
 
@@ -46,10 +47,10 @@ public class UserFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
 
-        fname = (EditText) view.findViewById(R.id.fname);
-        lname = (EditText) view.findViewById(R.id.lname);
+        fname = (TextInputEditText) view.findViewById(R.id.fname);
+        lname = (TextInputEditText) view.findViewById(R.id.lname);
         back = (ImageView) view.findViewById(R.id.back2);
-        mobile = (EditText) view.findViewById(R.id.confirmNumber);
+        mobile = (TextInputEditText) view.findViewById(R.id.confirmNumber);
         update = (Button) view.findViewById(R.id.button);
         cancel = (Button) view.findViewById(R.id.cancel);
 

@@ -2,6 +2,11 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 android {
+    splits{
+        abi {
+            universalApk true
+        }
+    }
     signingConfigs {
         debug {
             storeFile file('C:\\Users\\hp\\Desktop\\Android\\app_keys.jks')
@@ -25,10 +30,8 @@ android {
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
-
         renderscriptTargetApi 21
         renderscriptSupportModeEnabled true
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
     }

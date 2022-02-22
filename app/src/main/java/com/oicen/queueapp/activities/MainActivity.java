@@ -1,6 +1,8 @@
 package com.oicen.queueapp.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,7 +49,10 @@ public class MainActivity extends AppCompatActivity {
         catch (Exception e) {
             e.printStackTrace();
         }
-        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){ setTheme(R.style.AppThemeDark); }
+        setupTheme();
+        if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
+            setTheme(R.style.AppThemeDark);
+        }
         else{ setTheme(R.style.AppTheme); }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -79,6 +84,17 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    void setupTheme(){
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("theme", Context.MODE_PRIVATE);
+        boolean isDark = sp.getBoolean("isDark", false);
+        System.out.println(isDark);
+        if(isDark){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 
     void userLogin(){

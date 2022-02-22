@@ -14,9 +14,9 @@
 
     <style name="AppThemeDark" parent="Theme.MaterialComponents.DayNight">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">#222</item>
+        <item name="colorPrimary">@color/darkColorPrimary</item>
+        <item name="colorPrimaryDark">@color/darkColorPrimaryDark</item>
+        <item name="colorAccent">@color/darkColorAccent</item>
         <item name="android:windowActionBar">false</item>
         <item name="listPreferredItemHeightSmall">70dp</item>
         <item name="cardStyle">@style/CardView.Dark</item>

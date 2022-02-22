@@ -177,7 +177,7 @@ public class ProducDetailsFragment extends Fragment {
                     SharedPreferences.Editor editor = getActivity().getSharedPreferences("plate_list", Context.MODE_PRIVATE).edit();
                     Gson gson = new Gson();
                     json = gson.toJson(plateModel);
-                    editor.putString("orderlist", json).commit();
+                    editor.putString("orderlist", json).apply();
                     plateModel = new ArrayList<PlateModel>();
 
                     ((MainApp) getActivity()).setBadgeCount(((MainApp) getActivity()).getItemCount());

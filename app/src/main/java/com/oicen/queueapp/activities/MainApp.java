@@ -126,6 +126,7 @@ public class MainApp extends AppCompatActivity {
         product = new ProducDetailsFragment();
         tabcat = new TabCategoryFragment();
 
+        setupTheme();
         if(AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES){
             setTheme(R.style.AppThemeDark);
         }
@@ -199,6 +200,19 @@ public class MainApp extends AppCompatActivity {
         dbHelper = new DBHelper(getApplicationContext());
         fetchItemsFromServer();
         orderPaid();
+
+
+    }
+
+    void setupTheme(){
+        SharedPreferences sp = getApplicationContext().getSharedPreferences("theme", Context.MODE_PRIVATE);
+        boolean isDark = sp.getBoolean("isDark", false);
+        System.out.println(isDark);
+        if(isDark){
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+        }else{
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+        }
     }
 
     public void showMessage(String text){
@@ -259,9 +273,12 @@ public class MainApp extends AppCompatActivity {
     }
 
     void changeTheme(){
+        SharedPreferences.Editor editor = getApplicationContext().getSharedPreferences("theme", Context.MODE_PRIVATE).edit();
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
+            editor.putBoolean("isDark", false).apply();
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         } else {
+            editor.putBoolean("isDark", true).apply();
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
         }
         this.recreate();

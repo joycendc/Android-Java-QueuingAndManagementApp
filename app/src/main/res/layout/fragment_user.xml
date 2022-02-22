@@ -6,24 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".activities.MainApp">
 
-    <EditText
-        android:id="@+id/confirmNumber"
+<!--    <EditText-->
+<!--        android:id="@+id/confirmNumber"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="46dp"-->
+<!--        android:layout_marginStart="25dp"-->
+<!--        android:layout_marginEnd="25dp"-->
+<!--        android:clickable="true"-->
+<!--        android:cursorVisible="true"-->
+<!--        android:editable="true"-->
+<!--        android:ems="10"-->
+<!--        android:enabled="true"-->
+<!--        android:focusable="true"-->
+<!--        android:inputType="number"-->
+<!--        android:text="Name"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="1.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView12" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/numberLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="46dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginEnd="25dp"
-        android:clickable="true"
-        android:cursorVisible="true"
-        android:editable="true"
         android:ems="10"
-        android:enabled="true"
-        android:focusable="true"
-        android:inputType="number"
-        android:text="Name"
+        android:freezesText="false"
+        android:hint="Mobile Number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toBottomOf="@+id/textView12" >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/confirmNumber"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:clickable="true"
+            android:cursorVisible="true"
+            android:editable="true"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/textView12"
@@ -34,24 +60,50 @@
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/lname"
-        app:layout_constraintTop_toBottomOf="@+id/lname" />
+        app:layout_constraintStart_toStartOf="@+id/lnameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/lnameLayout" />
 
-    <EditText
-        android:id="@+id/lname"
+<!--    <EditText-->
+<!--        android:id="@+id/lname"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="25dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="25dp"-->
+<!--        android:ems="10"-->
+<!--        android:focusable="false"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:text="Name"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.0"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView11" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/lnameLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="46dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
         android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:freezesText="false"
+        android:hint="Last Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
+        app:layout_constraintTop_toBottomOf="@+id/textView11">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/lname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:clickable="true"
+            android:cursorVisible="true"
+            android:editable="true"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/textView11"
@@ -63,24 +115,51 @@
         android:textColor="@color/colorPrimary"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="@+id/fname"
-        app:layout_constraintTop_toBottomOf="@+id/fname" />
+        app:layout_constraintStart_toStartOf="@+id/fnameLayout"
+        app:layout_constraintTop_toBottomOf="@+id/fnameLayout" />
 
-    <EditText
-        android:id="@+id/fname"
+<!--    <EditText-->
+<!--        android:id="@+id/fname"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="25dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:layout_marginEnd="25dp"-->
+<!--        android:ems="10"-->
+<!--        android:focusable="false"-->
+<!--        android:inputType="textPersonName"-->
+<!--        android:text="Name"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.494"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/textView2" />-->
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/fnameLayout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         android:layout_width="0dp"
-        android:layout_height="46dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="25dp"
         android:ems="10"
-        android:focusable="false"
-        android:inputType="textPersonName"
-        android:text="Name"
+        android:freezesText="false"
+        android:hint="First Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2" />
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/fname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:clickable="true"
+            android:cursorVisible="true"
+            android:editable="true"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <ImageView
         android:id="@+id/back2"
@@ -127,10 +206,10 @@
         android:text="Edit"
         android:textAllCaps="false"
         android:textSize="18sp"
-        app:layout_constraintEnd_toEndOf="@+id/confirmNumber"
+        app:layout_constraintEnd_toEndOf="@+id/numberLayout"
         app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="@+id/confirmNumber"
-        app:layout_constraintTop_toBottomOf="@+id/confirmNumber" />
+        app:layout_constraintStart_toStartOf="@+id/numberLayout"
+        app:layout_constraintTop_toBottomOf="@+id/numberLayout" />
 
     <Button
         android:id="@+id/cancel"
@@ -139,8 +218,8 @@
         android:text="Cancel"
         android:textAllCaps="false"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/confirmNumber"
-        app:layout_constraintStart_toStartOf="@+id/confirmNumber"
+        app:layout_constraintEnd_toEndOf="@+id/numberLayout"
+        app:layout_constraintStart_toStartOf="@+id/numberLayout"
         app:layout_constraintTop_toBottomOf="@+id/button" />
 
 

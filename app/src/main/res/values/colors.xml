@@ -3,6 +3,9 @@
     <color name="colorPrimary">#cf242a</color>
     <color name="colorPrimaryDark">#A3161B</color>
     <color name="colorAccent">#ffffff</color>
+    <color name="darkColorPrimary">#cf242a</color>
+    <color name="darkColorPrimaryDark">#141831</color>
+    <color name="darkColorAccent">#cf242a</color>
     <color name="white">#fff</color>
     <color name="black">#000</color>
     <color name="shimmer">#aaa</color>

@@ -57,7 +57,7 @@
             android:layout_height="match_parent">
 
             <androidx.gridlayout.widget.GridLayout
-                app:columnCount="3"
+                app:columnCount="2"
                 app:rowCount="4"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -68,33 +68,25 @@
 
                 <!--add  several shimmer placeholder layout -->
 
-                <include  android:layout_width="180dp"
+                <include  android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
+                <include  android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
+                <include  android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
+                <include  android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
+                <include  android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
+                <include  android:layout_width="210dp"
                     android:layout_height="wrap_content"
                     layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    layout="@layout/food_item_shimmer"></include>
-                <include  android:layout_width="180dp"
-                    android:layout_height="wrap_content"
-                    layout="@layout/food_item_shimmer"></include>
+
 
             </androidx.gridlayout.widget.GridLayout>
         </RelativeLayout>
@@ -105,7 +97,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="10dp"
-        android:columnWidth="180dp"
+        android:columnWidth="210dp"
         android:numColumns="auto_fit"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
