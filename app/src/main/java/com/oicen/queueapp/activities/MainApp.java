@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
+import android.util.Pair;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -114,6 +115,7 @@ public class MainApp extends AppCompatActivity {
     public boolean inqueue;
     public String queueid;
     public boolean isPaid;
+    TextView pp,tc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,12 +146,33 @@ public class MainApp extends AppCompatActivity {
         mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         nvDrawer = (NavigationView) findViewById(R.id.nvView);
 
+        pp = (TextView)findViewById(R.id.pp);
+        tc = (TextView)findViewById(R.id.tc);
+
 
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                
                 mDrawer.openDrawer(nvDrawer);
+            }
+        });
+
+        pp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Pptc.class);
+                intent.putExtra("type", "pp");
+                startActivity(intent);
+            }
+        });
+
+        tc.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), Pptc.class);
+                intent.putExtra("type", "tc");
+                startActivity(intent);
             }
         });
 

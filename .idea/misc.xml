@@ -5,9 +5,10 @@
       <map>
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/drawable/ic_logo.xml" value="0.11614583333333334" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/drawable/table_bg_normal.xml" value="0.22552083333333334" />
-        <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/activity_main.xml" value="0.14270833333333333" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/activity_main_app.xml" value="0.14270833333333333" />
-        <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/activity_registration.xml" value="0.14270833333333333" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/activity_pptc.xml" value="0.209375" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/activity_registration.xml" value="0.33" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/custom_tab.xml" value="0.209375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/fragment_favorites.xml" value="0.209375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/fragment_plate.xml" value="0.25" />
@@ -15,7 +16,7 @@
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/fragment_queue.xml" value="0.209375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/fragment_recent_orders.xml" value="0.209375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/fragment_tab_category.xml" value="0.209375" />
-        <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/fragment_user.xml" value="0.209375" />
+        <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/fragment_user.xml" value="0.25" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/order_details_dialog.xml" value="0.209375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/order_item.xml" value="0.209375" />
         <entry key="..\:/Users/hp/AndroidStudioProjects/FoodOrderQueue/app/src/main/res/layout/placeorder_dialog.xml" value="0.209375" />

@@ -4,14 +4,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
+import android.util.Pair;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -27,7 +36,10 @@ import com.oicen.queueapp.utils.VolleySingleton;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static com.oicen.queueapp.BuildConfig.HOST;
@@ -84,7 +96,55 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        TextView tv = findViewById(R.id.txt);
+
+        List<Pair<String, View.OnClickListener>> pairsList = new ArrayList<>();
+
+        pairsList.add(new Pair<>("45,59", v -> {
+            Intent intent = new Intent(this, Pptc.class);
+            intent.putExtra("type", "pp");
+            startActivity(intent);
+        }));
+
+        pairsList.add(new Pair<>("64,83", v -> {
+            Intent intent = new Intent(this, Pptc.class);
+            intent.putExtra("type", "tc");
+            startActivity(intent);
+        }));
+
+        String pptc = "By logging in I agree to accept the KUMPARES Privacy Policy and Terms & Conditions.";
+
+        makeLinks(pairsList, pptc, tv);
     }
+
+    private void makeLinks(List<Pair<String, View.OnClickListener>> pairsList, String text, TextView tv) {
+        SpannableString ss = new SpannableString(text);
+        for (Pair<String, View.OnClickListener> pair : pairsList) {
+
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(View textView) {
+                    pair.second.onClick(textView);
+                }
+
+                @Override
+                public void updateDrawState(TextPaint ds) {
+
+                    ds.linkColor = ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary);
+                    ds.setUnderlineText(true);
+
+                    super.updateDrawState(ds);
+                }
+            };
+
+            String[] indexes = pair.first.split(",");
+            ss.setSpan(clickableSpan, Integer.parseInt(indexes[0]), Integer.parseInt(indexes[1]), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
+        tv.setText(ss);
+        tv.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
 
     void setupTheme(){
         SharedPreferences sp = getApplicationContext().getSharedPreferences("theme", Context.MODE_PRIVATE);
@@ -100,7 +160,12 @@ public class MainActivity extends AppCompatActivity {
     void userLogin(){
         final String number = mobileNumberField.getText().toString();
         if(TextUtils.isEmpty(number)){
-            mobileNumberField.setError("Please Enter your Mobile Number !");
+            mobileNumberField.setError("Please Enter your 11 digit Mobile Number!");
+            mobileNumberField.requestFocus();
+            return;
+        }
+        if(number.length() < 11){
+            mobileNumberField.setError("Please Enter a 11 digit Mobile Number!");
             mobileNumberField.requestFocus();
             return;
         }

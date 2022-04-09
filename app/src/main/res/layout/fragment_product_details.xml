@@ -159,11 +159,11 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_add_box_24dp"
-                app:tint="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/prodPrice"
                 app:layout_constraintEnd_toEndOf="@+id/prodDesc"
                 app:layout_constraintTop_toTopOf="@+id/prodPrice"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"
+                app:tint="@color/colorPrimary" />
 
             <ImageButton
                 android:id="@+id/decrease"
@@ -175,11 +175,11 @@
                 android:padding="0dp"
                 android:scaleType="fitXY"
                 android:src="@drawable/ic_minus_box_24dp"
-                app:tint="@color/colorPrimary"
                 app:layout_constraintBottom_toBottomOf="@+id/increase"
                 app:layout_constraintEnd_toStartOf="@+id/qty"
                 app:layout_constraintTop_toTopOf="@+id/increase"
-                app:layout_constraintVertical_bias="1.0" />
+                app:layout_constraintVertical_bias="1.0"
+                app:tint="@color/colorPrimary" />
 
             <TextView
                 android:id="@+id/qty"
