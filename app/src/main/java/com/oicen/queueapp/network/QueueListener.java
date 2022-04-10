@@ -52,6 +52,7 @@ public class QueueListener extends Service {
     Runnable runnable;
     boolean queued;
     boolean isStarted = false;
+    boolean isCancelled = false;
 
     @Override
     public void onCreate() {
@@ -62,6 +63,7 @@ public class QueueListener extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         if (intent.getAction().equals("STOP")) {
+            isCancelled = true;
             stopForeground(true);
             stopSelf();
         }else if (intent.getAction().contains("START")) {
@@ -174,25 +176,28 @@ public class QueueListener extends Service {
 
                             stopForeground(true);
                             stopSelfResult(startId);
-                            String message = "Please go to the counter now";
-                            NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "Notification");
-                            builder.setSmallIcon(R.drawable.ic_fastfood_24dp);
-                            builder.setContentTitle("Your order is ready !");
-                            builder.setContentText(message);
-                            builder.setAutoCancel(true);
 
-                            Intent i = new Intent(getApplicationContext(), MainApp.class);
-                            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            if (intent.getAction().equals("START") && !isCancelled) {
+                                String message = "Please go to the counter now";
+                                NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext(), "Notification");
+                                builder.setSmallIcon(R.drawable.ic_fastfood_24dp);
+                                builder.setContentTitle("Your order is ready !");
+                                builder.setContentText(message);
+                                builder.setAutoCancel(true);
 
-                            PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
-                            builder.setContentIntent(pendingIntent);
+                                Intent i = new Intent(getApplicationContext(), MainApp.class);
+                                i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
-                            NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
-                            managerCompat.notify(1, builder.build());
+                                PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+                                builder.setContentIntent(pendingIntent);
+
+                                NotificationManagerCompat managerCompat = NotificationManagerCompat.from(getApplicationContext());
+                                managerCompat.notify(1, builder.build());
+                            }
 
 
                             Intent newIntent = new Intent(getApplicationContext(), MainApp.class);
-                            if (intent.getAction().equals("START")) newIntent.putExtra("done", true);
+                            if (intent.getAction().equals("START") && !isCancelled) newIntent.putExtra("done", true);
                             newIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(newIntent);
 

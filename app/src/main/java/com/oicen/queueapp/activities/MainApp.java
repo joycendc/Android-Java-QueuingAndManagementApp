@@ -149,7 +149,6 @@ public class MainApp extends AppCompatActivity {
         pp = (TextView)findViewById(R.id.pp);
         tc = (TextView)findViewById(R.id.tc);
 
-
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -661,18 +660,19 @@ public class MainApp extends AppCompatActivity {
     void displayMessage(){
         Bundle extras = getIntent().getExtras();
         if(extras != null){
+            Log.i("DONE: " , "" + extras.getBoolean("done"));
             if(extras.getBoolean("done")){
                 resDialog
-                    .setTitle("Your order is ready !")
-                    .setMessage("PLEASE GO TO THE COUNTER NOW TO CLAIM YOUR ORDER.")
-                    .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setCancelable(false)
-                    .show();
+                        .setTitle("Your order is ready !")
+                        .setMessage("PLEASE GO TO THE COUNTER NOW TO CLAIM YOUR ORDER.")
+                        .setPositiveButton("OKAY", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .setCancelable(true)
+                        .show();
             }
         }
     }

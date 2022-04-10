@@ -192,10 +192,12 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                                     .setPositiveButton("YES", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int which) {
                                             Intent serviceIntent = new Intent(context, QueueListener.class);
+                                            serviceIntent.putExtra("cancel", true);
                                             serviceIntent.setAction("STOP");
                                             ContextCompat.startForegroundService(context, serviceIntent);
 
                                             cancelOrder();
+                                            
                                             dialog.dismiss();
 
                                         }
