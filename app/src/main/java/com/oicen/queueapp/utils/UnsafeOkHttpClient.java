@@ -58,7 +58,7 @@ public class UnsafeOkHttpClient {
                       Request original = chain.request();
 
                       Request request = original.newBuilder()
-                              .header(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT)
+                            //   .header(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT)
                               .method(original.method(), original.body())
                               .build();
 

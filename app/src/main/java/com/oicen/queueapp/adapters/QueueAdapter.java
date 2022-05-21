@@ -250,12 +250,12 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                 params.put("customer_id", id);
                 return params;
             }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
-                return headers;
-            }
+            // @Override
+            // public Map<String, String> getHeaders() throws AuthFailureError {
+            //     Map<String, String> headers = new HashMap<>();
+            //     headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+            //     return headers;
+            // }
         };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }
@@ -297,12 +297,12 @@ public class QueueAdapter extends RecyclerView.Adapter<QueueAdapter.CustomerView
                 params.put("customer_id", id);
                 return params;
             }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
-                return headers;
-            }
+            // @Override
+            // public Map<String, String> getHeaders() throws AuthFailureError {
+            //     Map<String, String> headers = new HashMap<>();
+            //     headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+            //     return headers;
+            // }
         };
         VolleySingleton.getInstance(context).addToRequestQueue(stringRequest);
     }

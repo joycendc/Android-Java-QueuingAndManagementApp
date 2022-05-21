@@ -253,12 +253,12 @@ public class PlateFragment extends Fragment {
 
                 return params;
             }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
-                return headers;
-            }
+            // @Override
+            // public Map<String, String> getHeaders() throws AuthFailureError {
+            //     Map<String, String> headers = new HashMap<>();
+            //     headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+            //     return headers;
+            // }
         };
 
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(

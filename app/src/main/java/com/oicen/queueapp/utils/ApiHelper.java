@@ -44,5 +44,5 @@ public class ApiHelper {
     public static String UPDATE_USER = "updateUser.php";
     public static String RECENT_ORDERS = "getRecentOrders.php";
     public static String KEY_COOKIE = "cookie";
-    public static String VALUE_CONTENT = "__test=5083fb2d45d3ffeb754bd17e54732692; expires=Tue, 19 Jan 2038 03:14:07 UTC; PHPSESSID=bfa95c09254ed73071abd5eb05059595";
+    public static String VALUE_CONTENT = "__test=5083fb2d45d3ffeb754bd17e54732692; expires=Tue, 19 Jan 2038 03:14:07 UTC; PHPSESSID=8c3ceff11e0bad6291a5fef728f39ef3; path=/";
 }

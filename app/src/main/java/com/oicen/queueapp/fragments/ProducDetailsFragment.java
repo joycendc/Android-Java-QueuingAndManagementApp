@@ -230,12 +230,12 @@ public class ProducDetailsFragment extends Fragment {
                 params.put("fave", "check");
                 return params;
             }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
-                return headers;
-            }
+            // @Override
+            // public Map<String, String> getHeaders() throws AuthFailureError {
+            //     Map<String, String> headers = new HashMap<>();
+            //     headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+            //     return headers;
+            // }
         };
 
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
@@ -279,12 +279,12 @@ public class ProducDetailsFragment extends Fragment {
                 params.put("fave", mode);
                 return params;
             }
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> headers = new HashMap<>();
-                headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
-                return headers;
-            }
+            // @Override
+            // public Map<String, String> getHeaders() throws AuthFailureError {
+            //     Map<String, String> headers = new HashMap<>();
+            //     headers.put(ApiHelper.KEY_COOKIE, ApiHelper.VALUE_CONTENT);
+            //     return headers;
+            // }
         };
 
         stringRequest.setRetryPolicy(new DefaultRetryPolicy(
